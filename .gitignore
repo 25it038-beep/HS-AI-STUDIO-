@@ -23,6 +23,12 @@
 # misc
 .DS_Store
 *.pem
+dev-server.log
+*.log
+
+# root-level duplicates (assets live in /public)
+/HS CODE_0.1.0_x64-setup.exe
+/WhatsApp Image*.jpeg
 
 # debug
 npm-debug.log*

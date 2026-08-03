@@ -1,0 +1,9 @@
+{
+  "name": "hs-ai-solutions-landing",
+  "version": "1.0.0",
+  "private": true,
+  "framework": "nextjs",
+  "buildCommand": "npm run build",
+  "outputDirectory": "out",
+  "installCommand": "npm install"
+}
