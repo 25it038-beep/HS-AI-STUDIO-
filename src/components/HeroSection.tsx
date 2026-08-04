@@ -22,33 +22,33 @@ export default function HeroSection() {
     <motion.section
       ref={containerRef}
       style={{ opacity }}
-      className="relative min-h-screen flex items-center px-6 pt-32 pb-20"
+      className="relative min-h-screen flex items-center px-4 sm:px-6 lg:px-8 pt-36 pb-20 md:pt-40 md:pb-28"
     >
-      <div className="relative z-10 max-w-7xl mx-auto w-full grid lg:grid-cols-2 gap-20 lg:gap-16 items-center">
-        <div className="flex flex-col gap-10">
+      <div className="relative z-10 max-w-7xl mx-auto w-full grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+        <div className="flex flex-col gap-8 md:gap-10">
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: [0.23, 1, 0.32, 1] }}
             className="flex flex-col gap-6"
           >
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass text-xs text-zinc-400 w-fit">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-              HS AI Solutions Ecosystem v2.0
+            <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full glass border border-purple-500/20 text-xs font-medium text-zinc-300 w-fit shadow-inner">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_8px_rgba(52,211,153,0.8)]" />
+              <span>HS AI Solutions Ecosystem v2.0</span>
             </div>
 
-            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold leading-[1.02] tracking-tight">
+            <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold leading-[1.08] tracking-tight">
               <span className="gradient-text">One Ecosystem.</span>
               <br />
               <span className="text-white">Infinite AI</span>
               <br />
-              <span className="text-white/80">Possibilities.</span>
+              <span className="text-zinc-400">Possibilities.</span>
             </h1>
 
-            <p className="text-base sm:text-lg text-zinc-400 max-w-lg leading-relaxed">
+            <p className="text-base sm:text-lg text-zinc-400 max-w-xl leading-relaxed font-normal">
               Build, secure, automate, learn, and innovate with a growing
               collection of AI-powered solutions designed to solve real-world
-              problems.
+              challenges.
             </p>
           </motion.div>
 
@@ -56,13 +56,13 @@ export default function HeroSection() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.15, ease: [0.23, 1, 0.32, 1] }}
-            className="flex flex-wrap gap-4"
+            className="flex flex-wrap items-center gap-4"
           >
             <a
               href="#solutions"
-              className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-gradient-to-r from-purple-600 to-cyan-500 text-white font-medium text-sm hover:shadow-lg hover:shadow-purple-500/25 transition-all duration-300"
+              className="h-12 inline-flex items-center justify-center gap-2.5 px-8 rounded-full bg-gradient-to-r from-purple-600 via-purple-500 to-cyan-500 text-white font-semibold text-sm shadow-lg shadow-purple-500/25 hover:shadow-purple-500/40 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300"
             >
-              Explore Solutions
+              <span>Explore Solutions</span>
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
               </svg>
@@ -70,32 +70,35 @@ export default function HeroSection() {
 
             <a
               href="#solutions"
-              className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full glass glass-hover text-white font-medium text-sm transition-all duration-300"
+              className="h-12 inline-flex items-center justify-center gap-2.5 px-8 rounded-full glass glass-hover text-white font-semibold text-sm border border-white/10 hover:border-purple-500/30 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300"
             >
-              Launch Dashboard
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <span>Launch Dashboard</span>
+              <svg className="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
               </svg>
             </a>
           </motion.div>
 
+          {/* Clean Metric Cards Alignment */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.3, ease: [0.23, 1, 0.32, 1] }}
-            className="glass rounded-2xl p-6 grid grid-cols-2 sm:grid-cols-4 gap-6"
+            className="glass rounded-2xl p-6 border border-white/10 grid grid-cols-2 sm:grid-cols-4 gap-6 items-center"
           >
             {METRICS.map((metric, i) => (
               <div
                 key={metric.label}
-                className={`flex flex-col gap-1 ${
+                className={`flex flex-col gap-1.5 ${
                   i > 0 ? "sm:border-l sm:border-white/10 sm:pl-6" : ""
+                } ${i % 2 === 1 ? "max-sm:border-l max-sm:border-white/10 max-sm:pl-6" : ""} ${
+                  i >= 2 ? "max-sm:border-t max-sm:border-white/10 max-sm:pt-4" : ""
                 }`}
               >
-                <span className="text-lg sm:text-xl font-bold text-white">
+                <span className="text-xl sm:text-2xl font-bold text-white tracking-tight">
                   {metric.value}
                 </span>
-                <span className="text-[10px] text-zinc-500 uppercase tracking-widest">
+                <span className="text-[11px] font-semibold text-zinc-400 uppercase tracking-wider">
                   {metric.label}
                 </span>
               </div>
