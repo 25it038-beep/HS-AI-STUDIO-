@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import HeroSection from "@/components/HeroSection";
 import SolutionsShelf from "@/components/SolutionsShelf";
 import CTASection from "@/components/CTASection";
@@ -9,10 +10,17 @@ import AuroraBackground from "@/components/AuroraBackground";
 import ParticleField from "@/components/ParticleField";
 import ConstellationGrid from "@/components/ConstellationGrid";
 import CursorGlow from "@/components/CursorGlow";
+import DownloadModal from "@/components/DownloadModal";
 
 export default function Home() {
+  const [isDownloadModalOpen, setIsDownloadModalOpen] = useState(false);
+
+  const handleDownload = () => {
+    setIsDownloadModalOpen(true);
+  };
+
   return (
-    <main className="relative min-h-screen bg-[#0a0a0a] overflow-hidden">
+    <main className="relative min-h-screen bg-[#07070b] overflow-hidden">
       <AuroraBackground />
       <ParticleField />
       <ConstellationGrid />
@@ -20,9 +28,14 @@ export default function Home() {
 
       <Navbar />
       <HeroSection />
-      <SolutionsShelf />
+      <SolutionsShelf onDownload={handleDownload} />
       <CTASection />
-      <FooterSection />
+      <FooterSection onDownload={handleDownload} />
+
+      <DownloadModal
+        isOpen={isDownloadModalOpen}
+        onClose={() => setIsDownloadModalOpen(false)}
+      />
     </main>
   );
 }

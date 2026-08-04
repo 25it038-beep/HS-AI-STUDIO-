@@ -82,7 +82,7 @@ const SOLUTIONS = [
   },
 ];
 
-export default function SolutionsShelf() {
+export default function SolutionsShelf({ onDownload }: { onDownload?: () => void }) {
   return (
     <section id="solutions" className="relative z-10 py-28 md:py-36 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
@@ -114,7 +114,7 @@ export default function SolutionsShelf() {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8 items-stretch">
           {SOLUTIONS.map((solution, i) => (
-            <ShelfItem key={solution.title} solution={solution} index={i} />
+            <ShelfItem key={solution.title} solution={solution} index={i} onDownload={onDownload} />
           ))}
         </div>
       </div>
@@ -125,9 +125,11 @@ export default function SolutionsShelf() {
 function ShelfItem({
   solution,
   index,
+  onDownload,
 }: {
   solution: (typeof SOLUTIONS)[0];
   index: number;
+  onDownload?: () => void;
 }) {
   const cardRef = useRef<HTMLDivElement>(null);
   const isDev = solution.status === "development";
@@ -221,6 +223,7 @@ function ShelfItem({
                 <a
                   href="/downloads/HS CODE_0.1.0_x64-setup.exe"
                   download
+                  onClick={onDownload}
                   className="w-full h-11 inline-flex items-center justify-center gap-2.5 px-5 rounded-2xl bg-gradient-to-r from-amber-400/20 via-amber-500/20 to-amber-600/20 hover:from-amber-400/30 hover:to-amber-600/30 border border-amber-500/40 text-amber-200 text-xs font-bold uppercase tracking-wider transition-all duration-300 group/btn shadow-md"
                 >
                   <span>Download v0.1.0</span>

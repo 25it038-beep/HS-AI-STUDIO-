@@ -41,7 +41,7 @@ const SOCIAL_LINKS = [
   },
 ];
 
-export default function FooterSection() {
+export default function FooterSection({ onDownload }: { onDownload?: () => void }) {
   return (
     <footer id="contact" className="relative z-10 border-t border-white/[0.08] bg-[#07070b]">
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-amber-500/5 to-transparent pointer-events-none" />
@@ -97,6 +97,7 @@ export default function FooterSection() {
             <a
               href="/downloads/HS CODE_0.1.0_x64-setup.exe"
               download
+              onClick={onDownload}
               className="h-11 inline-flex items-center justify-center gap-2.5 px-7 rounded-2xl bg-gradient-to-r from-amber-400/20 via-amber-500/20 to-amber-600/20 hover:from-amber-400/30 hover:to-amber-600/30 text-amber-200 text-xs font-bold uppercase tracking-wider border border-amber-500/40 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 shadow-md w-full sm:w-auto"
             >
               <svg className="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
