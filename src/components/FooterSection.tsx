@@ -93,16 +93,22 @@ export default function FooterSection() {
             ))}
           </div>
 
-          <a
-            href="/downloads/HS CODE_0.1.0_x64-setup.exe"
-            download
-            className="h-11 inline-flex items-center justify-center gap-2.5 px-7 rounded-2xl bg-white/[0.05] hover:bg-amber-400/10 text-white hover:text-amber-200 text-xs font-bold uppercase tracking-wider border border-white/15 hover:border-amber-400/40 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 shadow-md"
-          >
-            <svg className="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.75} d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
-            </svg>
-            <span>Download HS CODE (v0.1.0)</span>
-          </a>
+          <div className="flex flex-col items-center gap-3 w-full max-w-md">
+            <a
+              href="/downloads/HS CODE_0.1.0_x64-setup.exe"
+              download
+              className="h-11 inline-flex items-center justify-center gap-2.5 px-7 rounded-2xl bg-gradient-to-r from-amber-400/20 via-amber-500/20 to-amber-600/20 hover:from-amber-400/30 hover:to-amber-600/30 text-amber-200 text-xs font-bold uppercase tracking-wider border border-amber-500/40 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 shadow-md w-full sm:w-auto"
+            >
+              <svg className="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.75} d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
+              </svg>
+              <span>Download HS CODE (v0.1.0)</span>
+            </a>
+
+            <div className="p-3 rounded-xl bg-amber-500/10 border border-amber-500/30 text-[11px] text-amber-200/90 leading-snug text-center shadow-inner w-full">
+              <span className="font-extrabold text-amber-300">NOTE:</span> After downloading it, if Windows shows &quot;Don&apos;t run&quot;, select <span className="font-bold text-white">&quot;More info&quot;</span> and select <span className="font-bold text-white">&quot;Run anyway&quot;</span>.
+            </div>
+          </div>
 
           <p className="text-xs text-zinc-500 font-medium tracking-wide">
             &copy; {new Date().getFullYear()} HS AI Solutions. All rights reserved.

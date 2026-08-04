@@ -212,32 +212,32 @@ function ShelfItem({
             <p className="text-sm text-zinc-400 leading-relaxed font-normal">
               {solution.description}
             </p>
-
-            {isDev && (
-              <div className="p-3 rounded-xl bg-amber-500/10 border border-amber-500/20 text-[11px] text-amber-200/90 leading-snug">
-                <span className="font-bold text-amber-300">NOTE:</span> After downloading it, if Windows shows &quot;Don&apos;t run&quot;, select <span className="font-semibold text-white">&quot;More info&quot;</span> and select <span className="font-semibold text-white">&quot;Run anyway&quot;</span>.
-              </div>
-            )}
           </div>
 
           {/* Bespoke Royal Action Button */}
-          <div className="pt-2">
+          <div className="pt-2 flex flex-col gap-2.5">
             {isDev ? (
-              <a
-                href="/downloads/HS CODE_0.1.0_x64-setup.exe"
-                download
-                className="w-full h-11 inline-flex items-center justify-center gap-2.5 px-5 rounded-2xl bg-white/[0.05] hover:bg-amber-400/10 border border-white/10 hover:border-amber-400/40 text-white text-xs font-bold uppercase tracking-wider transition-all duration-300 group/btn shadow-md"
-              >
-                <span>Download v0.1.0</span>
-                <svg
-                  className="w-4 h-4 text-amber-400 transition-transform duration-300 group-hover/btn:translate-y-0.5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
+              <>
+                <a
+                  href="/downloads/HS CODE_0.1.0_x64-setup.exe"
+                  download
+                  className="w-full h-11 inline-flex items-center justify-center gap-2.5 px-5 rounded-2xl bg-gradient-to-r from-amber-400/20 via-amber-500/20 to-amber-600/20 hover:from-amber-400/30 hover:to-amber-600/30 border border-amber-500/40 text-amber-200 text-xs font-bold uppercase tracking-wider transition-all duration-300 group/btn shadow-md"
                 >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
-                </svg>
-              </a>
+                  <span>Download v0.1.0</span>
+                  <svg
+                    className="w-4 h-4 text-amber-400 transition-transform duration-300 group-hover/btn:translate-y-0.5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
+                  </svg>
+                </a>
+                
+                <div className="p-3 rounded-xl bg-amber-500/10 border border-amber-500/30 text-[11px] text-amber-200/90 leading-snug text-left shadow-inner">
+                  <span className="font-extrabold text-amber-300">NOTE:</span> After downloading it, if Windows shows &quot;Don&apos;t run&quot;, select <span className="font-bold text-white">&quot;More info&quot;</span> and select <span className="font-bold text-white">&quot;Run anyway&quot;</span>.
+                </div>
+              </>
             ) : (
               <a
                 href={solution.url}
