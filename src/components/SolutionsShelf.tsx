@@ -112,7 +112,7 @@ export default function SolutionsShelf({ onDownload }: { onDownload?: () => void
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8 items-stretch">
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6 lg:gap-8 items-stretch">
           {SOLUTIONS.map((solution, i) => (
             <ShelfItem key={solution.title} solution={solution} index={i} onDownload={onDownload} />
           ))}

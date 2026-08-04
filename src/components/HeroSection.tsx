@@ -22,7 +22,7 @@ export default function HeroSection() {
     <motion.section
       ref={containerRef}
       style={{ opacity }}
-      className="relative min-h-screen flex items-center px-4 sm:px-6 lg:px-8 pt-36 pb-20 md:pt-40 md:pb-28"
+      className="relative min-h-[calc(100vh-4rem)] flex items-center px-4 sm:px-6 lg:px-8 pt-28 pb-16 md:pt-36 md:pb-20 lg:pt-32 lg:pb-20"
     >
       <div className="relative z-10 max-w-7xl mx-auto w-full grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
         <div className="flex flex-col gap-8 md:gap-10">
