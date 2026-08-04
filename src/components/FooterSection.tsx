@@ -43,10 +43,10 @@ const SOCIAL_LINKS = [
 
 export default function FooterSection() {
   return (
-    <footer id="contact" className="relative z-10 border-t border-white/10 bg-[#0a0a0a]">
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-purple-500/5 to-transparent pointer-events-none" />
+    <footer id="contact" className="relative z-10 border-t border-white/[0.08] bg-[#07070b]">
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-amber-500/5 to-transparent pointer-events-none" />
 
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -54,9 +54,9 @@ export default function FooterSection() {
           transition={{ duration: 0.8, ease: [0.23, 1, 0.32, 1] }}
           className="flex flex-col items-center text-center space-y-8"
         >
-          <div className="h-px w-36 bg-gradient-to-r from-transparent via-purple-500/40 to-transparent" />
+          <div className="h-px w-36 bg-gradient-to-r from-transparent via-amber-400/40 to-transparent" />
 
-          <div className="w-16 h-16 rounded-2xl overflow-hidden ring-2 ring-white/10 shadow-xl shadow-purple-500/10">
+          <div className="w-16 h-16 rounded-2xl overflow-hidden ring-2 ring-amber-400/30 shadow-[0_0_25px_rgba(245,158,11,0.2)]">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="/logo.jpeg"
@@ -66,15 +66,15 @@ export default function FooterSection() {
           </div>
 
           <div className="space-y-1.5">
-            <p className="text-xs font-medium text-zinc-400 uppercase tracking-widest">
+            <p className="text-xs font-bold text-amber-300/80 uppercase tracking-[0.2em]">
               Designed & Developed by
             </p>
-            <p className="text-xl font-extrabold gradient-text tracking-tight">
+            <p className="text-xl font-extrabold text-white tracking-tight">
               Harshan Seliyan B.S.
             </p>
           </div>
 
-          <p className="text-sm text-zinc-400 italic max-w-md leading-relaxed">
+          <p className="text-sm text-zinc-400 italic max-w-md leading-relaxed font-normal">
             &quot;Engineering the Future Through Artificial Intelligence.&quot;
           </p>
 
@@ -85,7 +85,7 @@ export default function FooterSection() {
                 href={link.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-11 h-11 rounded-full glass flex items-center justify-center text-zinc-400 hover:text-white hover:border-purple-500/40 hover:bg-purple-500/10 hover:scale-110 active:scale-95 transition-all duration-300 border border-white/10 shadow-md"
+                className="w-11 h-11 rounded-full bg-white/[0.04] flex items-center justify-center text-zinc-400 hover:text-amber-300 hover:border-amber-400/40 hover:bg-amber-400/10 hover:scale-110 active:scale-95 transition-all duration-300 border border-white/10 shadow-md"
                 aria-label={link.label}
               >
                 {link.icon}
@@ -96,19 +96,19 @@ export default function FooterSection() {
           <a
             href="/downloads/HS CODE_0.1.0_x64-setup.exe"
             download
-            className="h-11 inline-flex items-center justify-center gap-2.5 px-7 rounded-full glass glass-hover text-white text-xs sm:text-sm font-semibold border border-white/10 hover:border-purple-500/40 hover:bg-purple-500/10 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300"
+            className="h-11 inline-flex items-center justify-center gap-2.5 px-7 rounded-2xl bg-white/[0.05] hover:bg-amber-400/10 text-white hover:text-amber-200 text-xs font-bold uppercase tracking-wider border border-white/15 hover:border-amber-400/40 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 shadow-md"
           >
-            <svg className="w-4 h-4 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.75} d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
             </svg>
             <span>Download HS CODE (v0.1.0)</span>
           </a>
 
-          <p className="text-xs text-zinc-400 font-medium tracking-wide">
+          <p className="text-xs text-zinc-500 font-medium tracking-wide">
             &copy; {new Date().getFullYear()} HS AI Solutions. All rights reserved.
           </p>
 
-          <div className="h-px w-36 bg-gradient-to-r from-transparent via-purple-500/40 to-transparent" />
+          <div className="h-px w-36 bg-gradient-to-r from-transparent via-amber-400/40 to-transparent" />
         </motion.div>
       </div>
     </footer>

@@ -6,56 +6,76 @@ import { motion } from "framer-motion";
 const SOLUTIONS = [
   {
     title: "AIShield",
-    tagline: "AI Cyber Security Platform",
+    tagline: "Cyber Security Platform",
     url: "https://efinal-ok77.vercel.app/",
     description:
       "AI-powered threat detection, content forensics, document analysis, intelligent reporting, and cybersecurity automation.",
-    gradient: "from-purple-600 via-purple-500 to-pink-500",
+    accentColor: "#a855f7", // Royal Amethyst
+    gradient: "from-purple-500 via-indigo-500 to-violet-600",
+    badgeBorder: "border-purple-500/30",
+    badgeBg: "bg-purple-500/10",
+    badgeText: "text-purple-300",
+    dotBg: "bg-purple-400",
     status: "live" as const,
     icon: (
-      <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <svg className="w-5 h-5 text-purple-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.75} d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
       </svg>
     ),
   },
   {
     title: "CareerAI",
-    tagline: "AI Career Intelligence",
+    tagline: "Career Intelligence Platform",
     url: "https://ledger-1-2ttx.onrender.com/",
     description:
       "Resume analysis, skill gap detection, personalized learning roadmaps, interview preparation, and career growth.",
-    gradient: "from-cyan-500 via-teal-500 to-blue-600",
+    accentColor: "#06b6d4", // Royal Cyan / Sapphire
+    gradient: "from-cyan-500 via-blue-500 to-indigo-600",
+    badgeBorder: "border-cyan-500/30",
+    badgeBg: "bg-cyan-500/10",
+    badgeText: "text-cyan-300",
+    dotBg: "bg-cyan-400",
     status: "live" as const,
     icon: (
-      <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <svg className="w-5 h-5 text-cyan-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.75} d="M20.25 14.15v4.25c0 1.094-.787 2.036-1.872 2.18-2.087.277-4.216.42-6.378.42s-4.291-.143-6.378-.42c-1.085-.144-1.872-1.086-1.872-2.18v-4.25m16.5 0a2.18 2.18 0 00.75-1.661V8.706c0-1.081-.768-2.015-1.837-2.175a48.114 48.114 0 00-3.413-.387m-9.5 3.346c.634-2.112 2.316-3.815 4.405-4.346m0 0a48.168 48.168 0 013.19 0m-3.19 0A48.3 48.3 0 0112 3.319c.92.6 1.78 1.281 2.563 2.042m-2.563 2.043v3.75" />
       </svg>
     ),
   },
   {
     title: "HS AI Assistant",
-    tagline: "AI Powered Chatbot",
+    tagline: "Multimodal AI Chatbot",
     url: "https://hs-chatbot-3.onrender.com/",
     description:
       "Multimodal AI assistant for reasoning, coding, document analysis, file understanding, and intelligent conversations.",
-    gradient: "from-emerald-500 via-green-500 to-teal-600",
+    accentColor: "#10b981", // Royal Emerald / Jade
+    gradient: "from-emerald-500 via-teal-500 to-green-600",
+    badgeBorder: "border-emerald-500/30",
+    badgeBg: "bg-emerald-500/10",
+    badgeText: "text-emerald-300",
+    dotBg: "bg-emerald-400",
     status: "live" as const,
     icon: (
-      <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <svg className="w-5 h-5 text-emerald-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.75} d="M8.625 12a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 01-2.555-.337A5.972 5.972 0 015.41 20.97a5.969 5.969 0 01-.474-.065 4.48 4.48 0 00.978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25z" />
       </svg>
     ),
   },
   {
     title: "AI Application Builder",
-    tagline: "AI App Builder",
+    tagline: "Autonomous App Studio",
     url: "",
     description:
       "Build full applications with natural language prompts. Describe it, and the AI assembles, wires, and ships it.",
-    gradient: "from-amber-500 via-orange-500 to-red-500",
+    accentColor: "#f59e0b", // Royal Gold / Amber
+    gradient: "from-amber-400 via-amber-500 to-orange-600",
+    badgeBorder: "border-amber-500/30",
+    badgeBg: "bg-amber-500/10",
+    badgeText: "text-amber-300",
+    dotBg: "bg-amber-400",
     status: "development" as const,
     icon: (
-      <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <svg className="w-5 h-5 text-amber-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.75} d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5" />
       </svg>
     ),
@@ -64,23 +84,31 @@ const SOLUTIONS = [
 
 export default function SolutionsShelf() {
   return (
-    <section id="solutions" className="relative z-10 py-24 md:py-32 px-4 sm:px-6 lg:px-8">
+    <section id="solutions" className="relative z-10 py-28 md:py-36 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 0.8, ease: [0.23, 1, 0.32, 1] }}
-          className="text-center mb-16 space-y-4"
+          className="text-center mb-20 space-y-4"
         >
-          <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass text-xs font-semibold uppercase tracking-[0.2em] text-purple-300 border border-purple-500/20">
-            One Place. Infinite Power.
-          </span>
-          <h2 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight">
-            <span className="gradient-text">Your AI Shelf</span>
+          <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-gradient-to-r from-amber-500/10 via-purple-500/10 to-amber-500/10 border border-amber-500/30 shadow-[0_0_15px_rgba(245,158,11,0.1)]">
+            <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
+            <span className="text-[11px] font-bold uppercase tracking-[0.25em] text-amber-200">
+              The Flagship Suite
+            </span>
+          </div>
+
+          <h2 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight text-white">
+            Curated Intelligence. <br className="hidden sm:inline" />
+            <span className="bg-gradient-to-r from-amber-200 via-white to-purple-300 bg-clip-text text-transparent">
+              Engineered for Perfection.
+            </span>
           </h2>
-          <p className="text-zinc-400 max-w-md mx-auto text-sm sm:text-base leading-relaxed">
-            All your specialized AI tools in one ecosystem. Instantly accessible.
+
+          <p className="text-zinc-400 max-w-lg mx-auto text-sm sm:text-base leading-relaxed font-normal">
+            Every tool in the HS AI Ecosystem is custom-crafted to deliver enterprise-grade performance and effortless sophistication.
           </p>
         </motion.div>
 
@@ -111,10 +139,10 @@ function ShelfItem({
       const rect = card.getBoundingClientRect();
       const x = (e.clientX - rect.left) / rect.width - 0.5;
       const y = (e.clientY - rect.top) / rect.height - 0.5;
-      card.style.transform = `perspective(1000px) rotateY(${x * 2}deg) rotateX(${-y * 2}deg)`;
+      card.style.transform = `perspective(1000px) rotateY(${x * 3}deg) rotateX(${-y * 3}deg) translateY(-4px)`;
     };
     const onLeave = () => {
-      card.style.transform = "perspective(1000px) rotateY(0deg) rotateX(0deg)";
+      card.style.transform = "perspective(1000px) rotateY(0deg) rotateX(0deg) translateY(0px)";
     };
     card.addEventListener("mousemove", onMove);
     card.addEventListener("mouseleave", onLeave);
@@ -129,84 +157,70 @@ function ShelfItem({
       initial={{ opacity: 0, y: 40 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-50px" }}
-      transition={{ duration: 0.6, delay: index * 0.1, ease: [0.23, 1, 0.32, 1] }}
+      transition={{ duration: 0.7, delay: index * 0.12, ease: [0.23, 1, 0.32, 1] }}
       className="h-full flex flex-col"
     >
       <div
         ref={cardRef}
-        className="group relative glass glass-hover rounded-2xl p-6 sm:p-7 h-full flex flex-col justify-between overflow-hidden cursor-pointer transition-all duration-300 border border-white/10 hover:border-purple-500/30 hover:shadow-2xl hover:shadow-purple-500/10"
+        className="group relative rounded-3xl p-7 sm:p-8 h-full flex flex-col justify-between overflow-hidden cursor-pointer transition-all duration-500 bg-gradient-to-b from-[#13141f]/90 via-[#0e0f18]/95 to-[#090a10] border border-white/[0.08] hover:border-amber-400/40 shadow-[0_10px_30px_rgba(0,0,0,0.5)] hover:shadow-[0_20px_40px_rgba(0,0,0,0.8)]"
         style={{ willChange: "transform", transformStyle: "preserve-3d" }}
       >
-        {/* Subtle Ambient Card Gradient Background on Hover */}
+        {/* Royal Metallic Top Border Accent Line */}
         <div
-          className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+          className="absolute top-0 inset-x-0 h-[2px] opacity-80 group-hover:opacity-100 transition-opacity duration-500"
           style={{
-            background: `radial-gradient(circle at 50% 0%, rgba(168,85,247,0.12), transparent 70%)`,
+            background: `linear-gradient(90deg, transparent, ${solution.accentColor}, transparent)`,
           }}
         />
 
-        <div className="relative z-10 flex flex-col h-full justify-between gap-5">
-          {/* Header Row: Icon + Badge */}
+        {/* Subtle Ambient Radial Lighting */}
+        <div
+          className="absolute -top-24 -right-24 w-48 h-48 rounded-full blur-3xl opacity-0 group-hover:opacity-25 transition-opacity duration-700 pointer-events-none"
+          style={{ background: solution.accentColor }}
+        />
+
+        <div className="relative z-10 flex flex-col h-full justify-between gap-6">
+          {/* Header Line: Icon Box + Status Badge */}
           <div className="flex items-center justify-between gap-3">
-            <div
-              className="w-11 h-11 rounded-xl flex items-center justify-center shadow-lg flex-shrink-0"
-              style={{
-                background: `linear-gradient(135deg, ${solution.gradient})`,
-              }}
-            >
+            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-white/[0.12] to-white/[0.02] border border-white/10 flex items-center justify-center shadow-lg group-hover:scale-105 group-hover:border-white/25 transition-all duration-300">
               {solution.icon}
             </div>
-            {isDev ? (
-              <span className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/20">
-                <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
-                <span className="text-[11px] text-amber-300 uppercase tracking-wider font-semibold">
-                  In Dev
-                </span>
+
+            <div className={`flex items-center gap-1.5 px-3.5 py-1 rounded-full ${solution.badgeBg} border ${solution.badgeBorder} shadow-inner`}>
+              <span className={`w-1.5 h-1.5 rounded-full ${solution.dotBg} animate-pulse`} />
+              <span className={`text-[10px] ${solution.badgeText} uppercase tracking-[0.15em] font-bold`}>
+                {isDev ? "In Development" : "Live"}
               </span>
-            ) : (
-              <span className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                <span className="text-[11px] text-emerald-300 uppercase tracking-wider font-semibold">
-                  Live
-                </span>
-              </span>
-            )}
+            </div>
           </div>
 
-          {/* Title & Tagline - Fixed Height Box for Perfect Alignment across cards */}
-          <div className="min-h-[56px] flex flex-col justify-center gap-1">
-            <h3 className="text-xl font-bold text-white tracking-tight leading-snug group-hover:text-purple-300 transition-colors">
+          {/* Title & Tagline Box */}
+          <div className="min-h-[60px] flex flex-col justify-center gap-1">
+            <h3 className="text-2xl font-bold text-white tracking-tight leading-snug group-hover:text-amber-200 transition-colors">
               {solution.title}
             </h3>
-            <p
-              className="text-xs font-semibold uppercase tracking-wider"
-              style={{
-                background: `linear-gradient(135deg, ${solution.gradient})`,
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-              }}
-            >
+            <p className="text-xs font-medium uppercase tracking-[0.18em] text-zinc-400">
               {solution.tagline}
             </p>
           </div>
 
-          {/* Clean Horizontal Divider */}
-          <div className="h-px w-full bg-white/10" />
+          {/* Elegant Divider */}
+          <div className="h-px w-full bg-gradient-to-r from-transparent via-white/15 to-transparent" />
 
-          {/* Description - Takes Remaining Vertical Space evenly */}
-          <p className="text-sm text-zinc-400 leading-relaxed flex-1 flex items-start">
+          {/* Description Text */}
+          <p className="text-sm text-zinc-400 leading-relaxed font-normal flex-1 flex items-start">
             {solution.description}
           </p>
 
-          {/* Action Button - Always Aligned at Bottom */}
+          {/* Bespoke Royal Action Button */}
           <div className="pt-2">
             {isDev ? (
               <a
                 href="/downloads/HS CODE_0.1.0_x64-setup.exe"
                 download
-                className="w-full h-11 inline-flex items-center justify-center gap-2 px-5 rounded-xl glass glass-hover text-white text-sm font-semibold transition-all duration-300 group/btn border border-white/10 hover:border-amber-500/40 hover:bg-amber-500/10"
+                className="w-full h-11 inline-flex items-center justify-center gap-2.5 px-5 rounded-2xl bg-white/[0.05] hover:bg-amber-400/10 border border-white/10 hover:border-amber-400/40 text-white text-xs font-bold uppercase tracking-wider transition-all duration-300 group/btn shadow-md"
               >
-                Download v0.1.0
+                <span>Download v0.1.0</span>
                 <svg
                   className="w-4 h-4 text-amber-400 transition-transform duration-300 group-hover/btn:translate-y-0.5"
                   fill="none"
@@ -221,11 +235,11 @@ function ShelfItem({
                 href={solution.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full h-11 inline-flex items-center justify-center gap-2 px-5 rounded-xl glass glass-hover text-white text-sm font-semibold transition-all duration-300 group/btn border border-white/10 hover:border-purple-500/40 hover:bg-purple-500/10"
+                className="w-full h-11 inline-flex items-center justify-center gap-2.5 px-5 rounded-2xl bg-white/[0.05] hover:bg-white/[0.12] border border-white/10 hover:border-white/30 text-white text-xs font-bold uppercase tracking-wider transition-all duration-300 group/btn shadow-md"
               >
-                Launch Application
+                <span>Launch Application</span>
                 <svg
-                  className="w-4 h-4 text-purple-400 transition-transform duration-300 group-hover/btn:translate-x-1"
+                  className="w-4 h-4 text-zinc-400 group-hover/btn:text-white transition-all duration-300 group-hover/btn:translate-x-1"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"

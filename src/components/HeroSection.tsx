@@ -32,23 +32,24 @@ export default function HeroSection() {
             transition={{ duration: 0.8, ease: [0.23, 1, 0.32, 1] }}
             className="flex flex-col gap-6"
           >
-            <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full glass border border-purple-500/20 text-xs font-medium text-zinc-300 w-fit shadow-inner">
+            <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-gradient-to-r from-amber-500/10 via-purple-500/10 to-amber-500/10 border border-amber-500/30 text-xs font-bold text-amber-200 tracking-wider w-fit shadow-[0_0_15px_rgba(245,158,11,0.1)]">
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_8px_rgba(52,211,153,0.8)]" />
-              <span>HS AI Solutions Ecosystem v2.0</span>
+              <span>HS AI SOLUTIONS ECOSYSTEM V2.0</span>
             </div>
 
-            <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold leading-[1.08] tracking-tight">
-              <span className="gradient-text">One Ecosystem.</span>
+            <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold leading-[1.08] tracking-tight text-white">
+              One Ecosystem.
               <br />
-              <span className="text-white">Infinite AI</span>
+              <span className="bg-gradient-to-r from-amber-200 via-amber-300 to-amber-500 bg-clip-text text-transparent">
+                Infinite AI
+              </span>
               <br />
               <span className="text-zinc-400">Possibilities.</span>
             </h1>
 
             <p className="text-base sm:text-lg text-zinc-400 max-w-xl leading-relaxed font-normal">
-              Build, secure, automate, learn, and innovate with a growing
-              collection of AI-powered solutions designed to solve real-world
-              challenges.
+              Build, secure, automate, learn, and innovate with a bespoke
+              suite of high-performance AI solutions engineered for real-world supremacy.
             </p>
           </motion.div>
 
@@ -60,20 +61,20 @@ export default function HeroSection() {
           >
             <a
               href="#solutions"
-              className="h-12 inline-flex items-center justify-center gap-2.5 px-8 rounded-full bg-gradient-to-r from-purple-600 via-purple-500 to-cyan-500 text-white font-semibold text-sm shadow-lg shadow-purple-500/25 hover:shadow-purple-500/40 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300"
+              className="h-12 inline-flex items-center justify-center gap-2.5 px-8 rounded-full bg-gradient-to-r from-amber-300 via-amber-400 to-amber-500 text-zinc-950 font-extrabold text-xs uppercase tracking-wider shadow-[0_0_25px_rgba(245,158,11,0.3)] hover:shadow-[0_0_35px_rgba(245,158,11,0.5)] hover:scale-[1.02] active:scale-[0.98] transition-all duration-300"
             >
               <span>Explore Solutions</span>
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              <svg className="w-4 h-4 text-zinc-950" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" />
               </svg>
             </a>
 
             <a
               href="#solutions"
-              className="h-12 inline-flex items-center justify-center gap-2.5 px-8 rounded-full glass glass-hover text-white font-semibold text-sm border border-white/10 hover:border-purple-500/30 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300"
+              className="h-12 inline-flex items-center justify-center gap-2.5 px-8 rounded-full bg-white/[0.05] hover:bg-white/[0.1] text-white font-bold text-xs uppercase tracking-wider border border-white/15 hover:border-amber-400/40 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 shadow-md"
             >
               <span>Launch Dashboard</span>
-              <svg className="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-4 h-4 text-amber-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
               </svg>
             </a>
@@ -84,7 +85,7 @@ export default function HeroSection() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.3, ease: [0.23, 1, 0.32, 1] }}
-            className="glass rounded-2xl p-6 border border-white/10 grid grid-cols-2 sm:grid-cols-4 gap-6 items-center"
+            className="bg-gradient-to-b from-[#13141f]/90 to-[#090a10] rounded-3xl p-7 border border-white/[0.08] grid grid-cols-2 sm:grid-cols-4 gap-6 items-center shadow-xl"
           >
             {METRICS.map((metric, i) => (
               <div
@@ -95,10 +96,10 @@ export default function HeroSection() {
                   i >= 2 ? "max-sm:border-t max-sm:border-white/10 max-sm:pt-4" : ""
                 }`}
               >
-                <span className="text-xl sm:text-2xl font-bold text-white tracking-tight">
+                <span className="text-xl sm:text-2xl font-extrabold text-white tracking-tight">
                   {metric.value}
                 </span>
-                <span className="text-[11px] font-semibold text-zinc-400 uppercase tracking-wider">
+                <span className="text-[10px] font-bold text-amber-300/80 uppercase tracking-[0.18em]">
                   {metric.label}
                 </span>
               </div>
