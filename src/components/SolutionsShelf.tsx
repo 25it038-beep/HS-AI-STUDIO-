@@ -208,9 +208,17 @@ function ShelfItem({
           <div className="h-px w-full bg-gradient-to-r from-transparent via-white/15 to-transparent" />
 
           {/* Description Text */}
-          <p className="text-sm text-zinc-400 leading-relaxed font-normal flex-1 flex items-start">
-            {solution.description}
-          </p>
+          <div className="flex-1 flex flex-col gap-3 justify-between">
+            <p className="text-sm text-zinc-400 leading-relaxed font-normal">
+              {solution.description}
+            </p>
+
+            {isDev && (
+              <div className="p-3 rounded-xl bg-amber-500/10 border border-amber-500/20 text-[11px] text-amber-200/90 leading-snug">
+                <span className="font-bold text-amber-300">NOTE:</span> After downloading it, if Windows shows &quot;Don&apos;t run&quot;, select <span className="font-semibold text-white">&quot;More info&quot;</span> and select <span className="font-semibold text-white">&quot;Run anyway&quot;</span>.
+              </div>
+            )}
+          </div>
 
           {/* Bespoke Royal Action Button */}
           <div className="pt-2">
