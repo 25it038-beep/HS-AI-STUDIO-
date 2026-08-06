@@ -22,52 +22,52 @@ export default function HeroSection() {
     <motion.section
       ref={containerRef}
       style={{ opacity }}
-      className="relative min-h-screen flex flex-col justify-center items-center px-4 sm:px-6 lg:px-8 pt-32 pb-20 cyber-grid"
+      className="relative min-h-[calc(100vh-4rem)] flex flex-col justify-center items-center px-4 sm:px-6 lg:px-8 pt-24 pb-16 md:pt-28 md:pb-20 cyber-grid"
     >
       {/* Background Radial Glow */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-tr from-cyan-600/15 via-purple-600/15 to-amber-500/15 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-gradient-to-tr from-cyan-600/15 via-purple-600/15 to-amber-500/15 rounded-full blur-[100px] pointer-events-none" />
 
-      <div className="relative z-10 max-w-6xl mx-auto w-full flex flex-col items-center text-center space-y-10">
+      <div className="relative z-10 max-w-5xl mx-auto w-full flex flex-col items-center text-center space-y-8">
         
         {/* Top Floating Cyber Badge */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: [0.23, 1, 0.32, 1] }}
-          className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full bg-[#0d111d]/90 border border-cyan-500/40 text-xs font-black tracking-widest text-cyan-300 shadow-[0_0_25px_rgba(6,182,212,0.25)]"
+          className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-[#0d111d]/90 border border-cyan-500/40 text-[11px] font-black tracking-widest text-cyan-300 shadow-[0_0_20px_rgba(6,182,212,0.2)]"
         >
-          <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping" />
+          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping flex-shrink-0" />
           <span>AUTONOMOUS CYBER AI ECOSYSTEM V2.0</span>
         </motion.div>
 
         {/* Main Headline */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 25 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.1, ease: [0.23, 1, 0.32, 1] }}
-          className="space-y-4 max-w-4xl"
+          className="space-y-3 max-w-3xl"
         >
-          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black tracking-tight leading-[1.05] text-white">
+          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-[1.08] text-white">
             Engineering Supremacy. <br />
             <span className="neon-gradient-text">
               One Ecosystem. Infinite AI.
             </span>
           </h1>
-          <p className="text-base sm:text-xl text-zinc-400 max-w-2xl mx-auto leading-relaxed font-normal">
+          <p className="text-sm sm:text-base text-zinc-400 max-w-xl mx-auto leading-relaxed font-normal">
             Bespoke suite of high-performance artificial intelligence tools for cybersecurity, career intelligence, multimodal coding, and autonomous app synthesis.
           </p>
         </motion.div>
 
         {/* Action Button Stage */}
         <motion.div
-          initial={{ opacity: 0, y: 25 }}
+          initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2, ease: [0.23, 1, 0.32, 1] }}
-          className="flex flex-wrap justify-center items-center gap-4"
+          className="flex flex-wrap justify-center items-center gap-3.5"
         >
           <a
             href="#solutions"
-            className="h-14 px-9 rounded-2xl bg-gradient-to-r from-cyan-500 via-teal-400 to-amber-400 text-zinc-950 font-black text-xs uppercase tracking-widest inline-flex items-center gap-3 shadow-[0_0_35px_rgba(6,182,212,0.4)] hover:shadow-[0_0_50px_rgba(245,158,11,0.6)] hover:scale-105 active:scale-95 transition-all duration-300"
+            className="h-12 px-7 rounded-xl bg-gradient-to-r from-cyan-500 via-teal-400 to-amber-400 text-zinc-950 font-black text-xs uppercase tracking-widest inline-flex items-center gap-2.5 shadow-[0_0_30px_rgba(6,182,212,0.35)] hover:shadow-[0_0_40px_rgba(245,158,11,0.5)] hover:scale-105 active:scale-95 transition-all duration-300"
           >
             <span>Explore Solutions Shelf</span>
             <svg className="w-4 h-4 text-zinc-950" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -77,7 +77,7 @@ export default function HeroSection() {
 
           <a
             href="#features"
-            className="h-14 px-8 rounded-2xl bg-white/[0.04] hover:bg-white/[0.1] text-white font-bold text-xs uppercase tracking-widest border border-white/15 hover:border-cyan-400/50 inline-flex items-center gap-2.5 transition-all duration-300 shadow-lg"
+            className="h-12 px-6 rounded-xl bg-white/[0.04] hover:bg-white/[0.1] text-white font-bold text-xs uppercase tracking-widest border border-white/15 hover:border-cyan-400/50 inline-flex items-center gap-2 transition-all duration-300 shadow-md"
           >
             <span>Inspect Live HUD</span>
             <svg className="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -88,10 +88,10 @@ export default function HeroSection() {
 
         {/* Central Futuristic Interactive Command Frame */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
+          initial={{ opacity: 0, scale: 0.96 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1, delay: 0.3, ease: [0.23, 1, 0.32, 1] }}
-          className="w-full max-w-5xl rounded-3xl bg-[#090b14]/90 border border-cyan-500/30 p-6 sm:p-8 shadow-[0_20px_60px_rgba(0,0,0,0.9)] relative overflow-hidden backdrop-blur-2xl grid md:grid-cols-2 gap-8 items-center text-left"
+          transition={{ duration: 0.9, delay: 0.25, ease: [0.23, 1, 0.32, 1] }}
+          className="w-full rounded-2xl bg-[#090b14]/90 border border-cyan-500/30 p-5 sm:p-7 shadow-[0_20px_50px_rgba(0,0,0,0.85)] relative overflow-hidden backdrop-blur-2xl grid md:grid-cols-2 gap-6 items-center text-left"
         >
           {/* Top Laser Accent */}
           <div className="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-cyan-400 via-amber-400 to-purple-500" />
@@ -99,28 +99,28 @@ export default function HeroSection() {
           {/* Left Side: Animated Cyber Terminal Log */}
           <TerminalWidget />
 
-          {/* Right Side: 3D Hologram Cube Stage */}
-          <div className="flex items-center justify-center relative min-h-[260px]">
+          {/* Right Side: 3D Hologram Stage */}
+          <div className="flex items-center justify-center relative min-h-[200px]">
             <ThreeScene />
           </div>
         </motion.div>
 
         {/* 4 Cyber Metric Bento Cards */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.4, ease: [0.23, 1, 0.32, 1] }}
-          className="w-full max-w-5xl grid grid-cols-2 sm:grid-cols-4 gap-4"
+          transition={{ duration: 0.8, delay: 0.35, ease: [0.23, 1, 0.32, 1] }}
+          className="w-full grid grid-cols-2 sm:grid-cols-4 gap-3.5"
         >
           {METRICS.map((m) => (
             <div
               key={m.label}
-              className={`p-5 rounded-2xl bg-[#090b14]/80 border ${m.border} text-left space-y-1 shadow-lg backdrop-blur-xl hover:scale-[1.03] transition-transform`}
+              className={`p-4 rounded-xl bg-[#090b14]/80 border ${m.border} text-left space-y-1 shadow-md backdrop-blur-xl`}
             >
-              <span className="text-[10px] font-mono text-zinc-400 font-bold uppercase tracking-widest block">
+              <span className="text-[9px] font-mono text-zinc-400 font-bold uppercase tracking-widest block">
                 {m.label}
               </span>
-              <span className={`text-lg sm:text-xl font-black ${m.color} block`}>
+              <span className={`text-base sm:text-lg font-black ${m.color} block`}>
                 {m.value}
               </span>
             </div>
@@ -152,23 +152,23 @@ function TerminalWidget() {
   }, []);
 
   return (
-    <div className="space-y-4">
-      <div className="flex items-center justify-between border-b border-white/10 pb-3">
-        <div className="flex items-center gap-2">
-          <span className="w-3 h-3 rounded-full bg-red-500/80" />
-          <span className="w-3 h-3 rounded-full bg-yellow-500/80" />
-          <span className="w-3 h-3 rounded-full bg-green-500/80" />
+    <div className="space-y-3">
+      <div className="flex items-center justify-between border-b border-white/10 pb-2.5">
+        <div className="flex items-center gap-1.5">
+          <span className="w-2.5 h-2.5 rounded-full bg-red-500/80" />
+          <span className="w-2.5 h-2.5 rounded-full bg-yellow-500/80" />
+          <span className="w-2.5 h-2.5 rounded-full bg-green-500/80" />
         </div>
-        <span className="text-[10px] font-mono text-cyan-400 font-bold tracking-widest uppercase">
+        <span className="text-[9px] font-mono text-cyan-400 font-bold tracking-widest uppercase">
           LIVE CYBER CONSOLE
         </span>
       </div>
 
-      <div className="space-y-2 font-mono text-xs text-zinc-300">
+      <div className="space-y-1.5 font-mono text-[11px] text-zinc-300">
         {logs.map((log, idx) => (
-          <div key={idx} className="flex items-start gap-2">
-            <span className="text-cyan-400 font-bold">&gt;</span>
-            <span className={idx === logs.length - 1 ? "text-amber-300 font-bold animate-pulse" : "text-zinc-400"}>
+          <div key={idx} className="flex items-start gap-1.5 truncate">
+            <span className="text-cyan-400 font-bold flex-shrink-0">&gt;</span>
+            <span className={idx === logs.length - 1 ? "text-amber-300 font-bold animate-pulse truncate" : "text-zinc-400 truncate"}>
               {log}
             </span>
           </div>
@@ -195,12 +195,11 @@ function ThreeScene() {
         alpha: true,
         antialias: true,
       });
-      renderer.setSize(260, 260);
+      renderer.setSize(220, 220);
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
       mountRef.current?.appendChild(renderer.domElement);
 
-      // Holographic Diamond Octahedron Core
-      const octaGeo = new THREE.OctahedronGeometry(1.4, 0);
+      const octaGeo = new THREE.OctahedronGeometry(1.3, 0);
       const octaMat = new THREE.MeshBasicMaterial({
         color: 0x06b6d4,
         wireframe: true,
@@ -210,8 +209,7 @@ function ThreeScene() {
       const octa = new THREE.Mesh(octaGeo, octaMat);
       scene.add(octa);
 
-      // Inner Core Glow
-      const icoGeo = new THREE.IcosahedronGeometry(0.8, 1);
+      const icoGeo = new THREE.IcosahedronGeometry(0.75, 1);
       const icoMat = new THREE.MeshBasicMaterial({
         color: 0xf59e0b,
         wireframe: true,
@@ -221,15 +219,14 @@ function ThreeScene() {
       const ico = new THREE.Mesh(icoGeo, icoMat);
       scene.add(ico);
 
-      // Swarming Particles
       const particlesGeo = new THREE.BufferGeometry();
-      const count = 300;
+      const count = 250;
       const positions = new Float32Array(count * 3);
 
       for (let i = 0; i < count * 3; i += 3) {
         const theta = Math.random() * Math.PI * 2;
         const phi = Math.acos(2 * Math.random() - 1);
-        const r = 1.5 + Math.random() * 1.0;
+        const r = 1.4 + Math.random() * 0.9;
         positions[i] = r * Math.sin(phi) * Math.cos(theta);
         positions[i + 1] = r * Math.sin(phi) * Math.sin(theta);
         positions[i + 2] = r * Math.cos(phi);
@@ -237,7 +234,7 @@ function ThreeScene() {
 
       particlesGeo.setAttribute("position", new THREE.BufferAttribute(positions, 3));
       const particlesMat = new THREE.PointsMaterial({
-        size: 0.04,
+        size: 0.035,
         color: 0x38bdf8,
         transparent: true,
         opacity: 0.8,
@@ -246,7 +243,7 @@ function ThreeScene() {
       const particles = new THREE.Points(particlesGeo, particlesMat);
       scene.add(particles);
 
-      camera.position.z = 4.2;
+      camera.position.z = 4;
 
       const animate = () => {
         octa.rotation.y += 0.006;
@@ -270,5 +267,5 @@ function ThreeScene() {
     return () => cleanup?.();
   }, []);
 
-  return <div ref={mountRef} className="w-[260px] h-[260px] pointer-events-none" />;
+  return <div ref={mountRef} className="w-[220px] h-[220px] pointer-events-none" />;
 }
