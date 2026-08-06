@@ -86,6 +86,7 @@ export default function SolutionsShelf({ onDownload }: { onDownload?: () => void
   return (
     <section id="solutions" className="relative z-10 py-28 md:py-36 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
+        {/* Section Header */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -112,6 +113,7 @@ export default function SolutionsShelf({ onDownload }: { onDownload?: () => void
           </p>
         </motion.div>
 
+        {/* 4-Card Equal Grid Layout */}
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6 lg:gap-8 items-stretch">
           {SOLUTIONS.map((solution, i) => (
             <ShelfItem key={solution.title} solution={solution} index={i} onDownload={onDownload} />
@@ -137,15 +139,18 @@ function ShelfItem({
   useEffect(() => {
     const card = cardRef.current;
     if (!card) return;
+
     const onMove = (e: MouseEvent) => {
       const rect = card.getBoundingClientRect();
       const x = (e.clientX - rect.left) / rect.width - 0.5;
       const y = (e.clientY - rect.top) / rect.height - 0.5;
-      card.style.transform = `perspective(1000px) rotateY(${x * 3}deg) rotateX(${-y * 3}deg) translateY(-4px)`;
+      card.style.transform = `perspective(1000px) rotateY(${x * 3.5}deg) rotateX(${-y * 3.5}deg) translateY(-4px)`;
     };
+
     const onLeave = () => {
       card.style.transform = "perspective(1000px) rotateY(0deg) rotateX(0deg) translateY(0px)";
     };
+
     card.addEventListener("mousemove", onMove);
     card.addEventListener("mouseleave", onLeave);
     return () => {
@@ -164,10 +169,10 @@ function ShelfItem({
     >
       <div
         ref={cardRef}
-        className="group relative rounded-3xl p-7 sm:p-8 h-full flex flex-col justify-between overflow-hidden cursor-pointer transition-all duration-500 bg-gradient-to-b from-[#13141f]/90 via-[#0e0f18]/95 to-[#090a10] border border-white/[0.08] hover:border-amber-400/40 shadow-[0_10px_30px_rgba(0,0,0,0.5)] hover:shadow-[0_20px_40px_rgba(0,0,0,0.8)]"
+        className="group relative rounded-3xl p-7 sm:p-8 h-full flex flex-col justify-between overflow-hidden cursor-pointer transition-all duration-500 bg-gradient-to-b from-[#13141f]/95 via-[#0e0f18]/95 to-[#090a10] border border-white/[0.08] hover:border-amber-400/40 shadow-[0_10px_30px_rgba(0,0,0,0.5)] hover:shadow-[0_20px_45px_rgba(0,0,0,0.85)]"
         style={{ willChange: "transform", transformStyle: "preserve-3d" }}
       >
-        {/* Royal Metallic Top Border Accent Line */}
+        {/* Royal Top Metallic Accent Line */}
         <div
           className="absolute top-0 inset-x-0 h-[2px] opacity-80 group-hover:opacity-100 transition-opacity duration-500"
           style={{
@@ -175,7 +180,7 @@ function ShelfItem({
           }}
         />
 
-        {/* Subtle Ambient Radial Lighting */}
+        {/* Ambient Radial Hover Lighting */}
         <div
           className="absolute -top-24 -right-24 w-48 h-48 rounded-full blur-3xl opacity-0 group-hover:opacity-25 transition-opacity duration-700 pointer-events-none"
           style={{ background: solution.accentColor }}
@@ -183,12 +188,12 @@ function ShelfItem({
 
         <div className="relative z-10 flex flex-col h-full justify-between gap-6">
           {/* Header Line: Icon Box + Status Badge */}
-          <div className="flex items-center justify-between gap-3">
+          <div className="flex items-center justify-between gap-3 h-12">
             <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-white/[0.12] to-white/[0.02] border border-white/10 flex items-center justify-center shadow-lg group-hover:scale-105 group-hover:border-white/25 transition-all duration-300">
               {solution.icon}
             </div>
 
-            <div className={`flex items-center gap-1.5 px-3.5 py-1 rounded-full ${solution.badgeBg} border ${solution.badgeBorder} shadow-inner`}>
+            <div className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-full ${solution.badgeBg} border ${solution.badgeBorder} shadow-inner`}>
               <span className={`w-1.5 h-1.5 rounded-full ${solution.dotBg} animate-pulse`} />
               <span className={`text-[10px] ${solution.badgeText} uppercase tracking-[0.15em] font-bold`}>
                 {isDev ? "In Development" : "Live"}
@@ -196,35 +201,35 @@ function ShelfItem({
             </div>
           </div>
 
-          {/* Title & Tagline Box */}
-          <div className="min-h-[60px] flex flex-col justify-center gap-1">
+          {/* Title & Tagline Box (Equal min-height for horizontal alignment) */}
+          <div className="min-h-[64px] flex flex-col justify-center gap-1">
             <h3 className="text-2xl font-bold text-white tracking-tight leading-snug group-hover:text-amber-200 transition-colors">
               {solution.title}
             </h3>
-            <p className="text-xs font-medium uppercase tracking-[0.18em] text-zinc-400">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-zinc-400">
               {solution.tagline}
             </p>
           </div>
 
-          {/* Elegant Divider */}
+          {/* Hairline Horizontal Divider */}
           <div className="h-px w-full bg-gradient-to-r from-transparent via-white/15 to-transparent" />
 
-          {/* Description Text */}
-          <div className="flex-1 flex flex-col gap-3 justify-between">
+          {/* Description Text Container */}
+          <div className="flex-1 flex flex-col justify-between gap-4 py-1">
             <p className="text-sm text-zinc-400 leading-relaxed font-normal">
               {solution.description}
             </p>
           </div>
 
-          {/* Bespoke Royal Action Button */}
-          <div className="pt-2 flex flex-col gap-2.5">
+          {/* Bottom Action Container & Windows Setup Note */}
+          <div className="mt-auto pt-2 flex flex-col gap-2.5">
             {isDev ? (
               <>
                 <a
                   href="/downloads/HS CODE_0.1.0_x64-setup.exe"
                   download
                   onClick={onDownload}
-                  className="w-full h-11 inline-flex items-center justify-center gap-2.5 px-5 rounded-2xl bg-gradient-to-r from-amber-400/20 via-amber-500/20 to-amber-600/20 hover:from-amber-400/30 hover:to-amber-600/30 border border-amber-500/40 text-amber-200 text-xs font-bold uppercase tracking-wider transition-all duration-300 group/btn shadow-md"
+                  className="w-full h-12 inline-flex items-center justify-center gap-2.5 px-5 rounded-2xl bg-gradient-to-r from-amber-400/20 via-amber-500/20 to-amber-600/20 hover:from-amber-400/30 hover:to-amber-600/30 border border-amber-500/40 text-amber-200 text-xs font-extrabold uppercase tracking-wider transition-all duration-300 group/btn shadow-md"
                 >
                   <span>Download v0.1.0</span>
                   <svg
@@ -237,6 +242,7 @@ function ShelfItem({
                   </svg>
                 </a>
                 
+                {/* Windows SmartScreen Installation Note */}
                 <div className="p-3 rounded-xl bg-amber-500/10 border border-amber-500/30 text-[11px] text-amber-200/90 leading-snug text-left shadow-inner">
                   <span className="font-extrabold text-amber-300">NOTE:</span> After downloading it, if Windows shows &quot;Don&apos;t run&quot;, select <span className="font-bold text-white">&quot;More info&quot;</span> and select <span className="font-bold text-white">&quot;Run anyway&quot;</span>.
                 </div>
@@ -246,7 +252,7 @@ function ShelfItem({
                 href={solution.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full h-11 inline-flex items-center justify-center gap-2.5 px-5 rounded-2xl bg-white/[0.05] hover:bg-white/[0.12] border border-white/10 hover:border-white/30 text-white text-xs font-bold uppercase tracking-wider transition-all duration-300 group/btn shadow-md"
+                className="w-full h-12 inline-flex items-center justify-center gap-2.5 px-5 rounded-2xl bg-white/[0.05] hover:bg-white/[0.12] border border-white/10 hover:border-white/30 text-white text-xs font-extrabold uppercase tracking-wider transition-all duration-300 group/btn shadow-md"
               >
                 <span>Launch Application</span>
                 <svg

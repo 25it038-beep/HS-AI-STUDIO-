@@ -81,7 +81,7 @@ function MagneticButton({ children }: { children: React.ReactNode }) {
       const rect = el.getBoundingClientRect();
       const x = e.clientX - rect.left - rect.width / 2;
       const y = e.clientY - rect.top - rect.height / 2;
-      el.style.transform = `translate(${x * 0.15}px, ${y * 0.15}px)`;
+      el.style.transform = `translate(${x * 0.18}px, ${y * 0.18}px)`;
     };
 
     const onMouseLeave = () => {
@@ -96,5 +96,9 @@ function MagneticButton({ children }: { children: React.ReactNode }) {
     };
   }, []);
 
-  return <div ref={ref} className="magnetic-button inline-block" style={{ willChange: "transform" }}>{children}</div>;
+  return (
+    <div ref={ref} className="magnetic-button inline-block" style={{ willChange: "transform" }}>
+      {children}
+    </div>
+  );
 }
