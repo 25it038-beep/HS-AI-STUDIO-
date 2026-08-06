@@ -10,6 +10,13 @@ const METRICS = [
   { label: "Performance", value: "Lightning Fast" },
 ];
 
+const FLOATING_CHIPS = [
+  { text: "🛡️ AIShield Active", pos: "top-4 -left-6 sm:-left-10" },
+  { text: "⚡ CareerAI Engine", pos: "top-1/3 -right-6 sm:-right-10" },
+  { text: "💬 HS AI Assistant", pos: "bottom-12 -left-4 sm:-left-8" },
+  { text: "🛠️ Autonomous Builder", pos: "bottom-2 -right-4 sm:-right-8" },
+];
+
 export default function HeroSection() {
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
@@ -43,7 +50,7 @@ export default function HeroSection() {
             <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold leading-[1.08] tracking-tight text-white">
               One Ecosystem.
               <br />
-              <span className="bg-gradient-to-r from-amber-200 via-amber-300 to-amber-500 bg-clip-text text-transparent">
+              <span className="gold-shimmer-text">
                 Infinite AI
               </span>
               <br />
@@ -112,14 +119,30 @@ export default function HeroSection() {
           </motion.div>
         </div>
 
-        {/* Right 3D Visual Column */}
+        {/* Right 3D Visual Column with Floating Holographic Badge Chips */}
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1.2, delay: 0.2, ease: [0.23, 1, 0.32, 1] }}
-          className="hidden lg:flex items-center justify-center"
+          className="hidden lg:flex items-center justify-center relative"
         >
           <ThreeScene />
+
+          {/* Floating Badges */}
+          {FLOATING_CHIPS.map((chip, idx) => (
+            <motion.div
+              key={chip.text}
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: [0, -6, 0] }}
+              transition={{
+                opacity: { duration: 0.6, delay: 0.4 + idx * 0.1 },
+                y: { duration: 4 + idx, repeat: Infinity, ease: "easeInOut" },
+              }}
+              className={`absolute ${chip.pos} px-4 py-2 rounded-2xl bg-[#0e0f18]/90 border border-amber-400/30 text-xs font-bold text-amber-200 shadow-[0_10px_25px_rgba(0,0,0,0.6)] backdrop-blur-xl pointer-events-none z-20`}
+            >
+              {chip.text}
+            </motion.div>
+          ))}
         </motion.div>
       </div>
     </motion.section>
@@ -147,16 +170,38 @@ function ThreeScene() {
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
       mountRef.current?.appendChild(renderer.domElement);
 
-      // Outer Gold Particle Sphere
+      // 1. Holographic Cube Wireframe Core
+      const cubeGeo = new THREE.BoxGeometry(2.2, 2.2, 2.2);
+      const cubeMat = new THREE.MeshBasicMaterial({
+        color: 0xf59e0b,
+        wireframe: true,
+        transparent: true,
+        opacity: 0.25,
+      });
+      const cube = new THREE.Mesh(cubeGeo, cubeMat);
+      scene.add(cube);
+
+      // Inner Icosahedron
+      const icoGeo = new THREE.IcosahedronGeometry(1.2, 1);
+      const icoMat = new THREE.MeshBasicMaterial({
+        color: 0xa855f7,
+        wireframe: true,
+        transparent: true,
+        opacity: 0.35,
+      });
+      const ico = new THREE.Mesh(icoGeo, icoMat);
+      scene.add(ico);
+
+      // 2. Outer Swarming Particle Cloud
       const particlesGeo = new THREE.BufferGeometry();
-      const count = 450;
+      const count = 500;
       const positions = new Float32Array(count * 3);
       const colors = new Float32Array(count * 3);
 
       for (let i = 0; i < count * 3; i += 3) {
         const theta = Math.random() * Math.PI * 2;
         const phi = Math.acos(2 * Math.random() - 1);
-        const r = 2 + Math.random() * 1.8;
+        const r = 2.2 + Math.random() * 1.5;
         positions[i] = r * Math.sin(phi) * Math.cos(theta);
         positions[i + 1] = r * Math.sin(phi) * Math.sin(theta);
         positions[i + 2] = r * Math.cos(phi);
@@ -180,70 +225,46 @@ function ThreeScene() {
       const particles = new THREE.Points(particlesGeo, particlesMat);
       scene.add(particles);
 
-      // Inner Core Cluster
-      const innerGeo = new THREE.BufferGeometry();
-      const innerCount = 80;
-      const innerPos = new Float32Array(innerCount * 3);
-      for (let i = 0; i < innerCount * 3; i += 3) {
-        const theta = Math.random() * Math.PI * 2;
-        const phi = Math.acos(2 * Math.random() - 1);
-        const r = 0.4 + Math.random() * 0.9;
-        innerPos[i] = r * Math.sin(phi) * Math.cos(theta);
-        innerPos[i + 1] = r * Math.sin(phi) * Math.sin(theta);
-        innerPos[i + 2] = r * Math.cos(phi);
-      }
-      innerGeo.setAttribute("position", new THREE.BufferAttribute(innerPos, 3));
-
-      const innerMat = new THREE.PointsMaterial({
-        size: 0.065,
-        color: 0xf59e0b,
-        transparent: true,
-        opacity: 0.7,
-        blending: THREE.AdditiveBlending,
-      });
-      const innerSphere = new THREE.Points(innerGeo, innerMat);
-      scene.add(innerSphere);
-
-      // Ring 1 (Gold)
-      const ringGeo = new THREE.TorusGeometry(1.85, 0.012, 16, 100);
+      // 3. Dual Orbit Rings
+      const ringGeo = new THREE.TorusGeometry(2.1, 0.012, 16, 100);
       const ringMat = new THREE.MeshBasicMaterial({
         color: 0xf59e0b,
         transparent: true,
-        opacity: 0.25,
+        opacity: 0.3,
       });
       const ring = new THREE.Mesh(ringGeo, ringMat);
       ring.rotation.x = Math.PI / 3;
       scene.add(ring);
 
-      // Ring 2 (Purple Accent)
       const ring2 = new THREE.Mesh(
-        new THREE.TorusGeometry(2.35, 0.009, 16, 100),
+        new THREE.TorusGeometry(2.6, 0.009, 16, 100),
         new THREE.MeshBasicMaterial({
-          color: 0xa855f7,
+          color: 0x06b6d4,
           transparent: true,
-          opacity: 0.2,
+          opacity: 0.25,
         })
       );
       ring2.rotation.x = -Math.PI / 4;
       ring2.rotation.y = Math.PI / 6;
       scene.add(ring2);
 
-      camera.position.z = 5;
+      camera.position.z = 5.2;
 
-      // Mouse Parallax Interaction
+      // Mouse Parallax Logic
       let mouseX = 0;
       let mouseY = 0;
       const onPointerMove = (e: MouseEvent) => {
-        mouseX = (e.clientX / window.innerWidth - 0.5) * 0.4;
-        mouseY = (e.clientY / window.innerHeight - 0.5) * 0.4;
+        mouseX = (e.clientX / window.innerWidth - 0.5) * 0.5;
+        mouseY = (e.clientY / window.innerHeight - 0.5) * 0.5;
       };
       window.addEventListener("mousemove", onPointerMove);
 
       const animate = () => {
-        particles.rotation.y += 0.0025 + mouseX * 0.005;
-        particles.rotation.x += 0.0008 + mouseY * 0.005;
-        innerSphere.rotation.y -= 0.0035;
-        innerSphere.rotation.z += 0.0015;
+        cube.rotation.y += 0.003 + mouseX * 0.005;
+        cube.rotation.x += 0.002 + mouseY * 0.005;
+        ico.rotation.y -= 0.005;
+        ico.rotation.z += 0.002;
+        particles.rotation.y += 0.002;
         ring.rotation.z += 0.003;
         ring2.rotation.y += 0.0025;
 

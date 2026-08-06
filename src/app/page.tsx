@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import HeroSection from "@/components/HeroSection";
+import FeatureShowcase from "@/components/FeatureShowcase";
 import SolutionsShelf from "@/components/SolutionsShelf";
 import CTASection from "@/components/CTASection";
 import FooterSection from "@/components/FooterSection";
@@ -20,7 +21,7 @@ export default function Home() {
   };
 
   return (
-    <main className="relative min-h-screen bg-[#07070b] overflow-hidden">
+    <main className="relative min-h-screen bg-[#06070a] overflow-hidden">
       <AuroraBackground />
       <ParticleField />
       <ConstellationGrid />
@@ -28,6 +29,7 @@ export default function Home() {
 
       <Navbar />
       <HeroSection />
+      <FeatureShowcase onDownload={handleDownload} />
       <SolutionsShelf onDownload={handleDownload} />
       <CTASection />
       <FooterSection onDownload={handleDownload} />
