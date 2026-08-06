@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { Shield, Briefcase, Bot, Cpu, ExternalLink, Download, CheckCircle2 } from "lucide-react";
 
 const SOLUTIONS = [
   {
@@ -16,11 +17,7 @@ const SOLUTIONS = [
     btnClass: "bg-gradient-to-r from-purple-600 via-indigo-600 to-purple-700 text-white shadow-purple-900/40",
     status: "live" as const,
     features: ["Real-Time Packet Forensics", "Auto Incident Reporting", "Document Content Scanner"],
-    icon: (
-      <svg className="w-5 h-5 text-purple-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.75} d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
-      </svg>
-    ),
+    icon: <Shield className="w-6 h-6 text-purple-300" />,
   },
   {
     id: "careerai",
@@ -29,17 +26,13 @@ const SOLUTIONS = [
     url: "https://ledger-1-2ttx.onrender.com/",
     description:
       "ATS resume analytics, skill gap audit, personalized learning roadmaps, and interview coaching.",
-    neonColor: "#06b6d4",
-    glowClass: "shadow-[0_0_25px_rgba(6,182,212,0.15)] hover:border-cyan-400/60",
+    neonColor: "#00f0ff",
+    glowClass: "shadow-[0_0_25px_rgba(0,240,255,0.15)] hover:border-cyan-400/60",
     badgeBg: "bg-cyan-500/10 text-cyan-300 border-cyan-500/30",
     btnClass: "bg-gradient-to-r from-cyan-500 via-blue-600 to-cyan-600 text-white shadow-cyan-900/40",
     status: "live" as const,
     features: ["ATS Score Optimization", "Skill Gap Auditor", "Personalized Learning Paths"],
-    icon: (
-      <svg className="w-5 h-5 text-cyan-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.75} d="M20.25 14.15v4.25c0 1.094-.787 2.036-1.872 2.18-2.087.277-4.216.42-6.378.42s-4.291-.143-6.378-.42c-1.085-.144-1.872-1.086-1.872-2.18v-4.25m16.5 0a2.18 2.18 0 00.75-1.661V8.706c0-1.081-.768-2.015-1.837-2.175a48.114 48.114 0 00-3.413-.387m-9.5 3.346c.634-2.112 2.316-3.815 4.405-4.346m0 0a48.168 48.168 0 013.19 0m-3.19 0A48.3 48.3 0 0112 3.319c.92.6 1.78 1.281 2.563 2.042m-2.563 2.043v3.75" />
-      </svg>
-    ),
+    icon: <Briefcase className="w-6 h-6 text-cyan-300" />,
   },
   {
     id: "assistant",
@@ -54,11 +47,7 @@ const SOLUTIONS = [
     btnClass: "bg-gradient-to-r from-emerald-500 via-teal-600 to-emerald-600 text-white shadow-emerald-900/40",
     status: "live" as const,
     features: ["Multi-Modal File Parsing", "Full-Stack Code Synthesis", "Deep Logical Reasoning"],
-    icon: (
-      <svg className="w-5 h-5 text-emerald-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.75} d="M8.625 12a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 01-2.555-.337A5.972 5.972 0 015.41 20.97a5.969 5.969 0 01-.474-.065 4.48 4.48 0 00.978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25z" />
-      </svg>
-    ),
+    icon: <Bot className="w-6 h-6 text-emerald-300" />,
   },
   {
     id: "builder",
@@ -73,17 +62,13 @@ const SOLUTIONS = [
     btnClass: "bg-gradient-to-r from-amber-400 via-amber-500 to-orange-500 text-zinc-950 font-extrabold shadow-amber-900/40",
     status: "development" as const,
     features: ["Prompt-to-Executable", "One-Click Compiler", "Native Desktop Build"],
-    icon: (
-      <svg className="w-5 h-5 text-amber-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.75} d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5" />
-      </svg>
-    ),
+    icon: <Cpu className="w-6 h-6 text-amber-300" />,
   },
 ];
 
 export default function SolutionsShelf({ onDownload }: { onDownload?: () => void }) {
   return (
-    <section id="solutions" className="relative z-10 py-20 md:py-28 px-4 sm:px-6 lg:px-8 cyber-dots">
+    <section id="solutions" className="relative z-10 py-20 md:py-28 px-4 sm:px-6 lg:px-8 os-dots">
       <div className="max-w-7xl mx-auto space-y-12">
         {/* Section Header */}
         <motion.div
@@ -94,23 +79,23 @@ export default function SolutionsShelf({ onDownload }: { onDownload?: () => void
           className="text-center space-y-3 max-w-3xl mx-auto"
         >
           <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/30 shadow-inner">
-            <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping" />
+            <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
             <span className="text-[10px] font-mono font-bold uppercase tracking-[0.2em] text-cyan-300">
-              SOLUTIONS MATRIX V2.0
+              FLAGSHIP SOLUTIONS MATRIX
             </span>
           </div>
 
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight leading-tight">
-            Flagship Autonomous <br />
-            <span className="cyan-gold-text">Product Suite</span>
+            Autonomous Enterprise <br />
+            <span className="cyan-purple-text">AI Product Suite</span>
           </h2>
 
           <p className="text-zinc-400 text-xs sm:text-sm leading-relaxed">
-            Click any application below to launch directly or download the executable.
+            Every product is custom-crafted to deliver enterprise-grade performance and effortless sophistication.
           </p>
         </motion.div>
 
-        {/* Clean 4 Bento Cards Grid */}
+        {/* 4 Glass Bento Cards Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 items-stretch">
           {SOLUTIONS.map((solution, i) => (
             <BentoItem key={solution.id} solution={solution} index={i} onDownload={onDownload} />
@@ -140,7 +125,7 @@ function BentoItem({
       transition={{ duration: 0.6, delay: index * 0.1, ease: [0.23, 1, 0.32, 1] }}
       className="h-full flex flex-col"
     >
-      <div className={`bento-card p-6 sm:p-7 h-full flex flex-col justify-between relative overflow-hidden group ${solution.glowClass}`}>
+      <div className={`os-card p-6 sm:p-7 h-full flex flex-col justify-between relative overflow-hidden group ${solution.glowClass}`}>
         
         {/* Top Laser Accent */}
         <div
@@ -156,7 +141,7 @@ function BentoItem({
             </div>
 
             <div className={`px-2.5 py-0.5 rounded-full text-[9px] font-mono font-bold uppercase tracking-wider border ${solution.badgeBg}`}>
-              {isDev ? "In Dev (v0.1.0)" : "Live App"}
+              {isDev ? "In Dev (v0.1.0)" : "Live Portal"}
             </div>
           </div>
 
@@ -181,7 +166,7 @@ function BentoItem({
           <div className="space-y-1.5 pt-1">
             {solution.features.map((feat) => (
               <div key={feat} className="flex items-center gap-2 text-[10px] text-zinc-300">
-                <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: solution.neonColor }} />
+                <CheckCircle2 className="w-3.5 h-3.5 flex-shrink-0" style={{ color: solution.neonColor }} />
                 <span className="truncate">{feat}</span>
               </div>
             ))}
@@ -197,10 +182,8 @@ function BentoItem({
                   onClick={onDownload}
                   className={`w-full h-11 inline-flex items-center justify-center gap-2 px-4 rounded-xl ${solution.btnClass} text-[11px] uppercase tracking-wider font-extrabold shadow-md hover:scale-[1.02] active:scale-[0.98] transition-all`}
                 >
+                  <Download className="w-3.5 h-3.5" />
                   <span>Download v0.1.0</span>
-                  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
-                  </svg>
                 </a>
                 <div className="p-2.5 rounded-lg bg-amber-500/10 border border-amber-500/30 text-[10px] text-amber-200/90 leading-tight text-left shadow-inner">
                   <span className="font-extrabold text-amber-300">NOTE:</span> If Windows shows &quot;Don&apos;t run&quot;, select <span className="font-bold text-white">&quot;More info&quot;</span> &amp; <span className="font-bold text-white">&quot;Run anyway&quot;</span>.
@@ -213,10 +196,8 @@ function BentoItem({
                 rel="noopener noreferrer"
                 className={`w-full h-11 inline-flex items-center justify-center gap-2 px-4 rounded-xl ${solution.btnClass} text-[11px] uppercase tracking-wider font-extrabold shadow-md hover:scale-[1.02] active:scale-[0.98] transition-all`}
               >
-                <span>Launch {solution.title}</span>
-                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                </svg>
+                <span>Launch Portal</span>
+                <ExternalLink className="w-3.5 h-3.5" />
               </a>
             )}
           </div>
