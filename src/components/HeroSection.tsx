@@ -1,20 +1,13 @@
 "use client";
 
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 
 const METRICS = [
-  { label: "AI Products", value: "4+" },
-  { label: "AI Operations", value: "Thousands" },
-  { label: "Growth Rate", value: "Accelerating" },
-  { label: "Performance", value: "Lightning Fast" },
-];
-
-const FLOATING_CHIPS = [
-  { text: "🛡️ AIShield Active", pos: "top-4 -left-6 sm:-left-10" },
-  { text: "⚡ CareerAI Engine", pos: "top-1/3 -right-6 sm:-right-10" },
-  { text: "💬 HS AI Assistant", pos: "bottom-12 -left-4 sm:-left-8" },
-  { text: "🛠️ Autonomous Builder", pos: "bottom-2 -right-4 sm:-right-8" },
+  { label: "AI Products", value: "4 Flagships", color: "text-cyan-400", border: "border-cyan-500/30" },
+  { label: "Execution Engine", value: "Neural v4", color: "text-amber-400", border: "border-amber-500/30" },
+  { label: "Response Latency", value: "< 12ms", color: "text-purple-400", border: "border-purple-500/30" },
+  { label: "Ecosystem Status", value: "100% Operational", color: "text-emerald-400", border: "border-emerald-500/30" },
 ];
 
 export default function HeroSection() {
@@ -29,123 +22,159 @@ export default function HeroSection() {
     <motion.section
       ref={containerRef}
       style={{ opacity }}
-      className="relative min-h-[calc(100vh-4rem)] flex items-center px-4 sm:px-6 lg:px-8 pt-28 pb-16 md:pt-36 md:pb-20 lg:pt-32 lg:pb-20"
+      className="relative min-h-screen flex flex-col justify-center items-center px-4 sm:px-6 lg:px-8 pt-32 pb-20 cyber-grid"
     >
-      <div className="relative z-10 max-w-7xl mx-auto w-full grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-        {/* Left Hero Column */}
-        <div className="flex flex-col gap-8 md:gap-10">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: [0.23, 1, 0.32, 1] }}
-            className="flex flex-col gap-6"
-          >
-            {/* Version Badge */}
-            <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-gradient-to-r from-amber-500/10 via-purple-500/10 to-amber-500/10 border border-amber-500/30 text-xs font-bold text-amber-200 tracking-wider w-fit shadow-[0_0_15px_rgba(245,158,11,0.12)]">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_8px_rgba(52,211,153,0.8)]" />
-              <span>HS AI SOLUTIONS ECOSYSTEM V2.0</span>
-            </div>
+      {/* Background Radial Glow */}
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-tr from-cyan-600/15 via-purple-600/15 to-amber-500/15 rounded-full blur-[120px] pointer-events-none" />
 
-            {/* Main Headline */}
-            <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold leading-[1.08] tracking-tight text-white">
-              One Ecosystem.
-              <br />
-              <span className="gold-shimmer-text">
-                Infinite AI
-              </span>
-              <br />
-              <span className="text-zinc-400">Possibilities.</span>
-            </h1>
-
-            {/* Subtitle */}
-            <p className="text-base sm:text-lg text-zinc-400 max-w-xl leading-relaxed font-normal">
-              Build, secure, automate, learn, and innovate with a bespoke
-              suite of high-performance AI solutions engineered for real-world supremacy.
-            </p>
-          </motion.div>
-
-          {/* CTA Button Row */}
-          <motion.div
-            initial={{ opacity: 0, y: 25 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.15, ease: [0.23, 1, 0.32, 1] }}
-            className="flex flex-wrap items-center gap-4"
-          >
-            <a
-              href="#solutions"
-              className="h-12 inline-flex items-center justify-center gap-2.5 px-8 rounded-full bg-gradient-to-r from-amber-300 via-amber-400 to-amber-500 text-zinc-950 font-extrabold text-xs uppercase tracking-wider shadow-[0_0_25px_rgba(245,158,11,0.3)] hover:shadow-[0_0_35px_rgba(245,158,11,0.5)] hover:scale-[1.02] active:scale-[0.98] transition-all duration-300"
-            >
-              <span>Explore Solutions</span>
-              <svg className="w-4 h-4 text-zinc-950" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" />
-              </svg>
-            </a>
-
-            <a
-              href="#solutions"
-              className="h-12 inline-flex items-center justify-center gap-2.5 px-8 rounded-full bg-white/[0.05] hover:bg-white/[0.1] text-white font-bold text-xs uppercase tracking-wider border border-white/15 hover:border-amber-400/40 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 shadow-md"
-            >
-              <span>Launch Dashboard</span>
-              <svg className="w-4 h-4 text-amber-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-              </svg>
-            </a>
-          </motion.div>
-
-          {/* Metrics Grid Container */}
-          <motion.div
-            initial={{ opacity: 0, y: 25 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.3, ease: [0.23, 1, 0.32, 1] }}
-            className="bg-gradient-to-b from-[#13141f]/90 to-[#090a10] rounded-3xl p-7 border border-white/[0.08] grid grid-cols-2 sm:grid-cols-4 gap-6 items-center shadow-xl"
-          >
-            {METRICS.map((metric, i) => (
-              <div
-                key={metric.label}
-                className={`flex flex-col gap-1.5 ${
-                  i > 0 ? "sm:border-l sm:border-white/10 sm:pl-6" : ""
-                } ${i % 2 === 1 ? "max-sm:border-l max-sm:border-white/10 max-sm:pl-6" : ""} ${
-                  i >= 2 ? "max-sm:border-t max-sm:border-white/10 max-sm:pt-4" : ""
-                }`}
-              >
-                <span className="text-xl sm:text-2xl font-extrabold text-white tracking-tight">
-                  {metric.value}
-                </span>
-                <span className="text-[10px] font-bold text-amber-300/80 uppercase tracking-[0.18em]">
-                  {metric.label}
-                </span>
-              </div>
-            ))}
-          </motion.div>
-        </div>
-
-        {/* Right 3D Visual Column with Floating Holographic Badge Chips */}
+      <div className="relative z-10 max-w-6xl mx-auto w-full flex flex-col items-center text-center space-y-10">
+        
+        {/* Top Floating Cyber Badge */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1.2, delay: 0.2, ease: [0.23, 1, 0.32, 1] }}
-          className="hidden lg:flex items-center justify-center relative"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, ease: [0.23, 1, 0.32, 1] }}
+          className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full bg-[#0d111d]/90 border border-cyan-500/40 text-xs font-black tracking-widest text-cyan-300 shadow-[0_0_25px_rgba(6,182,212,0.25)]"
         >
-          <ThreeScene />
+          <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping" />
+          <span>AUTONOMOUS CYBER AI ECOSYSTEM V2.0</span>
+        </motion.div>
 
-          {/* Floating Badges */}
-          {FLOATING_CHIPS.map((chip, idx) => (
-            <motion.div
-              key={chip.text}
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: [0, -6, 0] }}
-              transition={{
-                opacity: { duration: 0.6, delay: 0.4 + idx * 0.1 },
-                y: { duration: 4 + idx, repeat: Infinity, ease: "easeInOut" },
-              }}
-              className={`absolute ${chip.pos} px-4 py-2 rounded-2xl bg-[#0e0f18]/90 border border-amber-400/30 text-xs font-bold text-amber-200 shadow-[0_10px_25px_rgba(0,0,0,0.6)] backdrop-blur-xl pointer-events-none z-20`}
+        {/* Main Headline */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.1, ease: [0.23, 1, 0.32, 1] }}
+          className="space-y-4 max-w-4xl"
+        >
+          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black tracking-tight leading-[1.05] text-white">
+            Engineering Supremacy. <br />
+            <span className="neon-gradient-text">
+              One Ecosystem. Infinite AI.
+            </span>
+          </h1>
+          <p className="text-base sm:text-xl text-zinc-400 max-w-2xl mx-auto leading-relaxed font-normal">
+            Bespoke suite of high-performance artificial intelligence tools for cybersecurity, career intelligence, multimodal coding, and autonomous app synthesis.
+          </p>
+        </motion.div>
+
+        {/* Action Button Stage */}
+        <motion.div
+          initial={{ opacity: 0, y: 25 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.2, ease: [0.23, 1, 0.32, 1] }}
+          className="flex flex-wrap justify-center items-center gap-4"
+        >
+          <a
+            href="#solutions"
+            className="h-14 px-9 rounded-2xl bg-gradient-to-r from-cyan-500 via-teal-400 to-amber-400 text-zinc-950 font-black text-xs uppercase tracking-widest inline-flex items-center gap-3 shadow-[0_0_35px_rgba(6,182,212,0.4)] hover:shadow-[0_0_50px_rgba(245,158,11,0.6)] hover:scale-105 active:scale-95 transition-all duration-300"
+          >
+            <span>Explore Solutions Shelf</span>
+            <svg className="w-4 h-4 text-zinc-950" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M19 9l-7 7-7-7" />
+            </svg>
+          </a>
+
+          <a
+            href="#features"
+            className="h-14 px-8 rounded-2xl bg-white/[0.04] hover:bg-white/[0.1] text-white font-bold text-xs uppercase tracking-widest border border-white/15 hover:border-cyan-400/50 inline-flex items-center gap-2.5 transition-all duration-300 shadow-lg"
+          >
+            <span>Inspect Live HUD</span>
+            <svg className="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+            </svg>
+          </a>
+        </motion.div>
+
+        {/* Central Futuristic Interactive Command Frame */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 1, delay: 0.3, ease: [0.23, 1, 0.32, 1] }}
+          className="w-full max-w-5xl rounded-3xl bg-[#090b14]/90 border border-cyan-500/30 p-6 sm:p-8 shadow-[0_20px_60px_rgba(0,0,0,0.9)] relative overflow-hidden backdrop-blur-2xl grid md:grid-cols-2 gap-8 items-center text-left"
+        >
+          {/* Top Laser Accent */}
+          <div className="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-cyan-400 via-amber-400 to-purple-500" />
+
+          {/* Left Side: Animated Cyber Terminal Log */}
+          <TerminalWidget />
+
+          {/* Right Side: 3D Hologram Cube Stage */}
+          <div className="flex items-center justify-center relative min-h-[260px]">
+            <ThreeScene />
+          </div>
+        </motion.div>
+
+        {/* 4 Cyber Metric Bento Cards */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.4, ease: [0.23, 1, 0.32, 1] }}
+          className="w-full max-w-5xl grid grid-cols-2 sm:grid-cols-4 gap-4"
+        >
+          {METRICS.map((m) => (
+            <div
+              key={m.label}
+              className={`p-5 rounded-2xl bg-[#090b14]/80 border ${m.border} text-left space-y-1 shadow-lg backdrop-blur-xl hover:scale-[1.03] transition-transform`}
             >
-              {chip.text}
-            </motion.div>
+              <span className="text-[10px] font-mono text-zinc-400 font-bold uppercase tracking-widest block">
+                {m.label}
+              </span>
+              <span className={`text-lg sm:text-xl font-black ${m.color} block`}>
+                {m.value}
+              </span>
+            </div>
           ))}
         </motion.div>
+
       </div>
     </motion.section>
+  );
+}
+
+function TerminalWidget() {
+  const [logs, setLogs] = useState<string[]>([
+    "[SYS OK] Initializing HS AI Neural Core...",
+    "[STATUS] AIShield v4.2 Security Protocol Active",
+    "[STATUS] CareerAI Roadmap Engine Operational",
+    "[STATUS] HS AI Chatbot Multimodal Stream Online",
+    "[STATUS] AI App Builder Executable Setup Ready",
+  ]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setLogs((prev) => {
+        const nextLog = `[PING ${Math.floor(Math.random() * 10 + 5)}ms] Neural latency optimal. Stream active.`;
+        return [...prev.slice(1), nextLog];
+      });
+    }, 4000);
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center justify-between border-b border-white/10 pb-3">
+        <div className="flex items-center gap-2">
+          <span className="w-3 h-3 rounded-full bg-red-500/80" />
+          <span className="w-3 h-3 rounded-full bg-yellow-500/80" />
+          <span className="w-3 h-3 rounded-full bg-green-500/80" />
+        </div>
+        <span className="text-[10px] font-mono text-cyan-400 font-bold tracking-widest uppercase">
+          LIVE CYBER CONSOLE
+        </span>
+      </div>
+
+      <div className="space-y-2 font-mono text-xs text-zinc-300">
+        {logs.map((log, idx) => (
+          <div key={idx} className="flex items-start gap-2">
+            <span className="text-cyan-400 font-bold">&gt;</span>
+            <span className={idx === logs.length - 1 ? "text-amber-300 font-bold animate-pulse" : "text-zinc-400"}>
+              {log}
+            </span>
+          </div>
+        ))}
+      </div>
+    </div>
   );
 }
 
@@ -166,107 +195,64 @@ function ThreeScene() {
         alpha: true,
         antialias: true,
       });
-      renderer.setSize(480, 480);
+      renderer.setSize(260, 260);
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
       mountRef.current?.appendChild(renderer.domElement);
 
-      // 1. Holographic Cube Wireframe Core
-      const cubeGeo = new THREE.BoxGeometry(2.2, 2.2, 2.2);
-      const cubeMat = new THREE.MeshBasicMaterial({
+      // Holographic Diamond Octahedron Core
+      const octaGeo = new THREE.OctahedronGeometry(1.4, 0);
+      const octaMat = new THREE.MeshBasicMaterial({
+        color: 0x06b6d4,
+        wireframe: true,
+        transparent: true,
+        opacity: 0.6,
+      });
+      const octa = new THREE.Mesh(octaGeo, octaMat);
+      scene.add(octa);
+
+      // Inner Core Glow
+      const icoGeo = new THREE.IcosahedronGeometry(0.8, 1);
+      const icoMat = new THREE.MeshBasicMaterial({
         color: 0xf59e0b,
         wireframe: true,
         transparent: true,
-        opacity: 0.25,
-      });
-      const cube = new THREE.Mesh(cubeGeo, cubeMat);
-      scene.add(cube);
-
-      // Inner Icosahedron
-      const icoGeo = new THREE.IcosahedronGeometry(1.2, 1);
-      const icoMat = new THREE.MeshBasicMaterial({
-        color: 0xa855f7,
-        wireframe: true,
-        transparent: true,
-        opacity: 0.35,
+        opacity: 0.7,
       });
       const ico = new THREE.Mesh(icoGeo, icoMat);
       scene.add(ico);
 
-      // 2. Outer Swarming Particle Cloud
+      // Swarming Particles
       const particlesGeo = new THREE.BufferGeometry();
-      const count = 500;
+      const count = 300;
       const positions = new Float32Array(count * 3);
-      const colors = new Float32Array(count * 3);
 
       for (let i = 0; i < count * 3; i += 3) {
         const theta = Math.random() * Math.PI * 2;
         const phi = Math.acos(2 * Math.random() - 1);
-        const r = 2.2 + Math.random() * 1.5;
+        const r = 1.5 + Math.random() * 1.0;
         positions[i] = r * Math.sin(phi) * Math.cos(theta);
         positions[i + 1] = r * Math.sin(phi) * Math.sin(theta);
         positions[i + 2] = r * Math.cos(phi);
-
-        colors[i] = 0.95 + Math.random() * 0.05;
-        colors[i + 1] = 0.7 + Math.random() * 0.25;
-        colors[i + 2] = 0.15 + Math.random() * 0.2;
       }
 
       particlesGeo.setAttribute("position", new THREE.BufferAttribute(positions, 3));
-      particlesGeo.setAttribute("color", new THREE.BufferAttribute(colors, 3));
-
       const particlesMat = new THREE.PointsMaterial({
-        size: 0.045,
-        vertexColors: true,
+        size: 0.04,
+        color: 0x38bdf8,
         transparent: true,
-        opacity: 0.85,
+        opacity: 0.8,
         blending: THREE.AdditiveBlending,
       });
-
       const particles = new THREE.Points(particlesGeo, particlesMat);
       scene.add(particles);
 
-      // 3. Dual Orbit Rings
-      const ringGeo = new THREE.TorusGeometry(2.1, 0.012, 16, 100);
-      const ringMat = new THREE.MeshBasicMaterial({
-        color: 0xf59e0b,
-        transparent: true,
-        opacity: 0.3,
-      });
-      const ring = new THREE.Mesh(ringGeo, ringMat);
-      ring.rotation.x = Math.PI / 3;
-      scene.add(ring);
-
-      const ring2 = new THREE.Mesh(
-        new THREE.TorusGeometry(2.6, 0.009, 16, 100),
-        new THREE.MeshBasicMaterial({
-          color: 0x06b6d4,
-          transparent: true,
-          opacity: 0.25,
-        })
-      );
-      ring2.rotation.x = -Math.PI / 4;
-      ring2.rotation.y = Math.PI / 6;
-      scene.add(ring2);
-
-      camera.position.z = 5.2;
-
-      // Mouse Parallax Logic
-      let mouseX = 0;
-      let mouseY = 0;
-      const onPointerMove = (e: MouseEvent) => {
-        mouseX = (e.clientX / window.innerWidth - 0.5) * 0.5;
-        mouseY = (e.clientY / window.innerHeight - 0.5) * 0.5;
-      };
-      window.addEventListener("mousemove", onPointerMove);
+      camera.position.z = 4.2;
 
       const animate = () => {
-        cube.rotation.y += 0.003 + mouseX * 0.005;
-        cube.rotation.x += 0.002 + mouseY * 0.005;
-        ico.rotation.y -= 0.005;
-        ico.rotation.z += 0.002;
-        particles.rotation.y += 0.002;
-        ring.rotation.z += 0.003;
-        ring2.rotation.y += 0.0025;
+        octa.rotation.y += 0.006;
+        octa.rotation.x += 0.003;
+        ico.rotation.y -= 0.008;
+        particles.rotation.y += 0.003;
 
         renderer.render(scene, camera);
         requestAnimationFrame(animate);
@@ -274,7 +260,6 @@ function ThreeScene() {
       animate();
 
       cleanup = () => {
-        window.removeEventListener("mousemove", onPointerMove);
         renderer.dispose();
         mountRef.current?.removeChild(renderer.domElement);
       };
@@ -285,10 +270,5 @@ function ThreeScene() {
     return () => cleanup?.();
   }, []);
 
-  return (
-    <div
-      ref={mountRef}
-      className="w-[340px] h-[340px] sm:w-[420px] sm:h-[420px] xl:w-[480px] xl:h-[480px] max-w-full pointer-events-none"
-    />
-  );
+  return <div ref={mountRef} className="w-[260px] h-[260px] pointer-events-none" />;
 }
