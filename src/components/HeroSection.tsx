@@ -70,15 +70,15 @@ export default function HeroSection() {
     <motion.section
       ref={sectionRef}
       style={reduced ? undefined : { opacity: fade }}
-      className="relative min-h-screen flex flex-col justify-center px-6 pt-32 pb-12"
+      className="relative min-h-[calc(100vh-4.5rem)] flex flex-col justify-center px-4 sm:px-6 pt-24 pb-8"
     >
-      <div className="max-w-7xl mx-auto w-full grid lg:grid-cols-[1.1fr_0.9fr] gap-12 items-center">
+      <div className="max-w-7xl mx-auto w-full grid lg:grid-cols-[1.1fr_0.9fr] gap-8 items-center">
         {/* ---------- Left ---------- */}
         <motion.div
           variants={stagger(0.12, reduced ? 0 : 0.2)}
           initial="hidden"
           animate="visible"
-          className="flex flex-col gap-8"
+          className="flex flex-col gap-6"
         >
           <motion.div variants={fadeUp} className="flex flex-wrap items-center gap-3">
             <span className="section-kicker">
@@ -93,20 +93,20 @@ export default function HeroSection() {
 
           <motion.h1
             variants={fadeUp}
-            className="font-display font-bold tracking-tight leading-[1.04] text-[clamp(2.4rem,5.6vw,4.6rem)]"
+            className="font-display font-bold tracking-tight leading-[1.08] text-[clamp(2.2rem,4.2vw,3.8rem)]"
           >
             <span className="block text-white">One Ecosystem.</span>
             <span className="block text-gradient">Infinite AI</span>
             <span className="block text-zinc-400">Possibilities.</span>
           </motion.h1>
 
-          <motion.p variants={fadeUp} className="text-base sm:text-lg text-zinc-400 max-w-xl leading-relaxed">
+          <motion.p variants={fadeUp} className="text-sm sm:text-base text-zinc-400 max-w-xl leading-relaxed">
             Build, secure, automate, learn, and innovate with a growing
             collection of AI-powered solutions designed to solve real-world
             problems — all in one place.
           </motion.p>
 
-          <motion.div variants={fadeUp} className="flex flex-wrap items-center gap-4">
+          <motion.div variants={fadeUp} className="flex flex-wrap items-center gap-3.5">
             <a href="#solutions" className="btn-primary sheen group">
               <Sparkles className="w-4 h-4" />
               Explore Solutions
@@ -121,17 +121,17 @@ export default function HeroSection() {
           {/* Stats */}
           <motion.div
             variants={fadeUp}
-            className="glass-card !rounded-2xl px-6 py-5 grid grid-cols-2 sm:grid-cols-4 gap-y-5 sm:gap-y-0"
+            className="glass-card !rounded-2xl px-5 py-4 grid grid-cols-2 sm:grid-cols-4 gap-y-4 sm:gap-y-0"
           >
             {STATS.map((stat, i) => (
               <div
                 key={stat.label}
-                className={`flex flex-col gap-0.5 ${i > 0 ? "sm:pl-6 sm:border-l sm:border-white/10" : ""}`}
+                className={`flex flex-col gap-0.5 ${i > 0 ? "sm:pl-5 sm:border-l sm:border-white/10" : ""}`}
               >
-                <span className="font-display text-xl font-semibold text-gradient-static">
+                <span className="font-display text-lg sm:text-xl font-semibold text-gradient-static">
                   <StatValue stat={stat} />
                 </span>
-                <span className="text-[10px] uppercase tracking-[0.2em] text-zinc-500">
+                <span className="text-[9px] uppercase tracking-[0.2em] text-zinc-500">
                   {stat.label}
                 </span>
               </div>
@@ -157,9 +157,9 @@ export default function HeroSection() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: reduced ? 0 : 1, duration: 1 }}
-        className="max-w-7xl mx-auto w-full mt-12"
+        className="max-w-7xl mx-auto w-full mt-6"
       >
-        <p className="text-center text-[10px] uppercase tracking-[0.3em] text-zinc-600 mb-4">
+        <p className="text-center text-[10px] uppercase tracking-[0.3em] text-zinc-600 mb-3">
           Powering the ecosystem
         </p>
         <div className="mask-fade-x overflow-hidden">
@@ -305,5 +305,5 @@ useEffect(() => {
     return () => cleanup?.();
   }, []);
 
-  return <div ref={mountRef} className="w-full max-w-[460px] aspect-square" />;
+  return <div ref={mountRef} className="w-full max-w-[380px] aspect-square" />;
 }
