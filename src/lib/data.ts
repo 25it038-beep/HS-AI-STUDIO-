@@ -3,6 +3,7 @@ import {
   GraduationCap,
   Bot,
   Code2,
+  Presentation,
   type LucideIcon,
 } from "lucide-react";
 
@@ -62,6 +63,17 @@ export const SOLUTIONS: Solution[] = [
     status: "development",
     icon: Code2,
   },
+  {
+    title: "Lumina",
+    tagline: "AI Presentation Studio",
+    url: "https://lumina-pghe.onrender.com/",
+    description:
+      "Turn ideas into beautiful, on-brand presentations in seconds — AI-crafted slides, layouts, and visual storytelling.",
+    gradient: "linear-gradient(135deg, #d946ef, #6366f1)",
+    glow: "rgba(217, 70, 239, 0.35)",
+    status: "live",
+    icon: Presentation,
+  },
 ];
 
 export interface Stat {
@@ -72,7 +84,7 @@ export interface Stat {
 }
 
 export const STATS: Stat[] = [
-  { label: "AI Products", value: 4, suffix: "+" },
+  { label: "AI Products", value: 5, suffix: "+" },
   { label: "AI Operations", value: 10000, suffix: "+" },
   { label: "Always Growing", text: "∞" },
   { label: "Lightning Fast", text: "≤1s" },

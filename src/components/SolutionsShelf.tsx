@@ -39,7 +39,7 @@ export default function SolutionsShelf() {
           initial="hidden"
           whileInView="visible"
           viewport={viewportOnce}
-          className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5"
+          className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-5"
         >
           {SOLUTIONS.map((solution, i) => (
             <SolutionCard key={solution.title} solution={solution} index={i} />

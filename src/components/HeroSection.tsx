@@ -87,7 +87,7 @@ export default function HeroSection() {
             </span>
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-medium text-emerald-300 bg-emerald-500/10 border border-emerald-500/25">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-              4 products live
+               5 products live
             </span>
           </motion.div>
 
