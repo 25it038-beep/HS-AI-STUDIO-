@@ -1,30 +1,31 @@
-"use client";
-
-import Navbar from "@/components/Navbar";
-import HeroSection from "@/components/HeroSection";
-import SolutionsShelf from "@/components/SolutionsShelf";
-import DownloadBand from "@/components/DownloadBand";
-import CTASection from "@/components/CTASection";
-import FooterSection from "@/components/FooterSection";
-import Atmosphere from "@/components/Atmosphere";
-import Preloader from "@/components/Preloader";
-import ScrollProgress from "@/components/ScrollProgress";
-import CustomCursor from "@/components/CustomCursor";
+import { Hero } from "@/sections/hero";
+import { Intro } from "@/sections/intro";
+import { Featured } from "@/sections/featured";
+import { MultiModel } from "@/sections/multi-model";
+import { DigitalIdentity } from "@/sections/digital-identity";
+import { Security } from "@/sections/security";
+import { AllApplications } from "@/sections/all-applications";
+import { WhatIBuild } from "@/sections/what-i-build";
+import { Technology } from "@/sections/technology";
+import { Ecosystem } from "@/sections/ecosystem";
+import { BuildingInPublic } from "@/sections/building-in-public";
+import { FinalCta } from "@/sections/final-cta";
 
 export default function Home() {
   return (
-    <main className="relative min-h-screen noise overflow-x-clip">
-      <Atmosphere />
-      <Preloader />
-      <ScrollProgress />
-      <CustomCursor />
-
-      <Navbar />
-      <HeroSection />
-      <SolutionsShelf />
-      <DownloadBand />
-      <CTASection />
-      <FooterSection />
-    </main>
+    <>
+      <Hero />
+      <Intro />
+      <Featured />
+      <MultiModel />
+      <DigitalIdentity />
+      <Security />
+      <AllApplications />
+      <WhatIBuild />
+      <Technology />
+      <Ecosystem />
+      <BuildingInPublic />
+      <FinalCta />
+    </>
   );
 }

@@ -1,24 +1,29 @@
-# HS AI Solutions — Landing Page
+# HS AI Solutions — AI on Board
 
-A world-class, dark-themed product landing page for the **HS AI Solutions** ecosystem — a growing collection of AI-powered products (AIShield, CareerAI, HS AI Assistant, AI Application Builder).
+The product site for the **HS AI Solutions** ecosystem — a curated collection of AI products built end-to-end: from research to deployed apps.
+
+## Products
+
+| # | Product | Status | URL |
+|---|---------|--------|-----|
+| 01 | Lumina — AI Presentation Generator | Live | https://lumina-pghe.onrender.com/ |
+| 02 | HSBot — Multi-Model AI Workspace | Live | https://hs-chatbot-3.onrender.com/ |
+| 03 | Ledger — Digital Identity Platform | Live | https://ledger-1-2ttx.onrender.com/ |
+| 04 | Phishing Defence — AI Link Protection | Live | https://efinal-ok77.vercel.app/ |
+| 05 | HS CODE — AI Code Companion (desktop) | In development | Download in `public/downloads/hs-code-setup.exe` |
 
 ## Features
 
-- Dark theme with aurora gradients, floating particles, constellation grid, and interactive cursor glow
-- Animated 3D visualization (Three.js) in the hero
-- Glassmorphism "AI Shelf" with live product cards and launch links
-- In-development product card with direct installer download (HS CODE)
-- Premium animations (Framer Motion), magnetic buttons, mouse-tilt cards
-- SEO: sitemap, robots.txt, web app manifest, Open Graph metadata
+- Dark cinematic landing page: 12 sections (hero, featured, multi-model, digital identity, security, all applications, ecosystem, building in public, final CTA, …)
+- Product detail pages for every product (`/products/{id}`, statically generated)
+- Live demo videos (screen recordings) embedded in-page
+- Desktop installer download with an "In development" status
+- Framer Motion animations, magnetic buttons, canvas particle hero, SVG ecosystem graph
+- Fully responsive, reduced-motion support
 
 ## Tech Stack
 
-Next.js 16 · React 19 · TypeScript · Tailwind CSS 4 · Framer Motion · GSAP · Three.js · React Three Fiber
-
-## Requirements
-
-- Node.js 20.9+ (LTS)
-- npm (see `requirements.txt` for the full dependency list)
+Next.js 16 (App Router, Turbopack) · React 19 · TypeScript · Tailwind CSS v4 · Framer Motion
 
 ## Getting Started
 
@@ -27,48 +32,23 @@ npm install
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000).
+Open http://localhost:3000.
 
-## Build & Preview
-
-The project builds to a fully static site (`out/`) — deployable on any static host.
+## Build & Checks
 
 ```bash
-npm run build      # static build -> out/
-npm run start      # serve the built site locally
-npm run lint       # ESLint check
+npm run lint   # ESLint
+npm run build  # production build
+npm run start  # serve the production build
 ```
 
-## Downloadable Assets
+## Content
 
-- Installer: `public/downloads/HS CODE_0.1.0_x64-setup.exe`
-- Logo: `public/logo.jpeg`
+All product data lives in a single registry: `src/data/products.ts`. Adding a product = one object (metadata, accent color, features, flow, capabilities, use cases, preview key).
 
-## Deployment
+## Contact
 
-### Vercel (recommended)
-
-1. Push this repo to GitHub.
-2. Import the repo at [vercel.com/new](https://vercel.com/new) — the included `vercel.json` configures everything automatically.
-3. Deploy. Live URL: `https://hs-ai-solutions.vercel.app`.
-
-### Render / Netlify / GitHub Pages (static hosting)
-
-- Build command: `npm run build`
-- Output directory: `out`
-- `next.config.ts` already uses `output: "export"` — no further config needed.
-
-### Environment Variables
-
-Copy `.env.example` to `.env.local` if you need overrides. No secrets are required for the landing page.
-
-## Customization
-
-- Product cards & links: `src/components/SolutionsShelf.tsx`
-- Social links (GitHub / LinkedIn / Portfolio / Email): `src/components/FooterSection.tsx`
-- Colors & glass styles: `src/app/globals.css`
-- Metadata / SEO: `src/app/layout.tsx`
-
-## License
+- LinkedIn: https://www.linkedin.com/in/harshan-seliyan-b-s-5339b4282
+- Email: harshanseliyan28@gmail.com
 
 © 2026 Harshan Seliyan B.S. All rights reserved.

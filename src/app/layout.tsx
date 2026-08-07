@@ -1,41 +1,52 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Space_Grotesk } from "next/font/google";
+import { Inter, Space_Grotesk, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { Nav } from "@/components/nav";
+import { Footer } from "@/components/footer";
 
-export const metadata: Metadata = {
-  metadataBase: new URL("https://hs-ai-solutions.vercel.app"),
-  title: "HS AI Solutions - One Ecosystem. Infinite AI Possibilities.",
-  description:
-    "Build, secure, automate, learn, and innovate with a growing collection of AI-powered solutions designed to solve real-world problems.",
-  icons: {
-    icon: "/logo.jpeg",
-    shortcut: "/logo.jpeg",
-    apple: "/logo.jpeg",
-  },
-  openGraph: {
-    title: "HS AI Solutions - One Ecosystem. Infinite AI Possibilities.",
-    description:
-      "Build, secure, automate, learn, and innovate with a growing collection of AI-powered solutions.",
-    images: ["/logo.jpeg"],
-    type: "website",
-  },
-};
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
+  display: "swap",
+});
+
+const spaceGrotesk = Space_Grotesk({
+  variable: "--font-space-grotesk",
+  subsets: ["latin"],
+  display: "swap",
 });
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+  display: "swap",
 });
 
-const spaceGrotesk = Space_Grotesk({
-  variable: "--font-display",
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-});
+export const metadata: Metadata = {
+  title: {
+    default: "HS AI Solutions — Building AI That Does More",
+    template: "%s — HS AI Solutions",
+  },
+  description:
+    "A growing collection of intelligent applications built to create, communicate, protect, and unlock human potential. Lumina · HSBot · Ledger · Phishing Defence.",
+  keywords: [
+    "AI products",
+    "AI applications",
+    "Lumina",
+    "HSBot",
+    "Ledger",
+    "Phishing Defence",
+    "AI portfolio",
+    "AI solutions",
+    "HS AI Solutions",
+  ],
+  openGraph: {
+    title: "HS AI Solutions — Building AI That Does More",
+    description:
+      "Four systems. Four problems. One AI-driven ecosystem of real, deployed applications.",
+    type: "website",
+  },
+};
 
 export default function RootLayout({
   children,
@@ -45,9 +56,13 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} ${spaceGrotesk.variable} antialiased`}
+      className={`${inter.variable} ${spaceGrotesk.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body>{children}</body>
+      <body className="flex min-h-full flex-col bg-ink text-paper">
+        <Nav />
+        <main className="flex-1">{children}</main>
+        <Footer />
+      </body>
     </html>
   );
 }
