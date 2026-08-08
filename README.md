@@ -1,54 +1,36 @@
-# HS AI Solutions — AI on Board
-
-The product site for the **HS AI Solutions** ecosystem — a curated collection of AI products built end-to-end: from research to deployed apps.
-
-## Products
-
-| # | Product | Status | URL |
-|---|---------|--------|-----|
-| 01 | Lumina — AI Presentation Generator | Live | https://lumina-pghe.onrender.com/ |
-| 02 | HSBot — Multi-Model AI Workspace | Live | https://hs-chatbot-3.onrender.com/ |
-| 03 | Ledger — Digital Identity Platform | Live | https://ledger-1-2ttx.onrender.com/ |
-| 04 | Phishing Defence — AI Link Protection | Live | https://efinal-ok77.vercel.app/ |
-| 05 | HS CODE — AI Code Companion (desktop) | In development | Download in `public/downloads/hs-code-setup.exe` |
-
-## Features
-
-- Dark cinematic landing page: 12 sections (hero, featured, multi-model, digital identity, security, all applications, ecosystem, building in public, final CTA, …)
-- Product detail pages for every product (`/products/{id}`, statically generated)
-- Live demo videos (screen recordings) embedded in-page
-- Desktop installer download with an "In development" status
-- Framer Motion animations, magnetic buttons, canvas particle hero, SVG ecosystem graph
-- Fully responsive, reduced-motion support
-
-## Tech Stack
-
-Next.js 16 (App Router, Turbopack) · React 19 · TypeScript · Tailwind CSS v4 · Framer Motion
+This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
 
+First, run the development server:
+
 ```bash
-npm install
 npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+# or
+bun dev
 ```
 
-Open http://localhost:3000.
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-## Build & Checks
+You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-```bash
-npm run lint   # ESLint
-npm run build  # production build
-npm run start  # serve the production build
-```
+This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-## Content
+## Learn More
 
-All product data lives in a single registry: `src/data/products.ts`. Adding a product = one object (metadata, accent color, features, flow, capabilities, use cases, preview key).
+To learn more about Next.js, take a look at the following resources:
 
-## Contact
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-- LinkedIn: https://www.linkedin.com/in/harshan-seliyan-b-s-5339b4282
-- Email: harshanseliyan28@gmail.com
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
-© 2026 Harshan Seliyan B.S. All rights reserved.
+## Deploy on Vercel
+
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
