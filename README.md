@@ -11,6 +11,7 @@ The product site for the **HS AI Solutions** ecosystem — a curated collection 
 | 03 | Ledger — Digital Identity Platform | Live | https://ledger-1-2ttx.onrender.com/ |
 | 04 | Phishing Defence — AI Link Protection | Live | https://efinal-ok77.vercel.app/ |
 | 05 | HS CODE — AI Code Companion (desktop) | In development | Download in `public/downloads/hs-code-setup.exe` |
+| 06 | Academia AI — Learning Operating System | Live | https://acdemia01-2.onrender.com/ |
 
 ## Features
 

@@ -3,6 +3,7 @@ import { HSBotPreview } from "@/components/previews/HSBotPreview";
 import { LedgerPreview } from "@/components/previews/LedgerPreview";
 import { PhishingPreview } from "@/components/previews/PhishingPreview";
 import { HSCODEPreview } from "@/components/previews/HSCODEPreview";
+import { AcademiaPreview } from "@/components/previews/AcademiaPreview";
 
 const registry: Record<string, React.ComponentType<{ className?: string }>> = {
   lumina: LuminaPreview,
@@ -10,6 +11,7 @@ const registry: Record<string, React.ComponentType<{ className?: string }>> = {
   ledger: LedgerPreview,
   phishing: PhishingPreview,
   hscode: HSCODEPreview,
+  academia: AcademiaPreview,
 };
 
 export function PreviewRenderer({
