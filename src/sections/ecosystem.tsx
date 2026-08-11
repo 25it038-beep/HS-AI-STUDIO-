@@ -6,10 +6,12 @@ import { products } from "@/data/products";
 import { Reveal } from "@/components/ui/Reveal";
 
 const NODES = [
-  { ...products[0]!, x: 50, y: 8 },
-  { ...products[1]!, x: 6, y: 46 },
-  { ...products[2]!, x: 94, y: 46 },
-  { ...products[3]!, x: 50, y: 92 },
+  { ...products[0]!, x: 50, y: 7 },
+  { ...products[1]!, x: 16, y: 31 },
+  { ...products[2]!, x: 84, y: 31 },
+  { ...products[4]!, x: 50, y: 93 },
+  { ...products[5]!, x: 16, y: 69 },
+  { ...products[3]!, x: 84, y: 69 },
 ];
 
 export function Ecosystem() {
@@ -28,7 +30,7 @@ export function Ecosystem() {
           </Reveal>
           <Reveal y={24} delay={0.05}>
             <h2 className="display-lg mt-5 text-[clamp(2.2rem,5vw,4.2rem)]">
-              Four Products. One Core: AI.
+              {products.length} Products. One Core: AI.
             </h2>
           </Reveal>
         </div>
