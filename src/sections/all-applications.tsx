@@ -109,7 +109,8 @@ export function AllApplications() {
           </div>
           <Reveal y={20} delay={0.1}>
             <p className="max-w-sm text-[15px] leading-relaxed text-ink/55">
-              Four live systems, each exploring a different way AI can solve a real problem.
+              Six systems — five live, one in development — each exploring a different way AI
+              can solve a real problem.
             </p>
           </Reveal>
         </div>

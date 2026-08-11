@@ -2,6 +2,7 @@
 
 import { WordReveal } from "@/components/ui/WordReveal";
 import { Reveal } from "@/components/ui/Reveal";
+import { products } from "@/data/products";
 
 export function Intro() {
   return (
@@ -13,8 +14,13 @@ export function Intro() {
         </Reveal>
 
         <div className="display-lg mt-10 text-[clamp(2.4rem,6.5vw,5.6rem)]">
-          <WordReveal text="Four Systems." className="block text-ink" />
-          <WordReveal text="Four Problems." className="block text-ink" stagger={0.04} delay={0.1} />
+          <WordReveal text={`${products.length} Systems.`} className="block text-ink" />
+          <WordReveal
+            text={`${products.length} Problems.`}
+            className="block text-ink"
+            stagger={0.04}
+            delay={0.1}
+          />
           <WordReveal
             text="One AI-Driven Ecosystem."
             className="block bg-gradient-to-r from-[#f5a623] via-[#8b7cf6] to-[#22d3ee] bg-clip-text text-transparent"
