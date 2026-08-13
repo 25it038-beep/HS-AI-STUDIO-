@@ -89,6 +89,8 @@ export function Hero() {
             { name: "HSBot", c: "#22d3ee" },
             { name: "Ledger", c: "#8b7cf6" },
             { name: "Phishing Defence", c: "#f4495f" },
+            { name: "HS CODE", c: "#4ade80" },
+            { name: "Academia AI", c: "#60a5fa" },
           ].map((p) => (
             <span key={p.name} className="flex items-center gap-2.5 text-sm text-white/50">
               <span className="h-1.5 w-1.5 rounded-full" style={{ background: p.c }} />
@@ -97,7 +99,7 @@ export function Hero() {
           ))}
           <span className="ml-auto hidden items-center gap-2 text-sm text-white/35 sm:flex">
             <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-400" />
-            4 systems live
+            6 systems · 5 live
           </span>
         </motion.div>
       </div>
