@@ -206,7 +206,8 @@ export function ProductDetailView({ product }: { product: ProductDetail }) {
 
         {product.preview === "phishing" ||
         product.preview === "ledger" ||
-        product.preview === "hsbot" ? (
+        product.preview === "hsbot" ||
+        product.preview === "academia" ? (
           <section className="border-t border-white/[0.07] bg-ink py-24">
             <div className="container-x">
               <SectionHeading eyebrow="Demo" title="Watch it in action" />

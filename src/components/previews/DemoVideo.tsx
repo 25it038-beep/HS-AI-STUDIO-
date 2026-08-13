@@ -8,6 +8,7 @@ const PHISHING_SRC = "/videos/phishing-demo.mp4";
 const PHISHING_LINKEDIN = "https://lnkd.in/dRpGMndE";
 const LEDGER_SRC = "/videos/ledger-demo.mp4";
 const HSBOT_SRC = "/videos/hsbot-demo.mp4";
+const ACADEMIA_SRC = "/videos/academia-demo.mp4";
 
 export const DEMO_VIDEOS: Record<
   string,
@@ -35,6 +36,11 @@ export const DEMO_VIDEOS: Record<
     src: HSBOT_SRC,
     label: "HSBot · Live Demo",
     caption: "Screen recording",
+  },
+  academia: {
+    src: ACADEMIA_SRC,
+    label: "Academia AI · Live Demo",
+    caption: "Demo video",
   },
 };
 

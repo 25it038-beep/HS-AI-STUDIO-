@@ -4,6 +4,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { products, type ProductDetail } from "@/data/products";
 import { PreviewRenderer } from "@/components/previews/PreviewRenderer";
+import { DemoVideo, DEMO_VIDEOS } from "@/components/previews/DemoVideo";
 import { Reveal } from "@/components/ui/Reveal";
 import { ArrowUpRight } from "@/components/ui/icons";
 
@@ -120,6 +121,17 @@ export function AllApplications() {
             <ProductCell key={p.id} product={p} />
           ))}
         </div>
+
+        <Reveal y={30} className="mt-16 md:mt-20">
+          <div className="mx-auto max-w-3xl rounded-3xl bg-ink p-4 ring-1 ring-white/10 sm:p-6">
+            <DemoVideo
+              src={DEMO_VIDEOS.academia.src}
+              label={DEMO_VIDEOS.academia.label}
+              accent={products[5]!.accent}
+              caption={DEMO_VIDEOS.academia.caption}
+            />
+          </div>
+        </Reveal>
       </div>
     </section>
   );
