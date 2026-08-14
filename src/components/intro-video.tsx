@@ -7,6 +7,7 @@ const INTRO_VIDEO = "/videos/intro-hs.mp4";
 
 export function IntroVideo() {
   const [visible, setVisible] = useState(true);
+  const [mutedHint, setMutedHint] = useState(false);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const soundRef = useRef(false);
   const finishedRef = useRef(false);
@@ -38,10 +39,22 @@ export function IntroVideo() {
         })
         .catch(() => {
           video.muted = true;
-          video.play().catch(() => {
-            /* video failed to load — chime will play instead */
-          });
+          video
+            .play()
+            .then(() => setMutedHint(true))
+            .catch(() => {
+              /* video failed to load — chime will play instead */
+            });
         });
+    };
+
+    const unlockSound = () => {
+      if (!video.muted) return;
+      video.muted = false;
+      video.currentTime = 0;
+      soundRef.current = true;
+      setMutedHint(false);
+      video.play().catch(() => {});
     };
 
     const onEnded = () => finish(soundRef.current);
@@ -49,11 +62,17 @@ export function IntroVideo() {
 
     video.addEventListener("ended", onEnded);
     video.addEventListener("error", onError);
+    window.addEventListener("pointerdown", unlockSound);
+    window.addEventListener("keydown", unlockSound);
+    window.addEventListener("touchstart", unlockSound);
     tryPlay();
 
     return () => {
       video.removeEventListener("ended", onEnded);
       video.removeEventListener("error", onError);
+      window.removeEventListener("pointerdown", unlockSound);
+      window.removeEventListener("keydown", unlockSound);
+      window.removeEventListener("touchstart", unlockSound);
     };
   }, [finish, reducedMotion]);
 
@@ -78,6 +97,19 @@ export function IntroVideo() {
             preload="auto"
             className="h-full w-full object-cover"
           />
+          <AnimatePresence>
+            {mutedHint && (
+              <motion.p
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.3 }}
+                className="absolute bottom-20 left-1/2 -translate-x-1/2 animate-pulse rounded-full border border-white/20 bg-black/40 px-4 py-2 text-xs uppercase tracking-widest text-white/90 backdrop-blur"
+              >
+                Tap anywhere for sound
+              </motion.p>
+            )}
+          </AnimatePresence>
           <button
             type="button"
             onClick={handleSkip}
