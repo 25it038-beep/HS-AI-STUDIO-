@@ -6,8 +6,11 @@ import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 const INTRO_VIDEO = "/videos/intro-hs.mp4";
 
 export function IntroVideo() {
-  const [entered, setEntered] = useState(false);
+  const [visible, setVisible] = useState(true);
+  const [soundBlocked, setSoundBlocked] = useState(false);
+  const [hintVisible, setHintVisible] = useState(false);
   const videoRef = useRef<HTMLVideoElement | null>(null);
+  const soundRef = useRef(false);
   const finishedRef = useRef(false);
   const reducedMotion = useReducedMotion();
 
@@ -17,7 +20,7 @@ export function IntroVideo() {
     window.dispatchEvent(
       new CustomEvent("hs-intro-finished", { detail: { sound } }),
     );
-    setEntered(true);
+    setVisible(false);
   }, []);
 
   useEffect(() => {
@@ -25,84 +28,114 @@ export function IntroVideo() {
     if (!video) return;
 
     if (reducedMotion) {
-      video.pause();
+      finish(false);
+      return;
     }
 
-    return () => {
-      video.pause();
+    const tryPlay = () => {
+      video
+        .play()
+        .then(() => {
+          soundRef.current = true;
+        })
+        .catch(() => {
+          setSoundBlocked(true);
+          video.muted = true;
+          video
+            .play()
+            .then(() => {
+              setHintVisible(true);
+              window.setTimeout(() => setHintVisible(false), 9000);
+            })
+            .catch(() => finish(false));
+        });
     };
-  }, [reducedMotion]);
 
-  const handleEnter = useCallback(() => {
-    const video = videoRef.current;
-    if (video && !reducedMotion) {
-      video.loop = false;
+    const unlockOnGesture = () => {
+      if (!video.muted) return;
       video.muted = false;
       video.currentTime = 0;
-      video.play().then(
-        () => finish(true),
-        () => finish(false),
-      );
-    } else {
-      finish(false);
-    }
+      soundRef.current = true;
+      video.play().catch(() => {});
+    };
+
+    const onEnded = () => finish(soundRef.current);
+    const onError = () => finish(false);
+
+    video.addEventListener("ended", onEnded);
+    video.addEventListener("error", onError);
+    window.addEventListener("pointerdown", unlockOnGesture);
+    window.addEventListener("keydown", unlockOnGesture);
+    window.addEventListener("touchstart", unlockOnGesture);
+    tryPlay();
+
+    return () => {
+      video.removeEventListener("ended", onEnded);
+      video.removeEventListener("error", onError);
+      window.removeEventListener("pointerdown", unlockOnGesture);
+      window.removeEventListener("keydown", unlockOnGesture);
+      window.removeEventListener("touchstart", unlockOnGesture);
+    };
   }, [finish, reducedMotion]);
 
   const handleSkip = useCallback(() => {
     videoRef.current?.pause();
-    finish(false);
+    finish(soundRef.current);
   }, [finish]);
 
   return (
-    <AnimatePresence>
-      {!entered && (
-        <motion.div
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-black"
-          initial={{ opacity: 1 }}
-          exit={{ opacity: 0, transition: { duration: 0.6, ease: "easeOut" } }}
-        >
-          {!reducedMotion && (
+    <>
+      <AnimatePresence>
+        {visible && (
+          <motion.div
+            className="fixed inset-0 z-[100] flex items-center justify-center bg-black"
+            initial={{ opacity: 1 }}
+            exit={{ opacity: 0, transition: { duration: 0.6, ease: "easeOut" } }}
+          >
             <video
               ref={videoRef}
               src={INTRO_VIDEO}
               autoPlay
-              muted
-              loop
               playsInline
               preload="auto"
-              className="absolute inset-0 h-full w-full object-cover"
+              className="h-full w-full object-cover"
             />
-          )}
-          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-56 bg-gradient-to-t from-black via-black/40 to-transparent" />
-          <motion.div
-            className="relative flex flex-col items-center gap-6 px-6"
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4, duration: 0.6 }}
-          >
-            <p className="text-center text-[11px] uppercase tracking-[0.35em] text-white/60">
-              HS AI Solutions
-            </p>
-            <button
-              type="button"
-              onClick={handleEnter}
-              className="group relative inline-flex items-center gap-3 rounded-full border border-white/30 bg-white/10 px-10 py-4 text-sm font-medium uppercase tracking-[0.25em] text-white backdrop-blur transition hover:border-white/60 hover:bg-white/20"
-            >
-              <span className="flex h-6 w-6 items-center justify-center">
-                <span className="h-0 w-0 border-y-[5px] border-l-[8px] border-y-transparent border-l-white transition group-hover:scale-110" />
-              </span>
-              Enter with sound
-            </button>
             <button
               type="button"
               onClick={handleSkip}
-              className="text-[11px] uppercase tracking-[0.3em] text-white/40 transition hover:text-white/80"
+              className="absolute bottom-6 right-6 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-xs uppercase tracking-widest text-white/80 backdrop-blur transition hover:bg-white/20 hover:text-white"
             >
-              Skip intro
+              Skip
             </button>
           </motion.div>
-        </motion.div>
-      )}
-    </AnimatePresence>
+        )}
+      </AnimatePresence>
+      <AnimatePresence>
+        {soundBlocked && hintVisible && !visible && (
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.4 }}
+            className="fixed bottom-6 left-1/2 z-[100] flex w-[min(92vw,30rem)] -translate-x-1/2 items-start gap-3 rounded-2xl border border-white/10 bg-ink/90 px-5 py-4 text-sm text-paper/90 shadow-2xl backdrop-blur"
+          >
+            <span aria-hidden>🔇</span>
+            <p className="flex-1">
+              Your browser blocked the intro&apos;s sound. To hear it
+              automatically on every visit, click the{" "}
+              <span className="font-medium text-paper">speaker icon</span> in
+              the address bar and choose <span className="font-medium text-paper">Allow</span>.
+            </p>
+            <button
+              type="button"
+              onClick={() => setHintVisible(false)}
+              className="text-xs uppercase tracking-widest text-paper/50 transition hover:text-paper"
+            >
+              Dismiss
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
   );
 }
