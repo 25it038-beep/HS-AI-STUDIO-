@@ -10,6 +10,7 @@ export function IntroVideo() {
   const [mutedHint, setMutedHint] = useState(false);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const soundRef = useRef(false);
+  const interactedRef = useRef(false);
   const finishedRef = useRef(false);
   const reducedMotion = useReducedMotion();
 
@@ -38,23 +39,34 @@ export function IntroVideo() {
           soundRef.current = true;
         })
         .catch(() => {
-          video.muted = true;
-          video
-            .play()
-            .then(() => setMutedHint(true))
-            .catch(() => {
-              /* video failed to load — chime will play instead */
-            });
+          if (interactedRef.current) {
+            video.muted = false;
+            video.currentTime = 0;
+            soundRef.current = true;
+            video.play().catch(() => {});
+          } else {
+            video.muted = true;
+            video
+              .play()
+              .then(() => setMutedHint(true))
+              .catch(() => {
+                /* video failed to load — chime will play instead */
+              });
+          }
         });
     };
 
     const unlockSound = () => {
-      if (!video.muted) return;
-      video.muted = false;
-      video.currentTime = 0;
-      soundRef.current = true;
-      setMutedHint(false);
-      video.play().catch(() => {});
+      interactedRef.current = true;
+      if (video.muted) {
+        video.muted = false;
+        video.currentTime = 0;
+        soundRef.current = true;
+        setMutedHint(false);
+        video.play().catch(() => {});
+      } else {
+        video.play().catch(() => {});
+      }
     };
 
     const onEnded = () => finish(soundRef.current);
