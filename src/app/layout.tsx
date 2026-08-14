@@ -4,6 +4,7 @@ import "./globals.css";
 import { Nav } from "@/components/nav";
 import { Footer } from "@/components/footer";
 import { AudioIntro } from "@/components/audio-intro";
+import { IntroVideo } from "@/components/intro-video";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -63,6 +64,7 @@ export default function RootLayout({
     >
       <body className="flex min-h-full flex-col bg-ink text-paper">
         <AudioIntro />
+        <IntroVideo />
         <Nav />
         <main className="flex-1">{children}</main>
         <Footer />
