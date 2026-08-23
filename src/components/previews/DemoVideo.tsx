@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { motion, useReducedMotion } from "framer-motion";
 import { PreviewFrame } from "@/components/previews/PreviewFrame";
@@ -9,6 +9,7 @@ const PHISHING_LINKEDIN = "https://lnkd.in/dRpGMndE";
 const LEDGER_SRC = "/videos/ledger-demo.mp4";
 const HSBOT_SRC = "/videos/hsbot-demo.mp4";
 const ACADEMIA_SRC = "/videos/academia-demo.mp4";
+const PENDULUM_SRC = "/videos/pendulum-demo.mp4";
 
 export const DEMO_VIDEOS: Record<
   string,
@@ -20,6 +21,11 @@ export const DEMO_VIDEOS: Record<
     externalLabel?: string;
   }
 > = {
+  pendulum: {
+    src: PENDULUM_SRC,
+    label: "Pendulum · Automated Private Browser Demo",
+    caption: "Screen recording · Live Desktop Application",
+  },
   phishing: {
     src: PHISHING_SRC,
     label: "Phishing Defence · Live Demo",
