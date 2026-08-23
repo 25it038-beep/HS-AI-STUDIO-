@@ -110,7 +110,7 @@ export function AllApplications() {
           </div>
           <Reveal y={20} delay={0.1}>
             <p className="max-w-sm text-[15px] leading-relaxed text-ink/55">
-              Six systems — five live, one in development — each exploring a different way AI
+              Seven systems — six live, one in development — each exploring a different way AI
               can solve a real problem.
             </p>
           </Reveal>
@@ -127,7 +127,7 @@ export function AllApplications() {
             <DemoVideo
               src={DEMO_VIDEOS.academia.src}
               label={DEMO_VIDEOS.academia.label}
-              accent={products[5]!.accent}
+              accent={products.find((p) => p.id === "academia")?.accent ?? "#60a5fa"}
               caption={DEMO_VIDEOS.academia.caption}
             />
           </div>

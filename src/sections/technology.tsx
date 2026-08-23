@@ -37,7 +37,7 @@ export function Technology() {
           </Reveal>
           <Reveal y={20} delay={0.12}>
             <p className="mt-6 text-[17px] leading-relaxed text-ink/55">
-              No imagined stacks — every technology below runs inside one of the six products,
+              No imagined stacks — every technology below runs inside one of the seven products,
               from orchestration to vector search to deployment.
             </p>
           </Reveal>

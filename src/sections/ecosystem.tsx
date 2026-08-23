@@ -5,14 +5,16 @@ import { motion, useReducedMotion } from "framer-motion";
 import { products } from "@/data/products";
 import { Reveal } from "@/components/ui/Reveal";
 
-const NODES = [
-  { ...products[0]!, x: 50, y: 7 },
-  { ...products[1]!, x: 16, y: 31 },
-  { ...products[2]!, x: 84, y: 31 },
-  { ...products[4]!, x: 50, y: 93 },
-  { ...products[5]!, x: 16, y: 69 },
-  { ...products[3]!, x: 84, y: 69 },
-];
+const NODES = products.map((product, i) => {
+  const angle = (-90 + (360 / products.length) * i) * (Math.PI / 180);
+  const rx = 37;
+  const ry = 36;
+  return {
+    ...product,
+    x: Math.round(50 + rx * Math.cos(angle)),
+    y: Math.round(50 + ry * Math.sin(angle)),
+  };
+});
 
 export function Ecosystem() {
   const reduce = useReducedMotion();

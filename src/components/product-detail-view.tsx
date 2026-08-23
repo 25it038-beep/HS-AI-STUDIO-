@@ -94,10 +94,17 @@ export function ProductDetailView({ product }: { product: ProductDetail }) {
                       Download for Windows
                       <DownloadIcon className="h-4 w-4" />
                     </MagneticButton>
-                    <span className="inline-flex items-center gap-2 rounded-full border border-amber-400/25 px-4 py-2.5 text-[12.5px] font-medium text-amber-300/90">
-                      <span className="h-1.5 w-1.5 rounded-full bg-amber-400" />
-                      In development · v0.1.0
-                    </span>
+                    {product.status === "development" ? (
+                      <span className="inline-flex items-center gap-2 rounded-full border border-amber-400/25 px-4 py-2.5 text-[12.5px] font-medium text-amber-300/90">
+                        <span className="h-1.5 w-1.5 rounded-full bg-amber-400" />
+                        In development · v0.1.0
+                      </span>
+                    ) : (
+                      <span className="inline-flex items-center gap-2 rounded-full border border-white/15 px-4 py-2.5 text-[12.5px] font-medium text-white/80">
+                        <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
+                        Windows Native (x64) · v0.1.0
+                      </span>
+                    )}
                   </>
                 ) : (
                   <>

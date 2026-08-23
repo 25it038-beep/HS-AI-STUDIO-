@@ -4,8 +4,10 @@ import { LedgerPreview } from "@/components/previews/LedgerPreview";
 import { PhishingPreview } from "@/components/previews/PhishingPreview";
 import { HSCODEPreview } from "@/components/previews/HSCODEPreview";
 import { AcademiaPreview } from "@/components/previews/AcademiaPreview";
+import { PendulumPreview } from "@/components/previews/PendulumPreview";
 
 const registry: Record<string, React.ComponentType<{ className?: string }>> = {
+  pendulum: PendulumPreview,
   lumina: LuminaPreview,
   hsbot: HSBotPreview,
   ledger: LedgerPreview,

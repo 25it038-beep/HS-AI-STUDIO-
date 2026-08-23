@@ -23,8 +23,62 @@ export interface ProductDetail extends Product {
 
 export const products: ProductDetail[] = [
   {
-    id: "lumina",
+    id: "pendulum",
     number: "01",
+    name: "Pendulum",
+    tagline: "Automated Private Browser",
+    description:
+      "An intelligent, privacy-first automated desktop browser engineered with AI workflow automation, anti-tracking shields, and stealth web exploration.",
+    long: "Pendulum redefines how you explore, extract, and automate the web with uncompromising privacy. Built as a native desktop browser, Pendulum pairs automated intelligent agents with hardened stealth capabilities — blocking trackers, isolating fingerprints, automating repetitive browsing tasks, and letting you direct complex web workflows locally on your machine.",
+    category: "AI BROWSER & PRIVACY",
+    url: "",
+    status: "live",
+    downloadUrl: "/downloads/pendulum-setup.exe",
+    features: [
+      "AI-powered web automation",
+      "Private stealth browsing",
+      "Anti-fingerprinting & tracker blocking",
+      "Automated session isolation",
+      "Intelligent web agent workflows",
+      "Local-first desktop performance",
+      "Windows x64 installer",
+    ],
+    technologies: [
+      "Electron",
+      "Chromium Engine",
+      "AI Browser Agents",
+      "Stealth & Anti-Tracking",
+      "Workflow Automation",
+      "TypeScript",
+      "Windows Desktop",
+    ],
+    accent: "#a855f7",
+    preview: "pendulum",
+    flow: [
+      { step: "Stealth initialization", detail: "Session launches in an isolated, tracker-free sandbox with spoofed fingerprints." },
+      { step: "Intent & workflow brief", detail: "Natural language instructions or automated routines guide the browser agent." },
+      { step: "Intelligent DOM navigation", detail: "AI parses pages, solves navigation paths, and automates multi-step interactions." },
+      { step: "Data extraction & privacy guard", detail: "Extracts target insights while filtering telemetry and tracking scripts." },
+      { step: "Clean session export", detail: "Deliverables are saved locally; cookies and temporary cache are purged on demand." },
+    ],
+    capabilities: [
+      "Autonomous multi-step browsing",
+      "Tracker & fingerprint shielding",
+      "Intelligent web data extraction",
+      "Isolated private container tabs",
+      "Natural language automation triggers",
+      "Zero telemetry local execution",
+    ],
+    useCases: [
+      { title: "Private research & intelligence", description: "Scrape, monitor, and research without leaving telemetry or digital footprints." },
+      { title: "Repetitive web automation", description: "Automate form filling, portal checks, and multi-step web flows hands-free." },
+      { title: "Stealth testing & QA", description: "Test web apps across clean environments with custom browser parameters." },
+      { title: "Privacy-first daily browsing", description: "Experience high-speed web navigation with built-in ad and tracker annihilation." },
+    ],
+  },
+  {
+    id: "lumina",
+    number: "02",
     name: "Lumina",
     tagline: "AI Presentation Generator",
     description:
@@ -78,7 +132,7 @@ export const products: ProductDetail[] = [
   },
   {
     id: "hsbot",
-    number: "02",
+    number: "03",
     name: "HSBot",
     tagline: "Multi-Model AI Chatbot",
     description:
@@ -130,7 +184,7 @@ export const products: ProductDetail[] = [
   },
   {
     id: "ledger",
-    number: "03",
+    number: "04",
     name: "Ledger",
     tagline: "AI Digital Identity & Career Intelligence",
     description:
@@ -192,7 +246,7 @@ export const products: ProductDetail[] = [
   },
   {
     id: "phishing-defence",
-    number: "04",
+    number: "05",
     name: "Phishing Defence",
     tagline: "AI Phishing & Malicious Link Protection",
     description:
@@ -244,7 +298,7 @@ export const products: ProductDetail[] = [
   },
   {
     id: "hs-code",
-    number: "05",
+    number: "06",
     name: "HS CODE",
     tagline: "AI Code Companion · Windows Desktop",
     description:
@@ -291,7 +345,7 @@ export const products: ProductDetail[] = [
   },
   {
     id: "academia",
-    number: "06",
+    number: "07",
     name: "Academia AI",
     tagline: "Personal AI Learning Operating System",
     description:

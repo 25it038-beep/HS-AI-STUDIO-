@@ -7,7 +7,7 @@ import { Reveal } from "@/components/ui/Reveal";
 import { LedgerGraph } from "@/components/visuals/ledger-graph";
 import { DemoVideo, DEMO_VIDEOS } from "@/components/previews/DemoVideo";
 
-const ledger = products[2]!;
+const ledger = products.find((p) => p.id === "ledger")!;
 
 export function DigitalIdentity() {
   return (

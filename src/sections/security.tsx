@@ -9,7 +9,7 @@ import { Parallax } from "@/components/ui/Showcase";
 import { PhishingPreview } from "@/components/previews/PhishingPreview";
 import { DemoVideo, DEMO_VIDEOS } from "@/components/previews/DemoVideo";
 
-const phishing = products[3]!;
+const phishing = products.find((p) => p.id === "phishing-defence")!;
 
 function FlowDiagram() {
   const steps = [

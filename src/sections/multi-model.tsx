@@ -8,7 +8,7 @@ import { Showcase } from "@/components/ui/Showcase";
 import { HSBotPreview } from "@/components/previews/HSBotPreview";
 import { DemoVideo, DEMO_VIDEOS } from "@/components/previews/DemoVideo";
 
-const hsbot = products[1]!;
+const hsbot = products.find((p) => p.id === "hsbot")!;
 
 export function MultiModel() {
   return (
