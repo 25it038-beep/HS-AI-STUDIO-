@@ -18,6 +18,7 @@ export function PendulumPreview({ className = "" }: { className?: string }) {
           alt="Pendulum Automated Private Browser Interface"
           fill
           priority
+          unoptimized
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 600px"
           className="object-cover object-top transition-transform duration-700 ease-out group-hover:scale-[1.02]"
         />
