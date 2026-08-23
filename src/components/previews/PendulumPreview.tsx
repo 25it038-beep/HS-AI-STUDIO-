@@ -14,7 +14,7 @@ export function PendulumPreview({ className = "" }: { className?: string }) {
       <div className="group relative aspect-[16/10] overflow-hidden bg-black">
         {/* Actual Pendulum Browser Screenshot */}
         <Image
-          src="/images/pendulum-preview.jpg"
+          src="/images/pendulum-preview.png"
           alt="Pendulum Automated Private Browser Interface"
           fill
           priority
