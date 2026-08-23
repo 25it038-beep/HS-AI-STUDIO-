@@ -31,9 +31,9 @@ export function Intro() {
 
         <Reveal y={26} delay={0.35}>
           <p className="mt-10 max-w-2xl text-lg leading-relaxed text-ink/55 md:text-xl">
-            From generating presentations to orchestrating multiple AI models, building digital
-            career intelligence, and defending users from phishing threats, each application
-            explores a different way AI can solve real-world problems.
+            From automated private browsing and AI-powered presentation generation to multi-model
+            orchestration, digital career intelligence, phishing defence, and AI learning systems —
+            each application explores a different way AI solves real-world problems.
           </p>
         </Reveal>
       </div>

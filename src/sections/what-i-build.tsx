@@ -4,12 +4,13 @@ import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 
 const WORDS = [
+  { word: "AUTOMATE", color: "#a855f7", desc: "Autonomous stealth web workflows and privacy-first browser exploration." },
   { word: "CREATE", color: "#f5a623", desc: "AI-powered presentation and content generation." },
-  { word: "CONVERSE", color: "#22d3ee", desc: "Multi-model intelligent communication." },
-  { word: "PROTECT", color: "#f4495f", desc: "AI-powered phishing and threat detection." },
+  { word: "CONVERSE", color: "#22d3ee", desc: "Multi-model intelligent conversational workspaces." },
   { word: "UNDERSTAND", color: "#8b7cf6", desc: "Documents, credentials, skills, and personal data transformed into intelligence." },
-  { word: "AUTOMATE", color: "#34d399", desc: "Systems that do the work behind the scenes." },
-  { word: "ANALYZE", color: "#fbbf24", desc: "Raw inputs scored, matched, and explained." },
+  { word: "PROTECT", color: "#f4495f", desc: "AI-powered phishing and threat detection." },
+  { word: "CODE", color: "#4ade80", desc: "Desktop-native AI coding assistance and local workflows." },
+  { word: "LEARN", color: "#60a5fa", desc: "Personalized syllabus roadmap and adaptive AI tutoring." },
 ];
 
 export function WhatIBuild() {
@@ -31,7 +32,7 @@ export function WhatIBuild() {
         <div className="flex items-end justify-between">
           <p className="eyebrow text-white/45">What I build</p>
           <p className="hidden font-mono text-[11px] text-white/25 sm:block">
-            6 modes · {String(active + 1).padStart(2, "0")}/06
+            7 modes · {String(active + 1).padStart(2, "0")}/07
           </p>
         </div>
 

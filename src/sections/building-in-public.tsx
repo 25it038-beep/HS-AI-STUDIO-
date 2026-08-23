@@ -3,7 +3,7 @@
 import { Reveal } from "@/components/ui/Reveal";
 
 const STATS = [
-  { value: "4", label: "AI Products", note: "live & deployed" },
+  { value: "7", label: "AI Applications", note: "live & deployed" },
   { value: "Multiple", label: "AI Models", note: "orchestrated" },
   { value: "∞", label: "Continuous Experiments", note: "always shipping" },
 ];
