@@ -59,7 +59,7 @@ export function FinalCta() {
           viewport={{ once: true }}
           transition={{ duration: 0.8, delay: 0.15 }}
         >
-          Seven applications. Seven different problems. One continuous experiment in building useful
+          Eight applications. Eight different problems. One continuous experiment in building useful
           intelligence.
         </motion.p>
 

@@ -91,7 +91,7 @@ export function ProductDetailView({ product }: { product: ProductDetail }) {
                 {product.downloadUrl ? (
                   <>
                     <MagneticButton href={product.downloadUrl} lg accent={product.accent}>
-                      Download for Windows
+                      {product.id === "electron" ? "Download Standalone ZIP" : "Download for Windows"}
                       <DownloadIcon className="h-4 w-4" />
                     </MagneticButton>
                     {product.status === "development" ? (
@@ -102,7 +102,9 @@ export function ProductDetailView({ product }: { product: ProductDetail }) {
                     ) : (
                       <span className="inline-flex items-center gap-2 rounded-full border border-white/15 px-4 py-2.5 text-[12.5px] font-medium text-white/80">
                         <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
-                        Windows Native (x64) · v0.1.0
+                        {product.id === "electron"
+                          ? "Offline AI · 4GB RAM Ready · Live Search"
+                          : "Windows Native (x64) · v0.1.0"}
                       </span>
                     )}
                   </>

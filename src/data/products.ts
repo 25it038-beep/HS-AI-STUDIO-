@@ -23,8 +23,61 @@ export interface ProductDetail extends Product {
 
 export const products: ProductDetail[] = [
   {
-    id: "pendulum",
+    id: "electron",
     number: "01",
+    name: "Electron AI",
+    tagline: "Proprietary Offline AI Model & Real-Time Web Search",
+    description:
+      "A lightweight, standalone AI model developed and fully owned by HS AI Solutions. Runs completely offline without network on any laptop with 4GB RAM — with zero Ollama setup — and performs universal real-time web search.",
+    long: "Electron AI is a proprietary AI model designed, developed, and fully owned by Harshan Seliyan under HS AI Solutions. Tuned with Knowledge Distillation and packaged into an ultra-optimized standalone engine, Electron runs 100% offline without any network connection on standard laptops with as little as 4GB of RAM — requiring no Ollama installation or complex environment setup. When connected to the internet, its integrated search bridge automatically performs real-time DuckDuckGo web searches across any interface. After downloading the ZIP file, simply extract it and click Start-Electron.bat to launch your private AI workspace.",
+    category: "OWN AI MODEL",
+    url: "",
+    status: "live",
+    downloadUrl: "/downloads/Electron-AI-Standalone-NoOllama.zip",
+    features: [
+      "100% Offline execution without network",
+      "Universal real-time web search integration",
+      "Ultra-lightweight: Runs smoothly on 4GB RAM laptops",
+      "Standalone package: Zero Ollama required",
+      "Proprietary model by HS AI Solutions",
+      "One-click launch with Start-Electron.bat",
+      "OpenAI & Ollama compatible local API endpoints",
+    ],
+    technologies: [
+      "HS AI Proprietary Model",
+      "Knowledge Distillation",
+      "GGUF Runtime",
+      "llama-server",
+      "DuckDuckGo Search Bridge",
+      "Standalone Windows Bundle",
+      "Local Web UI",
+    ],
+    accent: "#38bdf8",
+    preview: "electron",
+    flow: [
+      { step: "Download ZIP", detail: "Download Electron-AI-Standalone-NoOllama.zip directly to your machine." },
+      { step: "Extract Archive", detail: "Extract the zip contents to any folder without admin rights or dependencies." },
+      { step: "Click Start-Electron.bat", detail: "Launch the engine, real-time web search bridge, and browser interface with one click." },
+      { step: "Offline & Web Reasoning", detail: "Chat without network, or query live web search results seamlessly." },
+    ],
+    capabilities: [
+      "100% Offline local intelligence",
+      "DuckDuckGo real-time web search",
+      "4GB RAM low-spec laptop optimization",
+      "Zero telemetry & total data privacy",
+      "Universal interface compatibility",
+      "No Ollama or external dependencies",
+    ],
+    useCases: [
+      { title: "Offline productivity", description: "Work without internet connection on flights, commutes, or remote locations." },
+      { title: "Budget & 4GB RAM laptops", description: "Run an AI model locally without lag on entry-level hardware." },
+      { title: "Real-time web research", description: "Get answers backed by live web data directly in your private chat." },
+      { title: "Air-gapped security", description: "Keep your data, prompts, and code strictly on your local machine." },
+    ],
+  },
+  {
+    id: "pendulum",
+    number: "02",
     name: "Pendulum",
     tagline: "Automated Private Browser",
     description:
@@ -78,7 +131,7 @@ export const products: ProductDetail[] = [
   },
   {
     id: "lumina",
-    number: "02",
+    number: "03",
     name: "Lumina",
     tagline: "AI Presentation Generator",
     description:
@@ -132,7 +185,7 @@ export const products: ProductDetail[] = [
   },
   {
     id: "hsbot",
-    number: "03",
+    number: "04",
     name: "HSBot",
     tagline: "Multi-Model AI Chatbot",
     description:
@@ -184,7 +237,7 @@ export const products: ProductDetail[] = [
   },
   {
     id: "ledger",
-    number: "04",
+    number: "05",
     name: "Ledger",
     tagline: "AI Digital Identity & Career Intelligence",
     description:
@@ -246,7 +299,7 @@ export const products: ProductDetail[] = [
   },
   {
     id: "phishing-defence",
-    number: "05",
+    number: "06",
     name: "Phishing Defence",
     tagline: "AI Phishing & Malicious Link Protection",
     description:
@@ -298,7 +351,7 @@ export const products: ProductDetail[] = [
   },
   {
     id: "hs-code",
-    number: "06",
+    number: "07",
     name: "HS CODE",
     tagline: "AI Code Companion · Windows Desktop",
     description:
@@ -345,7 +398,7 @@ export const products: ProductDetail[] = [
   },
   {
     id: "academia",
-    number: "07",
+    number: "08",
     name: "Academia AI",
     tagline: "Personal AI Learning Operating System",
     description:

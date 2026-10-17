@@ -31,9 +31,10 @@ export function Intro() {
 
         <Reveal y={26} delay={0.35}>
           <p className="mt-10 max-w-2xl text-lg leading-relaxed text-ink/55 md:text-xl">
-            From automated private browsing and AI-powered presentation generation to multi-model
-            orchestration, digital career intelligence, phishing defence, and AI learning systems —
-            each application explores a different way AI solves real-world problems.
+            From proprietary standalone offline AI models and automated private browsing to
+            multi-model orchestration, presentation generation, digital career intelligence,
+            phishing defence, and AI learning systems — each application explores a different way
+            AI solves real-world problems.
           </p>
         </Reveal>
       </div>

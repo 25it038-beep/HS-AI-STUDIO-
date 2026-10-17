@@ -30,8 +30,13 @@ export const metadata: Metadata = {
     template: "%s — HS AI Solutions",
   },
   description:
-    "A growing collection of intelligent applications built to create, communicate, protect, and unlock human potential. Lumina · HSBot · Ledger · Phishing Defence · HS CODE · Academia AI.",
+    "A growing collection of intelligent applications built to create, communicate, protect, and unlock human potential. Electron AI · Pendulum · Lumina · HSBot · Ledger · Phishing Defence · HS CODE · Academia AI.",
   keywords: [
+    "Electron AI",
+    "Offline AI",
+    "Standalone AI Model",
+    "Real-Time Web Search",
+    "Pendulum",
     "AI products",
     "AI applications",
     "Lumina",
@@ -47,7 +52,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "HS AI Solutions — Building AI That Does More",
     description:
-      "Six systems. Six problems. One AI-driven ecosystem of real, deployed applications.",
+      "Eight systems. Eight problems. One AI-driven ecosystem of real, deployed applications.",
     type: "website",
   },
 };

@@ -1,3 +1,4 @@
+import { ElectronPreview } from "@/components/previews/ElectronPreview";
 import { LuminaPreview } from "@/components/previews/LuminaPreview";
 import { HSBotPreview } from "@/components/previews/HSBotPreview";
 import { LedgerPreview } from "@/components/previews/LedgerPreview";
@@ -7,6 +8,7 @@ import { AcademiaPreview } from "@/components/previews/AcademiaPreview";
 import { PendulumPreview } from "@/components/previews/PendulumPreview";
 
 const registry: Record<string, React.ComponentType<{ className?: string }>> = {
+  electron: ElectronPreview,
   pendulum: PendulumPreview,
   lumina: LuminaPreview,
   hsbot: HSBotPreview,
