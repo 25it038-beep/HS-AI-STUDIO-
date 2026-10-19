@@ -192,7 +192,7 @@ export const products: ProductDetail[] = [
       "A multi-model AI assistant that brings different AI models into one intelligent conversational workspace.",
     long: "One question asked once — answered by many intelligences. HSBot routes a single conversation through multiple AI models, so you can compare reasoning, pick the strongest response, and switch perspective mid-conversation. It turns model choice from a technical decision into part of the conversation itself.",
     category: "AI INTELLIGENCE",
-    url: "https://hs-chatbot-1-g0qm.onrender.com/",
+    url: "https://dashboard.render.com/static/srv-dbafke8m7kps738m22o0",
     status: "live",
     features: [
       "Multi-model conversations",
@@ -244,7 +244,7 @@ export const products: ProductDetail[] = [
       "An AI-powered digital identity system that connects documents, credentials, projects, skills, and career intelligence into one personal knowledge archive.",
     long: "Ledger turns scattered evidence of a career — certificates, resumes, projects, portfolios — into a connected personal intelligence layer. It ingests documents, builds a knowledge graph of what you have done and what you can do, and answers career questions: which gaps block the role you want, how your profile matches a job description, and what to build next.",
     category: "AI CAREER",
-    url: "https://ledger-2-er3t.onrender.com/",
+    url: "https://ledger-2-awfn.onrender.com/",
     status: "live",
     features: [
       "Document ingestion",
@@ -306,7 +306,7 @@ export const products: ProductDetail[] = [
       "An AI-powered security system designed to identify suspicious emails, URLs, and malicious links before users interact with them.",
     long: "Phishing Defence sits between people and the links they are about to trust. A URL or email is analyzed before any click: domain reputation, URL signals, structural anomalies and language patterns are checked together, scored, and answered with a clear verdict — safe, suspicious, or malicious — before it becomes a problem.",
     category: "AI SECURITY",
-    url: "https://forensic-ai-1-mma4.onrender.com/",
+    url: "https://forensic-ai-hs.onrender.com/",
     status: "live",
     features: [
       "URL verification",

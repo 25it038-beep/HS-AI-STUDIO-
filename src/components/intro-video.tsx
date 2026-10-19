@@ -41,6 +41,8 @@ export function IntroVideo() {
         .catch(() => {
           setSoundBlocked(true);
           video.muted = true;
+          video.defaultMuted = true;
+          video.setAttribute("muted", "");
           video
             .play()
             .then(() => {
@@ -54,8 +56,9 @@ export function IntroVideo() {
     const unlockOnGesture = () => {
       if (!video.muted) return;
       video.muted = false;
-      video.currentTime = 0;
+      video.removeAttribute("muted");
       soundRef.current = true;
+      setSoundBlocked(false);
       video.play().catch(() => {});
     };
 
@@ -100,8 +103,20 @@ export function IntroVideo() {
               preload="auto"
               className="h-full w-full object-cover"
             />
+            {soundBlocked && (
+              <motion.div
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.3 }}
+                className="pointer-events-none absolute bottom-20 left-1/2 -translate-x-1/2 rounded-full border border-white/20 bg-black/60 px-4 py-2 text-xs uppercase tracking-widest text-white/90 backdrop-blur"
+              >
+                🔊 Tap anywhere for sound
+              </motion.div>
+            )}
             <button
               type="button"
+              onPointerDown={(e) => e.stopPropagation()}
               onClick={handleSkip}
               className="absolute bottom-6 right-6 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-xs uppercase tracking-widest text-white/80 backdrop-blur transition hover:bg-white/20 hover:text-white"
             >
