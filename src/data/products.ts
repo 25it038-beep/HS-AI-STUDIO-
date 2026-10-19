@@ -192,7 +192,7 @@ export const products: ProductDetail[] = [
       "A multi-model AI assistant that brings different AI models into one intelligent conversational workspace.",
     long: "One question asked once — answered by many intelligences. HSBot routes a single conversation through multiple AI models, so you can compare reasoning, pick the strongest response, and switch perspective mid-conversation. It turns model choice from a technical decision into part of the conversation itself.",
     category: "AI INTELLIGENCE",
-    url: "https://dashboard.render.com/static/srv-dbafke8m7kps738m22o0",
+    url: "https://hs-chatbot-1-g0qm.onrender.com/",
     status: "live",
     features: [
       "Multi-model conversations",
