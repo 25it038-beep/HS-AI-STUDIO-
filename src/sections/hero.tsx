@@ -34,7 +34,7 @@ export function Hero() {
           HS AI Solutions
         </motion.p>
 
-        <h1 className="display-xl mt-7 max-w-5xl text-[clamp(3rem,9vw,7.25rem)]">
+        <h1 className="display-xl mt-7 max-w-5xl text-[clamp(2.4rem,8.5vw,7.25rem)]">
           {["Building", "AI", "That", "Does", "More."].map((word, i) => (
             <span key={i} className="inline-block overflow-hidden pb-[0.1em] -mb-[0.1em] align-bottom">
               <motion.span

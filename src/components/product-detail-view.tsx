@@ -56,7 +56,7 @@ export function ProductDetailView({ product }: { product: ProductDetail }) {
               </motion.p>
 
               <motion.h1
-                className="display-xl mt-6 text-[clamp(3rem,9vw,7rem)]"
+                className="display-xl mt-6 text-[clamp(2.4rem,8.5vw,7rem)]"
                 initial={{ opacity: 0, y: 24 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.12, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}

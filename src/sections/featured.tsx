@@ -29,7 +29,7 @@ export function Featured() {
           </Reveal>
 
           <Reveal y={26} delay={0.05}>
-            <h2 className="display-lg mt-6 text-[clamp(3rem,7vw,6.5rem)]">{spotlight.name}</h2>
+            <h2 className="display-lg mt-6 text-[clamp(2.4rem,7vw,6.5rem)]">{spotlight.name}</h2>
           </Reveal>
 
           <Reveal y={22} delay={0.1}>

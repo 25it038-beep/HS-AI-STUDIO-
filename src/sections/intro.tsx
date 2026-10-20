@@ -14,7 +14,7 @@ export function Intro() {
           <p className="eyebrow text-ink/45">The Studio, in one line</p>
         </Reveal>
 
-        <div className="display-lg mt-10 text-[clamp(2.4rem,6.5vw,5.6rem)]">
+        <div className="display-lg mt-10 text-[clamp(2.1rem,6.5vw,5.6rem)]">
           <WordReveal text={`${products.length} Systems.`} className="block text-ink" />
           <WordReveal
             text={`${products.length} Problems.`}

@@ -15,7 +15,7 @@ function ProductCell({ product }: { product: ProductDetail }) {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-8% 0px" }}
       transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-      className="group relative flex flex-col rounded-2xl border border-white/[0.08] bg-gradient-to-b from-white/[0.03] to-transparent p-4 transition-colors duration-500 hover:border-white/20 sm:p-5"
+      className="group relative flex flex-col rounded-2xl border border-white/10 bg-[#111116] p-4 text-white shadow-2xl transition-all duration-500 hover:border-white/25 sm:p-5"
       style={{ ["--acc" as string]: product.accent }}
     >
       <Link

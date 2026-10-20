@@ -17,7 +17,7 @@ export function Footer() {
               </span>
             </div>
             <p className="mt-4 text-sm leading-relaxed text-muted-dark">
-              Seven systems. Seven problems. One AI-driven ecosystem of real, deployed
+              Eight systems. Seven live, one in development. One AI-driven ecosystem of real, deployed
               applications.
             </p>
           </div>

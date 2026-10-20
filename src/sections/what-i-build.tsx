@@ -53,7 +53,7 @@ export function WhatIBuild() {
                 transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
               >
                 <span
-                  className="display-xl block text-[clamp(3rem,9vw,6rem)] leading-none"
+                  className="display-xl block text-[clamp(2.3rem,8.5vw,6rem)] leading-none"
                   style={{ color: cur.color }}
                 >
                   {cur.word}

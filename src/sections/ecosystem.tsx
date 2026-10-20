@@ -37,7 +37,7 @@ export function Ecosystem() {
           </Reveal>
         </div>
 
-        <div className="relative mx-auto mt-20 aspect-[4/3] max-w-3xl sm:aspect-[16/11]">
+        <div className="relative mx-auto mt-16 aspect-[4/5] min-h-[460px] max-w-3xl sm:mt-20 sm:aspect-[16/11] sm:min-h-0">
           <svg
             viewBox="0 0 100 100"
             className="absolute inset-0 h-full w-full"
@@ -63,12 +63,12 @@ export function Ecosystem() {
             transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
           >
             <div
-              className="flex h-20 w-20 items-center justify-center rounded-full border border-white/20 bg-white/[0.04] font-display text-xl font-bold text-white backdrop-blur-md sm:h-24 sm:w-24 sm:text-2xl"
+              className="flex h-16 w-16 items-center justify-center rounded-full border border-white/20 bg-white/[0.04] font-display text-lg font-bold text-white backdrop-blur-md sm:h-24 sm:w-24 sm:text-2xl"
               style={{ boxShadow: "0 0 70px -10px rgba(255,255,255,0.35)" }}
             >
               AI
             </div>
-            <span className="mt-2 font-mono text-[9px] uppercase tracking-[0.3em] text-white/40">
+            <span className="mt-1.5 font-mono text-[8px] uppercase tracking-[0.25em] text-white/40 sm:mt-2 sm:text-[9px] sm:tracking-[0.3em]">
               Core
             </span>
           </motion.div>
@@ -77,7 +77,7 @@ export function Ecosystem() {
           {NODES.map((n, i) => (
             <motion.div
               key={n.id}
-              className="absolute w-[44%] max-w-[240px] -translate-x-1/2 -translate-y-1/2 sm:w-[36%]"
+              className="absolute w-[46%] max-w-[170px] -translate-x-1/2 -translate-y-1/2 sm:w-[36%] sm:max-w-[240px]"
               style={{ left: `${n.x}%`, top: `${n.y}%` }}
               initial={{ opacity: 0, scale: 0.85 }}
               whileInView={{ opacity: 1, scale: 1 }}
@@ -87,16 +87,16 @@ export function Ecosystem() {
             >
               <Link
                 href={`/products/${n.id}`}
-                className="group flex items-center gap-3 rounded-xl border border-white/10 bg-onyx/90 px-4 py-3 backdrop-blur-md transition-colors duration-300 hover:border-white/30"
+                className="group flex items-center gap-2 rounded-xl border border-white/10 bg-onyx/90 p-2.5 backdrop-blur-md transition-colors duration-300 hover:border-white/30 sm:gap-3 sm:px-4 sm:py-3"
               >
                 <span
-                  className="h-2.5 w-2.5 shrink-0 rounded-full"
+                  className="h-2 w-2 shrink-0 rounded-full sm:h-2.5 sm:w-2.5"
                   style={{ background: n.accent, boxShadow: `0 0 14px ${n.accent}` }}
                 />
                 <span className="min-w-0">
-                  <span className="block text-[13px] font-semibold text-white">{n.name}</span>
+                  <span className="block truncate text-[11px] font-semibold text-white sm:text-[13px]">{n.name}</span>
                   <span
-                    className="block truncate font-mono text-[9px] uppercase tracking-[0.18em]"
+                    className="block truncate font-mono text-[8px] uppercase tracking-[0.14em] sm:text-[9px] sm:tracking-[0.18em]"
                     style={{ color: n.accent }}
                   >
                     {n.category}
