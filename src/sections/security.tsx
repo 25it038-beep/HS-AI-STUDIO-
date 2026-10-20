@@ -35,7 +35,7 @@ function FlowDiagram() {
           AI
         </span>
         <ArrowUpRight className="h-3 w-3 rotate-90 text-white/40" />
-        <div className="flex gap-1.5">
+        <div className="flex flex-wrap gap-1.5">
           {steps.map((s, i) => (
             <motion.span
               key={s.label}

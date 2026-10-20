@@ -6,7 +6,8 @@ import { products } from "@/data/products";
 
 export function Intro() {
   return (
-    <section id="products" className="relative overflow-hidden bg-paper py-32 text-ink md:py-40">
+    <section id="intro" className="relative overflow-hidden bg-paper py-32 text-ink md:py-40">
+      <div id="products" className="scroll-mt-24" />
       <div className="bg-grid-light pointer-events-none absolute inset-0 opacity-60 [mask-image:radial-gradient(ellipse_60%_60%_at_50%_30%,black,transparent)]" />
       <div className="container-x relative">
         <Reveal y={16}>

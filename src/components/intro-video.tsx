@@ -91,7 +91,7 @@ export function IntroVideo() {
       <AnimatePresence>
         {visible && (
           <motion.div
-            className="fixed inset-0 z-[100] flex items-center justify-center bg-black"
+            className="fixed inset-0 z-[100] flex items-center justify-center bg-black overflow-hidden select-none"
             initial={{ opacity: 1 }}
             exit={{ opacity: 0, transition: { duration: 0.6, ease: "easeOut" } }}
           >
@@ -101,7 +101,7 @@ export function IntroVideo() {
               autoPlay
               playsInline
               preload="auto"
-              className="h-full w-full object-cover"
+              className="h-full w-full max-h-screen object-contain"
             />
             {soundBlocked && (
               <motion.div
@@ -109,7 +109,7 @@ export function IntroVideo() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.3 }}
-                className="pointer-events-none absolute bottom-20 left-1/2 -translate-x-1/2 rounded-full border border-white/20 bg-black/60 px-4 py-2 text-xs uppercase tracking-widest text-white/90 backdrop-blur"
+                className="pointer-events-none absolute bottom-20 left-1/2 -translate-x-1/2 z-20 whitespace-nowrap rounded-full border border-white/20 bg-black/75 px-4 py-2 text-[11px] sm:text-xs uppercase tracking-widest text-white/90 backdrop-blur shadow-lg"
               >
                 🔊 Tap anywhere for sound
               </motion.div>
@@ -118,7 +118,7 @@ export function IntroVideo() {
               type="button"
               onPointerDown={(e) => e.stopPropagation()}
               onClick={handleSkip}
-              className="absolute bottom-6 right-6 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-xs uppercase tracking-widest text-white/80 backdrop-blur transition hover:bg-white/20 hover:text-white"
+              className="absolute bottom-6 right-6 sm:bottom-8 sm:right-8 z-20 rounded-full border border-white/25 bg-white/10 px-4 py-1.5 text-xs uppercase tracking-widest text-white/90 backdrop-blur transition hover:bg-white/25 hover:text-white active:scale-95"
             >
               Skip
             </button>
@@ -132,19 +132,19 @@ export function IntroVideo() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.4 }}
-            className="fixed bottom-6 left-1/2 z-[100] flex w-[min(92vw,30rem)] -translate-x-1/2 items-start gap-3 rounded-2xl border border-white/10 bg-ink/90 px-5 py-4 text-sm text-paper/90 shadow-2xl backdrop-blur"
+            className="fixed bottom-6 left-1/2 z-[100] flex w-[min(92vw,28rem)] -translate-x-1/2 items-start gap-3 rounded-2xl border border-white/10 bg-ink/95 p-4 text-xs sm:text-sm text-paper/90 shadow-2xl backdrop-blur"
           >
-            <span aria-hidden>🔇</span>
-            <p className="flex-1">
+            <span aria-hidden className="text-base">🔇</span>
+            <p className="flex-1 leading-relaxed">
               Your browser blocked the intro&apos;s sound. To hear it
-              automatically on every visit, click the{" "}
+              automatically, click the{" "}
               <span className="font-medium text-paper">speaker icon</span> in
               the address bar and choose <span className="font-medium text-paper">Allow</span>.
             </p>
             <button
               type="button"
               onClick={() => setHintVisible(false)}
-              className="text-xs uppercase tracking-widest text-paper/50 transition hover:text-paper"
+              className="shrink-0 text-xs uppercase tracking-widest text-paper/50 transition hover:text-paper"
             >
               Dismiss
             </button>
