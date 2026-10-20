@@ -2,5 +2,5 @@
 *.mp4 filter=lfs diff=lfs merge=lfs -text
 *.zip filter=lfs diff=lfs merge=lfs -text
 
-public/videos/intro-hs.mp4 -filter -diff -merge
+public/videos/*.mp4 -filter -diff -merge
 intro hs.mp4 -filter -diff -merge
