@@ -82,7 +82,15 @@ export function FinalCta() {
             Explore the Ecosystem
             <ArrowUpRight className="h-4 w-4" />
           </MagneticButton>
-          <MagneticButton href="#projects" variant="ghost" lg>
+          <MagneticButton
+            href="#projects"
+            onClick={(e) => {
+              e.preventDefault();
+              triggerFullscreenExploreVideo();
+            }}
+            variant="ghost"
+            lg
+          >
             View All Projects
           </MagneticButton>
         </motion.div>
