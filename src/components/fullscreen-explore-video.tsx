@@ -2,7 +2,6 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowUpRight, PlayIcon } from "@/components/ui/icons";
 
 export const EXPLORE_VIDEO_SRC = "/videos/explore-hs.mp4";
 export const EXPLORE_POSTER_SRC = "/videos/explore-poster.jpg";
@@ -12,17 +11,14 @@ export function triggerFullscreenExploreVideo() {
   window.dispatchEvent(new CustomEvent("hs-open-fullscreen-explore-video"));
 }
 
-// Alias for convenience
 export const triggerExploreVideo = triggerFullscreenExploreVideo;
 
 export function FullscreenExploreVideo() {
   const [isOpen, setIsOpen] = useState(false);
-  const [showEndCard, setShowEndCard] = useState(false);
   const [soundBlocked, setSoundBlocked] = useState(false);
   const videoRef = useRef<HTMLVideoElement | null>(null);
 
   const openVideo = useCallback(() => {
-    setShowEndCard(false);
     setSoundBlocked(false);
     setIsOpen(true);
   }, []);
@@ -32,38 +28,32 @@ export function FullscreenExploreVideo() {
       videoRef.current.pause();
     }
     setIsOpen(false);
-    setShowEndCard(false);
   }, []);
 
   const handleGoToProjects = useCallback(() => {
     closeVideo();
-    // Navigate / scroll to Explore the Applications section (#projects)
     if (typeof window !== "undefined") {
-      if (window.location.pathname === "/") {
-        const el = document.getElementById("projects");
-        if (el) {
-          el.scrollIntoView({ behavior: "smooth" });
+      setTimeout(() => {
+        if (window.location.pathname === "/") {
+          const el = document.getElementById("projects");
+          if (el) {
+            el.scrollIntoView({ behavior: "smooth" });
+          } else {
+            window.location.hash = "#projects";
+          }
         } else {
-          window.location.hash = "#projects";
+          window.location.href = "/#projects";
         }
-      } else {
-        window.location.href = "/#projects";
-      }
+      }, 80);
     }
   }, [closeVideo]);
 
-  const handleReplay = useCallback(() => {
-    setShowEndCard(false);
-    const video = videoRef.current;
-    if (video) {
-      video.currentTime = 0;
-      video.muted = false;
-      video.play().catch(() => {
-        video.muted = true;
-        video.play().catch(() => {});
-      });
-    }
-  }, []);
+  const handleVideoEnded = useCallback(() => {
+    // Graceful brief moment on the final logo screen before automatically scrolling to Explore Applications
+    setTimeout(() => {
+      handleGoToProjects();
+    }, 350);
+  }, [handleGoToProjects]);
 
   // Listen for global open event
   useEffect(() => {
@@ -118,17 +108,6 @@ export function FullscreenExploreVideo() {
     }
   }, [isOpen]);
 
-  // Auto-scroll to "Explore the Applications" after showing the end card
-  useEffect(() => {
-    if (!showEndCard) return;
-
-    const timer = setTimeout(() => {
-      handleGoToProjects();
-    }, 4500);
-
-    return () => clearTimeout(timer);
-  }, [showEndCard, handleGoToProjects]);
-
   const unmuteOnTap = () => {
     const video = videoRef.current;
     if (!video) return;
@@ -148,7 +127,7 @@ export function FullscreenExploreVideo() {
           className="fixed inset-0 z-[110] flex items-center justify-center bg-black overflow-hidden select-none"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          exit={{ opacity: 0, transition: { duration: 0.4 } }}
+          exit={{ opacity: 0, transition: { duration: 0.35 } }}
           onClick={unmuteOnTap}
         >
           {/* Subtle Ambient Radial Glow */}
@@ -194,16 +173,16 @@ export function FullscreenExploreVideo() {
             src={EXPLORE_VIDEO_SRC}
             poster={EXPLORE_POSTER_SRC}
             playsInline
-            controls={!showEndCard}
+            controls
             preload="auto"
-            onEnded={() => setShowEndCard(true)}
+            onEnded={handleVideoEnded}
             className="h-full w-full max-h-screen object-contain"
           >
             Your browser does not support video playback.
           </video>
 
           {/* Tap Anywhere for Sound Prompt */}
-          {soundBlocked && !showEndCard && (
+          {soundBlocked && (
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
@@ -214,87 +193,17 @@ export function FullscreenExploreVideo() {
             </motion.div>
           )}
 
-          {/* Bottom Skip Button during playback */}
-          {!showEndCard && (
-            <button
-              type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                setShowEndCard(true);
-              }}
-              className="absolute bottom-6 right-6 sm:bottom-8 sm:right-8 z-20 rounded-full border border-white/20 bg-black/60 px-4 py-1.5 text-xs uppercase tracking-widest text-white/80 backdrop-blur transition hover:bg-white/20 hover:text-white active:scale-95"
-            >
-              Skip →
-            </button>
-          )}
-
-          {/* End Screen: "Explore the Applications" */}
-          <AnimatePresence>
-            {showEndCard && (
-              <motion.div
-                initial={{ opacity: 0, scale: 0.94 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.96 }}
-                transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-                className="absolute inset-0 z-30 flex flex-col items-center justify-center bg-black/92 p-6 text-center backdrop-blur-md"
-                onClick={(e) => e.stopPropagation()}
-              >
-                <div className="relative flex flex-col items-center max-w-lg">
-                  {/* Glowing Logo Icon */}
-                  <div
-                    className="flex h-16 w-16 items-center justify-center rounded-2xl border border-cyan-400/40 bg-cyan-400/10 text-cyan-300 backdrop-blur"
-                    style={{ boxShadow: "0 0 40px rgba(34,211,238,0.4)" }}
-                  >
-                    <span className="font-display text-2xl font-bold tracking-tight">HS</span>
-                  </div>
-
-                  {/* Subtitle */}
-                  <p className="eyebrow mt-6 text-[11px] tracking-[0.25em] text-cyan-300">
-                    Intelligence Powers Possibility
-                  </p>
-
-                  {/* Headline: Explore the Applications */}
-                  <h2 className="display-lg mt-3 text-3xl sm:text-5xl font-semibold tracking-tight text-white">
-                    Explore the Applications
-                  </h2>
-
-                  <p className="mt-4 max-w-md text-sm sm:text-base leading-relaxed text-white/65">
-                    Eight intelligent systems — seven live, one in development — built to create, communicate, protect, and solve real-world problems.
-                  </p>
-
-                  {/* Call to Actions */}
-                  <div className="mt-8 flex flex-wrap items-center justify-center gap-3.5">
-                    <button
-                      type="button"
-                      onClick={handleGoToProjects}
-                      className="inline-flex h-12 items-center gap-2 rounded-full bg-cyan-400 px-7 text-sm font-semibold text-black transition-all hover:bg-cyan-300 hover:scale-105 active:scale-95 shadow-[0_0_35px_rgba(34,211,238,0.55)]"
-                    >
-                      <span>Explore the Applications</span>
-                      <ArrowUpRight className="h-4 w-4" />
-                    </button>
-
-                    <button
-                      type="button"
-                      onClick={handleReplay}
-                      className="inline-flex h-12 items-center gap-2 rounded-full border border-white/20 bg-white/5 px-6 text-sm font-medium text-white transition hover:border-white/50 hover:bg-white/10 active:scale-95"
-                    >
-                      <PlayIcon className="h-3.5 w-3.5" />
-                      <span>Replay Reel</span>
-                    </button>
-                  </div>
-
-                  {/* Close link */}
-                  <button
-                    type="button"
-                    onClick={closeVideo}
-                    className="mt-6 text-xs text-white/40 transition hover:text-white/80"
-                  >
-                    Close and return to page
-                  </button>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
+          {/* Skip directly to Explore Applications */}
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              handleGoToProjects();
+            }}
+            className="absolute bottom-6 right-6 sm:bottom-8 sm:right-8 z-20 rounded-full border border-white/20 bg-black/60 px-4 py-1.5 text-xs uppercase tracking-widest text-white/80 backdrop-blur transition hover:bg-white/20 hover:text-white active:scale-95"
+          >
+            Skip to Applications →
+          </button>
         </motion.div>
       )}
     </AnimatePresence>
