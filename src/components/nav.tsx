@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { AnimatePresence, motion, useScroll } from "framer-motion";
 import { ArrowUpRight } from "@/components/ui/icons";
-import { triggerExploreVideo } from "@/components/studio-explore-video";
+import { triggerFullscreenExploreVideo } from "@/components/fullscreen-explore-video";
 
 const LINKS = [
   { href: "#home", label: "Home" },
@@ -67,19 +67,14 @@ export function Nav() {
           </nav>
 
           <div className="flex items-center gap-3">
-            <a
-              href="#explore-video"
-              onClick={(e) => {
-                if (typeof window !== "undefined" && window.location.pathname === "/") {
-                  e.preventDefault();
-                  triggerExploreVideo();
-                }
-              }}
+            <button
+              type="button"
+              onClick={() => triggerFullscreenExploreVideo()}
               className="hidden items-center gap-1.5 rounded-full border border-white/15 px-4 py-2 text-[12.5px] font-medium text-white/85 transition-all hover:border-white/40 hover:bg-white/5 md:inline-flex"
             >
               Explore
               <ArrowUpRight className="h-3 w-3" />
-            </a>
+            </button>
             <button
               aria-label={open ? "Close menu" : "Open menu"}
               className="flex h-10 w-10 flex-col items-center justify-center gap-[5px] rounded-full border border-white/15 md:hidden"
@@ -139,19 +134,16 @@ export function Nav() {
               animate={{ opacity: 1 }}
               transition={{ delay: 0.4 }}
             >
-              <a
-                href="#explore-video"
-                onClick={(e) => {
+              <button
+                type="button"
+                onClick={() => {
                   setOpen(false);
-                  if (typeof window !== "undefined" && window.location.pathname === "/") {
-                    e.preventDefault();
-                    triggerExploreVideo();
-                  }
+                  triggerFullscreenExploreVideo();
                 }}
                 className="inline-flex items-center gap-2 rounded-full bg-paper px-6 py-3 text-sm font-semibold text-ink"
               >
                 Explore the ecosystem <ArrowUpRight className="h-4 w-4" />
-              </a>
+              </button>
             </motion.div>
           </motion.div>
         ) : null}

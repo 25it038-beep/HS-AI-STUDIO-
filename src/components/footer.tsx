@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { products } from "@/data/products";
 import { ArrowUpRight } from "@/components/ui/icons";
-import { triggerExploreVideo } from "@/components/studio-explore-video";
+import { triggerFullscreenExploreVideo } from "@/components/fullscreen-explore-video";
 
 export function Footer() {
   return (
@@ -86,18 +86,13 @@ export function Footer() {
             </div>
           </div>
 
-          <a
-            href="#explore-video"
-            onClick={(e) => {
-              if (typeof window !== "undefined" && window.location.pathname === "/") {
-                e.preventDefault();
-                triggerExploreVideo();
-              }
-            }}
+          <button
+            type="button"
+            onClick={() => triggerFullscreenExploreVideo()}
             className="inline-flex h-12 items-center justify-center gap-2 self-start rounded-full border border-white/15 px-6 text-sm font-medium text-white/85 transition-colors hover:border-white/40 hover:bg-white/5 md:self-auto"
           >
             Explore <ArrowUpRight className="h-4 w-4" />
-          </a>
+          </button>
         </div>
 
         <div className="mt-12 flex flex-col items-start justify-between gap-3 border-t border-white/8 pt-6 text-xs text-white/35 sm:flex-row">

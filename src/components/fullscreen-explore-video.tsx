@@ -118,6 +118,17 @@ export function FullscreenExploreVideo() {
     }
   }, [isOpen]);
 
+  // Auto-scroll to "Explore the Applications" after showing the end card
+  useEffect(() => {
+    if (!showEndCard) return;
+
+    const timer = setTimeout(() => {
+      handleGoToProjects();
+    }, 4500);
+
+    return () => clearTimeout(timer);
+  }, [showEndCard, handleGoToProjects]);
+
   const unmuteOnTap = () => {
     const video = videoRef.current;
     if (!video) return;

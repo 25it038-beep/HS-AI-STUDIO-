@@ -3,13 +3,13 @@
 import { motion, useReducedMotion } from "framer-motion";
 import { MagneticButton } from "@/components/ui/MagneticButton";
 import { ArrowUpRight } from "@/components/ui/icons";
-import { StudioExploreVideo, triggerExploreVideo } from "@/components/studio-explore-video";
+import { triggerFullscreenExploreVideo } from "@/components/fullscreen-explore-video";
 
 export function FinalCta() {
   const reduce = useReducedMotion();
 
   return (
-    <section className="relative overflow-hidden bg-ink py-32 md:py-44">
+    <section className="relative overflow-hidden bg-ink py-36 md:py-48">
       <div className="bg-grid-dark pointer-events-none absolute inset-0 opacity-30 [mask-image:radial-gradient(ellipse_60%_60%_at_50%_50%,black,transparent)]" />
       <div
         className="pointer-events-none absolute left-1/2 top-1/2 h-[480px] w-[720px] -translate-x-1/2 -translate-y-1/2 rounded-full blur-[130px]"
@@ -72,10 +72,10 @@ export function FinalCta() {
           transition={{ duration: 0.8, delay: 0.25 }}
         >
           <MagneticButton
-            href="#explore-video"
+            href="#projects"
             onClick={(e) => {
               e.preventDefault();
-              triggerExploreVideo();
+              triggerFullscreenExploreVideo();
             }}
             lg
           >
@@ -86,9 +86,6 @@ export function FinalCta() {
             View All Projects
           </MagneticButton>
         </motion.div>
-
-        {/* Video Showcase at the bottom of the site */}
-        <StudioExploreVideo className="mt-16 sm:mt-24" />
 
         <motion.div
           className="mt-16 flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-sm text-white/45"
