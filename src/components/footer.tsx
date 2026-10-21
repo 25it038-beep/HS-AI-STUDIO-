@@ -1,6 +1,9 @@
+"use client";
+
 import Link from "next/link";
 import { products } from "@/data/products";
 import { ArrowUpRight } from "@/components/ui/icons";
+import { triggerExploreVideo } from "@/components/studio-explore-video";
 
 export function Footer() {
   return (
@@ -84,7 +87,13 @@ export function Footer() {
           </div>
 
           <a
-            href="#projects"
+            href="#explore-video"
+            onClick={(e) => {
+              if (typeof window !== "undefined" && window.location.pathname === "/") {
+                e.preventDefault();
+                triggerExploreVideo();
+              }
+            }}
             className="inline-flex h-12 items-center justify-center gap-2 self-start rounded-full border border-white/15 px-6 text-sm font-medium text-white/85 transition-colors hover:border-white/40 hover:bg-white/5 md:self-auto"
           >
             Explore <ArrowUpRight className="h-4 w-4" />

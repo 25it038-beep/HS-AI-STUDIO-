@@ -55,6 +55,7 @@ export function MagneticButton({
   lg = false,
   className = "",
   accent,
+  onClick,
 }: {
   href: string;
   children: React.ReactNode;
@@ -63,6 +64,7 @@ export function MagneticButton({
   lg?: boolean;
   className?: string;
   accent?: string;
+  onClick?: (e: React.MouseEvent<HTMLAnchorElement>) => void;
 }) {
   const base =
     "relative inline-flex items-center justify-center gap-2 rounded-full font-medium tracking-tight transition-[background-color,color,border-color] duration-300 select-none";
@@ -86,6 +88,7 @@ export function MagneticButton({
     <Magnetic>
       <a
         href={href}
+        onClick={onClick}
         target={external ? "_blank" : undefined}
         rel={external ? "noopener noreferrer" : undefined}
         className={cls}
