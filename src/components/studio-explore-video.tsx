@@ -1,15 +1,15 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { motion, useReducedMotion } from "framer-motion";
-import { PlayIcon } from "@/components/ui/icons";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { ArrowUpRight, PlayIcon } from "@/components/ui/icons";
+import { triggerFullscreenExploreVideo } from "@/components/fullscreen-explore-video";
 
 export const EXPLORE_VIDEO_SRC = "/videos/explore-hs.mp4";
 export const EXPLORE_POSTER_SRC = "/videos/explore-poster.jpg";
 
 export function triggerExploreVideo() {
-  if (typeof window === "undefined") return;
-  window.dispatchEvent(new CustomEvent("hs-play-explore-video"));
+  triggerFullscreenExploreVideo();
 }
 
 export function StudioExploreVideo({ className = "" }: { className?: string }) {
@@ -18,6 +18,7 @@ export function StudioExploreVideo({ className = "" }: { className?: string }) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [hasError, setHasError] = useState(false);
+  const [showEndCard, setShowEndCard] = useState(false);
   const [isHighlighted, setIsHighlighted] = useState(false);
 
   useEffect(() => {
@@ -25,31 +26,31 @@ export function StudioExploreVideo({ className = "" }: { className?: string }) {
       const video = videoRef.current;
       if (!video) return;
 
-      // Scroll smoothly to the player
       containerRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
       setIsHighlighted(true);
       setTimeout(() => setIsHighlighted(false), 2400);
 
-      // Attempt to play with sound
       video.muted = false;
       video
         .play()
         .then(() => {
           setIsPlaying(true);
+          setShowEndCard(false);
         })
         .catch(() => {
-          // If browser policy blocks unmuted autoplay, play muted
           video.muted = true;
           video
             .play()
-            .then(() => setIsPlaying(true))
+            .then(() => {
+              setIsPlaying(true);
+              setShowEndCard(false);
+            })
             .catch(() => {});
         });
     };
 
     window.addEventListener("hs-play-explore-video", handlePlayEvent);
 
-    // If user loaded page with hash #explore-video, trigger playback
     if (typeof window !== "undefined" && window.location.hash === "#explore-video") {
       const timer = setTimeout(handlePlayEvent, 700);
       return () => {
@@ -71,14 +72,48 @@ export function StudioExploreVideo({ className = "" }: { className?: string }) {
       video.muted = false;
       video
         .play()
-        .then(() => setIsPlaying(true))
+        .then(() => {
+          setIsPlaying(true);
+          setShowEndCard(false);
+        })
         .catch(() => {
           video.muted = true;
-          video.play().then(() => setIsPlaying(true));
+          video.play().then(() => {
+            setIsPlaying(true);
+            setShowEndCard(false);
+          });
         });
     } else {
       video.pause();
       setIsPlaying(false);
+    }
+  };
+
+  const handleGoToProjects = () => {
+    if (typeof window !== "undefined") {
+      if (window.location.pathname === "/") {
+        const el = document.getElementById("projects");
+        if (el) {
+          el.scrollIntoView({ behavior: "smooth" });
+        } else {
+          window.location.hash = "#projects";
+        }
+      } else {
+        window.location.href = "/#projects";
+      }
+    }
+  };
+
+  const handleReplay = () => {
+    setShowEndCard(false);
+    const video = videoRef.current;
+    if (video) {
+      video.currentTime = 0;
+      video.muted = false;
+      video.play().then(() => setIsPlaying(true)).catch(() => {
+        video.muted = true;
+        video.play().then(() => setIsPlaying(true)).catch(() => {});
+      });
     }
   };
 
@@ -102,9 +137,14 @@ export function StudioExploreVideo({ className = "" }: { className?: string }) {
             </span>
             <span className="eyebrow text-[11px] text-cyan-300">Explore HS AI Studio</span>
           </div>
-          <span className="font-mono text-[11px] text-white/35">
-            1080p · Stereo · 16s Reel
-          </span>
+          <button
+            type="button"
+            onClick={triggerFullscreenExploreVideo}
+            className="flex items-center gap-1.5 font-mono text-[11px] text-cyan-300 hover:text-white transition-colors"
+          >
+            <span>Watch Fullscreen</span>
+            <span className="text-xs">⛶</span>
+          </button>
         </div>
 
         {/* Player Container */}
@@ -134,9 +174,14 @@ export function StudioExploreVideo({ className = "" }: { className?: string }) {
             </div>
 
             <div className="flex items-center gap-2">
-              <span className="hidden font-mono text-[9px] uppercase tracking-widest text-white/35 sm:inline-block">
-                Studio Reel
-              </span>
+              <button
+                type="button"
+                onClick={triggerFullscreenExploreVideo}
+                className="rounded px-2 py-0.5 font-mono text-[9px] uppercase tracking-widest text-cyan-300 hover:bg-white/10 transition"
+                title="Open in Fullscreen"
+              >
+                Fullscreen ⛶
+              </button>
             </div>
           </div>
 
@@ -146,12 +191,18 @@ export function StudioExploreVideo({ className = "" }: { className?: string }) {
               ref={videoRef}
               src={EXPLORE_VIDEO_SRC}
               poster={EXPLORE_POSTER_SRC}
-              controls
+              controls={!showEndCard}
               playsInline
               preload="metadata"
-              onPlay={() => setIsPlaying(true)}
+              onPlay={() => {
+                setIsPlaying(true);
+                setShowEndCard(false);
+              }}
               onPause={() => setIsPlaying(false)}
-              onEnded={() => setIsPlaying(false)}
+              onEnded={() => {
+                setIsPlaying(false);
+                setShowEndCard(true);
+              }}
               onError={() => setHasError(true)}
               className="absolute inset-0 h-full w-full object-contain"
             >
@@ -159,7 +210,7 @@ export function StudioExploreVideo({ className = "" }: { className?: string }) {
             </video>
 
             {/* Play Button Overlay */}
-            {!isPlaying && !hasError && (
+            {!isPlaying && !hasError && !showEndCard && (
               <button
                 type="button"
                 onClick={togglePlay}
@@ -177,6 +228,46 @@ export function StudioExploreVideo({ className = "" }: { className?: string }) {
                 </span>
               </button>
             )}
+
+            {/* End Card: Explore the Applications */}
+            <AnimatePresence>
+              {showEndCard && (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  transition={{ duration: 0.4 }}
+                  className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-black/90 p-6 text-center backdrop-blur-md"
+                >
+                  <p className="eyebrow text-[10px] tracking-[0.25em] text-cyan-300">
+                    Intelligence Powers Possibility
+                  </p>
+                  <h3 className="display-lg mt-2 text-2xl sm:text-4xl text-white">
+                    Explore the Applications
+                  </h3>
+                  <p className="mt-2 max-w-md text-xs sm:text-sm text-white/60">
+                    Eight intelligent systems built to solve real-world problems.
+                  </p>
+                  <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
+                    <button
+                      type="button"
+                      onClick={handleGoToProjects}
+                      className="inline-flex h-11 items-center gap-2 rounded-full bg-cyan-400 px-6 text-xs sm:text-sm font-semibold text-black transition-all hover:bg-cyan-300 hover:scale-105 active:scale-95 shadow-[0_0_25px_rgba(34,211,238,0.5)]"
+                    >
+                      <span>Explore the Applications</span>
+                      <ArrowUpRight className="h-4 w-4" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleReplay}
+                      className="inline-flex h-11 items-center gap-2 rounded-full border border-white/20 bg-white/5 px-5 text-xs sm:text-sm font-medium text-white transition hover:bg-white/10"
+                    >
+                      <span>Replay ↺</span>
+                    </button>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
 
             {/* Error Fallback */}
             {hasError && (
