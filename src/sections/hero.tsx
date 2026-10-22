@@ -94,8 +94,8 @@ export function Hero() {
           transition={{ duration: 1, delay: 1.1 }}
         >
           {[
-            { name: "Electron AI", c: "#38bdf8" },
             { name: "Galaxy Vision", c: "#c084fc" },
+            { name: "Electron AI", c: "#38bdf8" },
             { name: "Pendulum", c: "#a855f7" },
             { name: "Lumina", c: "#f5a623" },
             { name: "HSBot", c: "#22d3ee" },

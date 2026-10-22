@@ -4,8 +4,8 @@ import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 
 const WORDS = [
-  { word: "DISTILL", color: "#38bdf8", desc: "Proprietary offline AI models engineered for lightweight edge execution and real-time web search." },
   { word: "PERCEIVE", color: "#c084fc", desc: "Multimodal vision-language understanding, document OCR, and video frame reasoning." },
+  { word: "DISTILL", color: "#38bdf8", desc: "Proprietary offline AI models engineered for lightweight edge execution and real-time web search." },
   { word: "AUTOMATE", color: "#a855f7", desc: "Autonomous stealth web workflows and privacy-first browser exploration." },
   { word: "CREATE", color: "#f5a623", desc: "AI-powered presentation and content generation." },
   { word: "CONVERSE", color: "#22d3ee", desc: "Multi-model intelligent conversational workspaces." },
