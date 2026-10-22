@@ -5,6 +5,7 @@ import Link from "next/link";
 import { AnimatePresence, motion, useScroll } from "framer-motion";
 import { ArrowUpRight } from "@/components/ui/icons";
 import { triggerFullscreenExploreVideo } from "@/components/fullscreen-explore-video";
+import { NotificationBell } from "@/components/notification-bell";
 
 const LINKS = [
   { href: "#home", label: "Home" },
@@ -67,6 +68,7 @@ export function Nav() {
           </nav>
 
           <div className="flex items-center gap-3">
+            <NotificationBell />
             <button
               type="button"
               onClick={() => triggerFullscreenExploreVideo()}
