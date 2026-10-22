@@ -6,6 +6,7 @@ import { Footer } from "@/components/footer";
 import { AudioIntro } from "@/components/audio-intro";
 import { IntroVideo } from "@/components/intro-video";
 import { FullscreenExploreVideo } from "@/components/fullscreen-explore-video";
+import { ContributorFloatingBadge } from "@/components/contributor-floating-badge";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -31,9 +32,12 @@ export const metadata: Metadata = {
     template: "%s — HS AI Solutions",
   },
   description:
-    "A growing collection of intelligent applications built to create, communicate, protect, and unlock human potential. Electron AI · Pendulum · Lumina · HSBot · Ledger · Phishing Defence · HS CODE · Academia AI.",
+    "A growing collection of intelligent applications built to create, communicate, protect, and unlock human potential. Electron AI · Galaxy Vision · Pendulum · Lumina · HSBot · Ledger · Phishing Defence · HS CODE · Academia AI.",
   keywords: [
     "Electron AI",
+    "Galaxy Vision",
+    "Multimodal AI",
+    "Vision Language Model",
     "Offline AI",
     "Standalone AI Model",
     "Real-Time Web Search",
@@ -53,7 +57,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "HS AI Solutions — Building AI That Does More",
     description:
-      "Eight systems. Eight problems. One AI-driven ecosystem of real, deployed applications.",
+      "Nine systems. Nine problems. One AI-driven ecosystem of real, deployed applications.",
     type: "website",
   },
 };
@@ -75,6 +79,7 @@ export default function RootLayout({
         <Nav />
         <main className="flex-1">{children}</main>
         <Footer />
+        <ContributorFloatingBadge />
       </body>
     </html>
   );

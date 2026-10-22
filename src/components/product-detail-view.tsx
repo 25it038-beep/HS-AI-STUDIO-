@@ -5,10 +5,9 @@ import { motion } from "framer-motion";
 import { products, type ProductDetail } from "@/data/products";
 import { PreviewRenderer } from "@/components/previews/PreviewRenderer";
 import { DemoVideo, DEMO_VIDEOS } from "@/components/previews/DemoVideo";
-import { DownloadIcon } from "@/components/ui/icons";
+import { DownloadIcon, ArrowUpRight, TerminalIcon } from "@/components/ui/icons";
 import { Reveal } from "@/components/ui/Reveal";
 import { MagneticButton } from "@/components/ui/MagneticButton";
-import { ArrowUpRight } from "@/components/ui/icons";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 
 export function ProductDetailView({ product }: { product: ProductDetail }) {
@@ -91,7 +90,7 @@ export function ProductDetailView({ product }: { product: ProductDetail }) {
                 {product.downloadUrl ? (
                   <>
                     <MagneticButton href={product.downloadUrl} lg accent={product.accent}>
-                      {product.id === "electron" ? "Download Standalone ZIP" : "Download for Windows"}
+                      {product.id === "electron" ? "Download Standalone ZIP" : product.id === "galaxy-vision" ? "Download Portable ZIP" : "Download for Windows"}
                       <DownloadIcon className="h-4 w-4" />
                     </MagneticButton>
                     {product.status === "development" ? (
@@ -104,6 +103,8 @@ export function ProductDetailView({ product }: { product: ProductDetail }) {
                         <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
                         {product.id === "electron"
                           ? "Offline AI · 4GB RAM Ready · Live Search"
+                          : product.id === "galaxy-vision"
+                          ? "Multimodal Vision AI · Portable · Q4_K_M"
                           : "Windows Native (x64) · v0.1.0"}
                       </span>
                     )}
@@ -262,6 +263,90 @@ export function ProductDetailView({ product }: { product: ProductDetail }) {
           </div>
         </div>
       </section>
+
+      {/* portable bat launchers */}
+      {product.batLaunchers ? (
+        <section className="border-t border-white/[0.07] bg-[#0c0c11] py-24 text-white">
+          <div className="container-x">
+            <SectionHeading
+              eyebrow="One-Click BAT Launchers"
+              title="Run any interface instantly"
+            />
+            <p className="mt-4 max-w-2xl text-[15.5px] leading-relaxed text-muted-dark">
+              Extract the portable ZIP archive and launch your preferred workflow directly with Windows batch scripts. Zero installation, zero admin rights, fully offline-ready.
+            </p>
+            <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {product.batLaunchers.map((b, i) => (
+                <motion.div
+                  key={b.file}
+                  className="group relative flex flex-col justify-between rounded-2xl border border-white/10 bg-white/[0.02] p-6 transition-all duration-300 hover:border-white/30 hover:bg-white/[0.04]"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.05, duration: 0.5 }}
+                >
+                  <div>
+                    <div className="flex items-center justify-between">
+                      <span className="inline-flex items-center gap-1.5 rounded-lg border border-purple-400/30 bg-purple-500/10 px-2.5 py-1 font-mono text-[12px] font-semibold text-purple-300">
+                        <TerminalIcon className="h-3.5 w-3.5" />
+                        {b.file}
+                      </span>
+                      <span className="font-mono text-[11px] text-white/35">0{i + 1}</span>
+                    </div>
+                    <p className="mt-4 text-[16px] font-semibold text-white">{b.title}</p>
+                    <p className="mt-2 text-[13.5px] leading-relaxed text-muted-dark">{b.desc}</p>
+                  </div>
+                  <div className="mt-6 flex items-center justify-between border-t border-white/5 pt-4">
+                    <span className="font-mono text-[11px] text-white/40">Double-click to run</span>
+                    <span className="text-xs font-semibold" style={{ color: product.accent }}>→</span>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+      ) : null}
+
+      {/* technical specs table */}
+      {product.technicalSpecs ? (
+        <section className="border-t border-white/[0.07] bg-ink py-24 text-white">
+          <div className="container-x">
+            <SectionHeading
+              eyebrow="Hardware & Model Specs"
+              title="Technical Specifications"
+            />
+            <div className="mt-12 overflow-hidden rounded-2xl border border-white/10 bg-white/[0.02] shadow-2xl">
+              <table className="w-full text-left text-sm">
+                <thead>
+                  <tr className="border-b border-white/10 bg-white/[0.04]">
+                    <th className="py-4 px-6 font-mono text-[11px] uppercase tracking-wider text-white/45">Property</th>
+                    <th className="py-4 px-6 font-mono text-[11px] uppercase tracking-wider text-white/45">Specification</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-white/5">
+                  {product.technicalSpecs.map((spec, i) => (
+                    <motion.tr
+                      key={spec.property}
+                      initial={{ opacity: 0, x: -10 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: i * 0.04 }}
+                      className="transition-colors hover:bg-white/[0.02]"
+                    >
+                      <td className="py-4 px-6 font-medium text-white/70">{spec.property}</td>
+                      <td className="py-4 px-6 font-mono text-[13px] font-semibold text-white">
+                        <span className="inline-block rounded-md border border-white/10 bg-white/5 px-2.5 py-1">
+                          {spec.value}
+                        </span>
+                      </td>
+                    </motion.tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+      ) : null}
 
       {/* AI capabilities + technology */}
       <section className="border-t border-white/[0.07] bg-ink py-24">

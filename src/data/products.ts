@@ -19,6 +19,8 @@ export interface ProductDetail extends Product {
   flow: { step: string; detail: string }[];
   capabilities: string[];
   useCases: { title: string; description: string }[];
+  technicalSpecs?: { property: string; value: string }[];
+  batLaunchers?: { file: string; title: string; desc: string; command?: string }[];
 }
 
 export const products: ProductDetail[] = [
@@ -450,6 +452,106 @@ export const products: ProductDetail[] = [
       { title: "Exam revision", description: "Previous papers become adaptive practice and weak-spot analysis." },
       { title: "Concept mastery", description: "Learn any topic with a tutor that adapts to you." },
       { title: "Hands-free study", description: "Talk to the AI tutor while commuting or multitasking." },
+    ],
+  },
+  {
+    id: "galaxy-vision",
+    number: "09",
+    name: "Galaxy Vision",
+    tagline: "The AI that understands what it sees — and what you mean.",
+    description:
+      "A locally-hosted multimodal vision-language AI by HS AI Solutions — built for real-world analysis, not just chat. It sees images, reads documents, understands video frames, searches the web in real time, and holds full multi-turn conversations with pronoun and context awareness. All inference runs on your own GPU — no cloud, no subscriptions, complete privacy.",
+    long: "Galaxy Vision 1.0.0 is an enterprise-grade, locally-deployed multimodal vision-language AI system developed by HS AI Solutions for professionals who require deep visual understanding, automated document intelligence, and context-aware conversation without sending data to any third-party cloud. Running entirely on your local GPU (optimized for NVIDIA RTX 3050+ with 6GB VRAM), Galaxy Vision processes high-resolution images, complex invoices, receipts, technical schematics, and video frame sequences with surgical precision. It features full pronoun resolution and conversational entity tracking, offline-first DuckDuckGo web search synthesis, and a drop-in OpenAI-compatible REST API. With portable one-click BAT launchers, you can start the native Desktop GUI, Web UI, CLI, or API server immediately after extracting the ZIP file.",
+    category: "MULTIMODAL VISION-LANGUAGE AI",
+    url: "",
+    status: "live",
+    downloadUrl: "/downloads/galaxy-vision-v1.0.0-portable.zip",
+    features: [
+      "Vision & OCR: Analyze images, text extraction, chart interpretation & object detection",
+      "Document Intelligence: Parse invoices, receipts & tables into structured JSON",
+      "Video Frame Analysis: Sample keyframes & synthesize chronological event narratives",
+      "Live Screenshot AI: Instant real-time breakdown of visible screen, code, errors & UI",
+      "Web Search + AI Synthesis: Grounded DuckDuckGo queries without API keys",
+      "Conversational Context Memory: Full pronoun resolution & multi-turn entity tracking",
+      "100% Local & Private: Runs on local RTX GPU with zero cloud leakage",
+      "OpenAI-Compatible API: Drop-in support for VS Code, Continue.dev, AnythingLLM & Open WebUI",
+      "One-Click BAT Launchers: Run as Desktop App, Web UI, CLI, or REST API",
+    ],
+    technologies: [
+      "Multimodal Vision-Language",
+      "Q4_K_M 4-bit Quantization",
+      "8,192 Token Context Window",
+      "NVIDIA RTX GPU Accelerated",
+      "DuckDuckGo Search Bridge",
+      "OpenAI /v1 API Endpoints",
+      "Portable Windows Bundle (.bat)",
+      "Desktop App & Web UI",
+    ],
+    accent: "#c084fc",
+    preview: "galaxy-vision",
+    flow: [
+      { step: "Download Portable ZIP", detail: "Download galaxy-vision-v1.0.0-portable.zip directly to your workstation." },
+      { step: "Extract Anywhere", detail: "Extract the zip contents to any local folder without admin rights or external installations." },
+      { step: "Run setup.bat", detail: "Execute setup.bat once to configure your local Python environment and check GPU readiness." },
+      { step: "Select BAT Launcher", detail: "Launch start_desktop.bat for GUI, start_web_ui.bat for browser, start_cli.bat for CLI, or start_api.bat for REST server." },
+      { step: "Local Multimodal Analysis", detail: "Feed images, documents, screenshots, and queries with full context memory and 100% privacy." },
+    ],
+    capabilities: [
+      "Sub-second OCR & structured table parsing",
+      "Multi-turn pronoun and entity tracking across dialogue",
+      "Sequential video keyframe narrative synthesis",
+      "DuckDuckGo real-time cited web search",
+      "OpenAI-compatible /v1/chat/completions drop-in",
+      "100% Air-gapped local execution on NVIDIA RTX GPUs",
+    ],
+    useCases: [
+      { title: "Confidential document parsing", description: "Extract tables and financial figures from invoices and legal contracts without uploading to cloud servers." },
+      { title: "Visual coding & error debugging", description: "Capture live screenshots of code, terminals, and UI errors for instant diagnosis and solution generation." },
+      { title: "Video & surveillance auditing", description: "Analyze video footage keyframes chronologically to extract timelines and event summaries." },
+      { title: "Air-gapped enterprise intelligence", description: "Deploy an OpenAI-compatible vision-language API for internal developer tools in secure offline networks." },
+    ],
+    technicalSpecs: [
+      { property: "Model Family", value: "Galaxy (HS AI Solutions)" },
+      { property: "Version", value: "1.0.0" },
+      { property: "Architecture", value: "Multimodal Vision-Language" },
+      { property: "Foundation", value: "Apache 2.0 open-source base" },
+      { property: "Quantization", value: "Q4_K_M (4-bit)" },
+      { property: "Context Window", value: "8,192 tokens" },
+      { property: "Recommended GPU", value: "NVIDIA RTX 3050+ (6 GB VRAM)" },
+      { property: "Interface", value: "Web UI · Desktop App · CLI · REST API" },
+      { property: "Inference", value: "Local only — fully air-gapped capable" },
+    ],
+    batLaunchers: [
+      {
+        file: "start_desktop.bat",
+        title: "Desktop Application (GUI)",
+        desc: "Native desktop window with file dropzone, image preview, OCR inspector, and chat dialogue.",
+      },
+      {
+        file: "start_web_ui.bat",
+        title: "Browser Web UI",
+        desc: "Full browser interface on localhost with document parsing, multi-turn history, and live markdown.",
+      },
+      {
+        file: "start_cli.bat",
+        title: "Command-Line Interface (CLI)",
+        desc: "Fast terminal session for power users, scripts, batch processing, and headless servers.",
+      },
+      {
+        file: "start_api.bat",
+        title: "OpenAI-Compatible REST API",
+        desc: "Local server at /v1/chat/completions compatible with VS Code, Continue.dev, and Open WebUI.",
+      },
+      {
+        file: "galaxy-vision.bat",
+        title: "Master Interactive Launcher",
+        desc: "Interactive console menu to choose any interface mode with one keystroke.",
+      },
+      {
+        file: "setup.bat",
+        title: "One-Click Environment Setup",
+        desc: "Verifies Python dependencies, initializes local configuration, and tests GPU readiness.",
+      },
     ],
   },
 ];

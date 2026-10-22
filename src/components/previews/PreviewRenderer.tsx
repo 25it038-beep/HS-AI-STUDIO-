@@ -6,6 +6,7 @@ import { PhishingPreview } from "@/components/previews/PhishingPreview";
 import { HSCODEPreview } from "@/components/previews/HSCODEPreview";
 import { AcademiaPreview } from "@/components/previews/AcademiaPreview";
 import { PendulumPreview } from "@/components/previews/PendulumPreview";
+import { GalaxyVisionPreview } from "@/components/previews/GalaxyVisionPreview";
 
 const registry: Record<string, React.ComponentType<{ className?: string }>> = {
   electron: ElectronPreview,
@@ -16,6 +17,7 @@ const registry: Record<string, React.ComponentType<{ className?: string }>> = {
   phishing: PhishingPreview,
   hscode: HSCODEPreview,
   academia: AcademiaPreview,
+  "galaxy-vision": GalaxyVisionPreview,
 };
 
 export function PreviewRenderer({

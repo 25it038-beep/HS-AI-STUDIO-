@@ -5,6 +5,7 @@ import { AnimatePresence, motion } from "framer-motion";
 
 const WORDS = [
   { word: "DISTILL", color: "#38bdf8", desc: "Proprietary offline AI models engineered for lightweight edge execution and real-time web search." },
+  { word: "PERCEIVE", color: "#c084fc", desc: "Multimodal vision-language understanding, document OCR, and video frame reasoning." },
   { word: "AUTOMATE", color: "#a855f7", desc: "Autonomous stealth web workflows and privacy-first browser exploration." },
   { word: "CREATE", color: "#f5a623", desc: "AI-powered presentation and content generation." },
   { word: "CONVERSE", color: "#22d3ee", desc: "Multi-model intelligent conversational workspaces." },
@@ -33,7 +34,7 @@ export function WhatIBuild() {
         <div className="flex items-end justify-between">
           <p className="eyebrow text-white/45">What I build</p>
           <p className="hidden font-mono text-[11px] text-white/25 sm:block">
-            8 modes · {String(active + 1).padStart(2, "0")}/08
+            9 modes · {String(active + 1).padStart(2, "0")}/09
           </p>
         </div>
 

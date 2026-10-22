@@ -95,6 +95,7 @@ export function Hero() {
         >
           {[
             { name: "Electron AI", c: "#38bdf8" },
+            { name: "Galaxy Vision", c: "#c084fc" },
             { name: "Pendulum", c: "#a855f7" },
             { name: "Lumina", c: "#f5a623" },
             { name: "HSBot", c: "#22d3ee" },
@@ -110,7 +111,7 @@ export function Hero() {
           ))}
           <span className="ml-auto hidden items-center gap-2 text-sm text-white/35 sm:flex">
             <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-400" />
-            8 systems · 7 live
+            9 systems · 8 live
           </span>
         </motion.div>
       </div>

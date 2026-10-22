@@ -3,4 +3,5 @@
 *.zip filter=lfs diff=lfs merge=lfs -text
 
 public/videos/*.mp4 -filter -diff -merge
+public/downloads/*.zip -filter -diff -merge
 intro hs.mp4 -filter -diff -merge

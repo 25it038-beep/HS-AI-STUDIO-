@@ -77,3 +77,10 @@ export function DownloadIcon({ className = "" }: { className?: string }) {
     </svg>
   );
 }
+export function TerminalIcon({ className = "" }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 16 16" fill="none" className={`h-[0.9em] w-[0.9em] ${className}`} aria-hidden="true">
+      <path d="M2.5 4.5L6.5 8L2.5 11.5M7.5 11.5H13.5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
