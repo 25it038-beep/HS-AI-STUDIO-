@@ -60,6 +60,9 @@ export const metadata: Metadata = {
       "Nine systems. Nine problems. One AI-driven ecosystem of real, deployed applications.",
     type: "website",
   },
+  verification: {
+    google: "m5kChTz1e6OpOtRi-ndPdFEFuxipn0EZRx4-ncJpm8k",
+  },
 };
 
 export default function RootLayout({
