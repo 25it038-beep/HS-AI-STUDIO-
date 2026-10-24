@@ -36,15 +36,16 @@ export function WebsiteAssistantWidget() {
   const [isOpen, setIsOpen] = useState(false);
   const [webSearchEnabled, setWebSearchEnabled] = useState(true);
   const [clientLLMActive, setClientLLMActive] = useState(false);
-  const [clientLLMLoading, setClientLLMLoading] = useState(false);
-  const [engineInitProgress, setEngineInitProgress] = useState("");
+  const [clientLLMLoading, setClientLLMLoading] = useState(true);
+  const [isModelReady, setIsModelReady] = useState(false);
+  const [engineInitProgress, setEngineInitProgress] = useState("Initializing model environment...");
   const [webGPUSupported, setWebGPUSupported] = useState(false);
 
   const [messages, setMessages] = useState<MessageItem[]>([
     {
       id: "welcome",
       sender: "assistant",
-      text: "Hello! I am **HS Solutions Mini Star LLM**. I can answer general programming questions (Python, algorithms), search the live web, or guide you through HS AI Solutions tools.",
+      text: "Hello! I am **HS Solutions Mini Star LLM**. I can answer general programming questions (Python, algorithms), search the live web, or assist with your AI workflow.",
       timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
     },
   ]);
@@ -59,14 +60,22 @@ export function WebsiteAssistantWidget() {
     let isCancelled = false;
 
     async function autoLoadModel() {
-      if (typeof window === "undefined" || !(navigator as any).gpu) {
+      if (typeof window === "undefined") return;
+
+      if (!(navigator as any).gpu) {
+        // Fallback for browsers without WebGPU hardware
+        setClientLLMLoading(false);
+        setIsModelReady(true);
+        setEngineInitProgress("");
         return;
       }
+
       setWebGPUSupported(true);
 
       try {
         setClientLLMLoading(true);
-        setEngineInitProgress("Auto-loading in-browser 650MB model...");
+        setIsModelReady(false);
+        setEngineInitProgress("Loading HS Solutions Mini Star into GPU...");
 
         const { CreateMLCEngine } = await import("@mlc-ai/web-llm");
 
@@ -85,6 +94,7 @@ export function WebsiteAssistantWidget() {
         webllmEngineRef.current = engine;
         setClientLLMActive(true);
         setClientLLMLoading(false);
+        setIsModelReady(true);
         setEngineInitProgress("");
 
         setMessages((prev) => [
@@ -92,14 +102,15 @@ export function WebsiteAssistantWidget() {
           {
             id: `sys_${Date.now()}`,
             sender: "assistant",
-            text: "⚡ **In-Browser WebGPU LLM Loaded!** HS Solutions Mini Star is running directly inside your browser GPU with zero cloud latency.",
+            text: "⚡ **HS Solutions Mini Star LLM Ready!** Running directly inside your GPU. You can now chat.",
             timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
           },
         ]);
       } catch (err) {
-        console.warn("WebGPU in-browser LLM auto-load skipped or unsupported:", err);
+        console.warn("WebGPU in-browser LLM auto-load skipped or unsupported, falling back to server:", err);
         if (!isCancelled) {
           setClientLLMLoading(false);
+          setIsModelReady(true);
           setEngineInitProgress("");
         }
       }
@@ -119,6 +130,7 @@ export function WebsiteAssistantWidget() {
   }, [messages, isOpen]);
 
   const handleSend = async (textToSend?: string) => {
+    if (!isModelReady) return;
     const text = (textToSend || inputValue).trim();
     if (!text || isLoading) return;
 
@@ -253,15 +265,18 @@ CONVERSATION RULES:
           animate={{ scale: 1 }}
           transition={{ type: "spring", stiffness: 260, damping: 20 }}
         >
-          <span className="relative flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-tr from-purple-500 to-indigo-500 text-xs font-bold text-white shadow-md">
-            ⭐
-          </span>
+          <div className="relative flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-tr from-purple-500 to-indigo-500 text-xs font-bold text-white shadow-md">
+            <span>⭐</span>
+            {!isModelReady && (
+              <span className="absolute -inset-1 rounded-full border-2 border-purple-400 border-t-transparent animate-spin" />
+            )}
+          </div>
           <div className="flex flex-col text-left">
             <span className="font-mono text-[9.5px] uppercase tracking-wider text-purple-300">
-              Mini Star LLM {clientLLMActive ? "• WebGPU Active" : ""}
+              Mini Star LLM {!isModelReady ? "• Loading..." : clientLLMActive ? "• WebGPU Active" : ""}
             </span>
             <span className="text-[12.5px] font-semibold text-white/90 group-hover:text-white">
-              Ask Assistant
+              {!isModelReady ? "Model Loading..." : "Ask Assistant"}
             </span>
           </div>
         </motion.button>
@@ -354,100 +369,132 @@ CONVERSATION RULES:
               </div>
             )}
 
-            {/* Message Thread */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-3.5">
-              {messages.map((m) => (
-                <div
-                  key={m.id}
-                  className={`flex flex-col ${m.sender === "user" ? "items-end" : "items-start"}`}
-                >
-                  <div
-                    className={`max-w-[88%] rounded-2xl px-3.5 py-2.5 text-xs leading-relaxed ${
-                      m.sender === "user"
-                        ? "bg-purple-600 text-white"
-                        : "border border-white/10 bg-white/[0.04] text-white/90"
-                    }`}
-                  >
-                    {/* Web Searched Badge */}
-                    {m.webSearched && (
-                      <div className="mb-2 flex items-center gap-1 rounded-md border border-cyan-400/20 bg-cyan-500/10 px-2 py-0.5 font-mono text-[8.5px] text-cyan-300 w-fit">
-                        <span>🌐</span>
-                        <span>Researched via Live Web Tool</span>
-                      </div>
-                    )}
-
-                    <p className="whitespace-pre-line">{m.text}</p>
-
-                    {/* Matched Product Cards */}
-                    {m.products && m.products.length > 0 && (
-                      <div className="mt-3 space-y-2 border-t border-white/10 pt-2.5">
-                        <span className="font-mono text-[9px] uppercase tracking-wider text-purple-300 font-semibold">
-                          Verified Product Link:
-                        </span>
-                        {m.products.map((p) => (
-                          <Link
-                            key={p.id}
-                            href={p.destinationUrl}
-                            onClick={() => setIsOpen(false)}
-                            className="group flex items-center justify-between rounded-xl border border-white/12 bg-black/40 p-2.5 transition hover:border-purple-400/50 hover:bg-purple-950/20"
-                          >
-                            <div className="min-w-0 pr-2">
-                              <p className="font-semibold text-white group-hover:text-purple-300 transition truncate">
-                                {p.name}
-                              </p>
-                              <p className="text-[10px] text-muted-dark truncate">{p.tagline}</p>
-                            </div>
-                            <span className="inline-flex shrink-0 items-center gap-1 rounded-lg bg-purple-500/20 border border-purple-400/30 px-2 py-1 font-mono text-[9px] text-purple-200">
-                              Open <ArrowUpRight className="h-2.5 w-2.5" />
-                            </span>
-                          </Link>
-                        ))}
-                      </div>
-                    )}
-
-                    {/* Sources */}
-                    {m.sources && m.sources.length > 0 && (
-                      <div className="mt-2.5 flex flex-wrap gap-1 border-t border-white/5 pt-2">
-                        {m.sources.slice(0, 2).map((s, idx) => (
-                          <a
-                            key={idx}
-                            href={s.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-flex items-center gap-1 rounded bg-white/5 px-1.5 py-0.5 font-mono text-[8.5px] text-cyan-300 hover:text-white transition truncate max-w-[180px]"
-                          >
-                            🔗 {s.title}
-                          </a>
-                        ))}
-                      </div>
-                    )}
+            {/* Chat Body & Dedicated Loading Barrier */}
+            <div className="relative flex-1 min-h-0 flex flex-col overflow-hidden">
+              {/* Blocking Loading Overlay until model is fully loaded */}
+              {!isModelReady && (
+                <div className="absolute inset-0 z-30 flex flex-col items-center justify-center bg-[#0e0d16]/95 p-6 text-center backdrop-blur-md">
+                  <div className="relative mb-5 flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-tr from-purple-600 to-indigo-600 shadow-[0_0_40px_rgba(168,85,247,0.55)]">
+                    <span className="text-2xl animate-spin [animation-duration:3s]">⭐</span>
+                    <span className="absolute -inset-1.5 rounded-2xl border-2 border-purple-400/40 animate-ping opacity-30" />
                   </div>
-                  <span className="mt-1 font-mono text-[8.5px] text-white/30 px-1">
-                    {m.timestamp} {m.provider ? `• ${m.provider}` : ""}
-                  </span>
-                </div>
-              ))}
+                  <h4 className="font-display text-base font-semibold text-white tracking-wide">
+                    Loading HS Solutions Mini Star LLM
+                  </h4>
+                  <p className="mt-2 max-w-[300px] text-[11px] font-mono text-purple-200/90 leading-relaxed truncate">
+                    {engineInitProgress || "Initializing GPU environment & model weights..."}
+                  </p>
 
-              {isLoading && (
-                <div className="flex items-center gap-1.5 rounded-2xl border border-white/10 bg-white/[0.04] px-3.5 py-2.5 text-xs text-white/50 w-fit">
-                  <span className="h-1.5 w-1.5 rounded-full bg-purple-400 animate-bounce" />
-                  <span className="h-1.5 w-1.5 rounded-full bg-purple-400 animate-bounce [animation-delay:0.2s]" />
-                  <span className="h-1.5 w-1.5 rounded-full bg-purple-400 animate-bounce [animation-delay:0.4s]" />
-                  <span className="font-mono text-[10px] ml-1">Generating response...</span>
+                  {/* Progress Bar Animation */}
+                  <div className="mt-5 w-60 h-2 rounded-full bg-white/10 p-0.5 overflow-hidden">
+                    <div className="h-full bg-gradient-to-r from-purple-500 via-indigo-400 to-cyan-400 rounded-full animate-pulse w-full" />
+                  </div>
+
+                  <div className="mt-4 flex items-center gap-2 rounded-full bg-white/5 border border-white/10 px-3 py-1">
+                    <span className="h-2 w-2 rounded-full bg-amber-400 animate-ping shrink-0" />
+                    <p className="text-[10px] text-white/60 font-mono">
+                      Chat is locked until the model finishes loading
+                    </p>
+                  </div>
                 </div>
               )}
-              <div ref={messagesEndRef} />
+
+              {/* Message Thread */}
+              <div className="flex-1 overflow-y-auto p-4 space-y-3.5">
+                {messages.map((m) => (
+                  <div
+                    key={m.id}
+                    className={`flex flex-col ${m.sender === "user" ? "items-end" : "items-start"}`}
+                  >
+                    <div
+                      className={`max-w-[88%] rounded-2xl px-3.5 py-2.5 text-xs leading-relaxed ${
+                        m.sender === "user"
+                          ? "bg-purple-600 text-white"
+                          : "border border-white/10 bg-white/[0.04] text-white/90"
+                      }`}
+                    >
+                      {/* Web Searched Badge */}
+                      {m.webSearched && (
+                        <div className="mb-2 flex items-center gap-1 rounded-md border border-cyan-400/20 bg-cyan-500/10 px-2 py-0.5 font-mono text-[8.5px] text-cyan-300 w-fit">
+                          <span>🌐</span>
+                          <span>Researched via Live Web Tool</span>
+                        </div>
+                      )}
+
+                      <p className="whitespace-pre-line">{m.text}</p>
+
+                      {/* Matched Product Cards */}
+                      {m.products && m.products.length > 0 && (
+                        <div className="mt-3 space-y-2 border-t border-white/10 pt-2.5">
+                          <span className="font-mono text-[9px] uppercase tracking-wider text-purple-300 font-semibold">
+                            Verified Product Link:
+                          </span>
+                          {m.products.map((p) => (
+                            <Link
+                              key={p.id}
+                              href={p.destinationUrl}
+                              onClick={() => setIsOpen(false)}
+                              className="group flex items-center justify-between rounded-xl border border-white/12 bg-black/40 p-2.5 transition hover:border-purple-400/50 hover:bg-purple-950/20"
+                            >
+                              <div className="min-w-0 pr-2">
+                                <p className="font-semibold text-white group-hover:text-purple-300 transition truncate">
+                                  {p.name}
+                                </p>
+                                <p className="text-[10px] text-muted-dark truncate">{p.tagline}</p>
+                              </div>
+                              <span className="inline-flex shrink-0 items-center gap-1 rounded-lg bg-purple-500/20 border border-purple-400/30 px-2 py-1 font-mono text-[9px] text-purple-200">
+                                Open <ArrowUpRight className="h-2.5 w-2.5" />
+                              </span>
+                            </Link>
+                          ))}
+                        </div>
+                      )}
+
+                      {/* Sources */}
+                      {m.sources && m.sources.length > 0 && (
+                        <div className="mt-2.5 flex flex-wrap gap-1 border-t border-white/5 pt-2">
+                          {m.sources.slice(0, 2).map((s, idx) => (
+                            <a
+                              key={idx}
+                              href={s.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-1 rounded bg-white/5 px-1.5 py-0.5 font-mono text-[8.5px] text-cyan-300 hover:text-white transition truncate max-w-[180px]"
+                            >
+                              🔗 {s.title}
+                            </a>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                    <span className="mt-1 font-mono text-[8.5px] text-white/30 px-1">
+                      {m.timestamp} {m.provider ? `• ${m.provider}` : ""}
+                    </span>
+                  </div>
+                ))}
+
+                {isLoading && (
+                  <div className="flex items-center gap-1.5 rounded-2xl border border-white/10 bg-white/[0.04] px-3.5 py-2.5 text-xs text-white/50 w-fit">
+                    <span className="h-1.5 w-1.5 rounded-full bg-purple-400 animate-bounce" />
+                    <span className="h-1.5 w-1.5 rounded-full bg-purple-400 animate-bounce [animation-delay:0.2s]" />
+                    <span className="h-1.5 w-1.5 rounded-full bg-purple-400 animate-bounce [animation-delay:0.4s]" />
+                    <span className="font-mono text-[10px] ml-1">Generating response...</span>
+                  </div>
+                )}
+                <div ref={messagesEndRef} />
+              </div>
             </div>
 
-            {/* Suggested Queries Chips */}
-            {messages.length <= 3 && (
+            {/* Suggested Queries Chips (Unlocked only when model is ready) */}
+            {isModelReady && messages.length <= 3 && (
               <div className="px-4 py-1.5 flex flex-wrap gap-1.5 bg-white/[0.01] border-t border-white/5">
                 {SUGGESTED_QUERIES.map((q) => (
                   <button
                     key={q}
                     type="button"
+                    disabled={!isModelReady}
                     onClick={() => handleSend(q)}
-                    className="rounded-full border border-white/10 bg-white/[0.03] px-2.5 py-1 text-[10px] text-white/70 hover:border-purple-400/40 hover:text-white transition"
+                    className="rounded-full border border-white/10 bg-white/[0.03] px-2.5 py-1 text-[10px] text-white/70 hover:border-purple-400/40 hover:text-white transition disabled:opacity-40"
                   >
                     {q}
                   </button>
@@ -455,7 +502,7 @@ CONVERSATION RULES:
               </div>
             )}
 
-            {/* Input Bar */}
+            {/* Input Bar (Locked until model is loaded) */}
             <form
               onSubmit={(e) => {
                 e.preventDefault();
@@ -466,14 +513,19 @@ CONVERSATION RULES:
               <input
                 type="text"
                 value={inputValue}
+                disabled={!isModelReady || isLoading}
                 onChange={(e) => setInputValue(e.target.value)}
-                placeholder="Ask anything, code in Python, search web..."
-                className="flex-1 rounded-xl border border-white/12 bg-white/[0.04] px-3.5 py-2 text-xs text-white placeholder-white/30 outline-none focus:border-purple-400/60"
+                placeholder={
+                  !isModelReady
+                    ? "Model loading... Please wait"
+                    : "Ask anything, code in Python, search web..."
+                }
+                className="flex-1 rounded-xl border border-white/12 bg-white/[0.04] px-3.5 py-2 text-xs text-white placeholder-white/30 outline-none focus:border-purple-400/60 disabled:opacity-40 disabled:cursor-not-allowed"
               />
               <button
                 type="submit"
-                disabled={isLoading || !inputValue.trim()}
-                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-purple-600 text-white transition hover:bg-purple-500 disabled:opacity-40"
+                disabled={!isModelReady || isLoading || !inputValue.trim()}
+                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-purple-600 text-white transition hover:bg-purple-500 disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 ↑
               </button>
