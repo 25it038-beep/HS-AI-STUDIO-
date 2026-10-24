@@ -9,6 +9,7 @@ interface MessageItem {
   id: string;
   sender: "user" | "assistant";
   text: string;
+  webSearched?: boolean;
   products?: {
     id: string;
     name: string;
@@ -25,18 +26,19 @@ interface MessageItem {
 
 const SUGGESTED_QUERIES = [
   "What is Lumina?",
-  "What is Galaxy Vision?",
-  "Where can I find Electron AI?",
-  "What products does HS AI Solutions offer?",
+  "What is Python?",
+  "Latest AI news",
+  "Where can I find Galaxy Vision?",
 ];
 
 export function WebsiteAssistantWidget() {
   const [isOpen, setIsOpen] = useState(false);
+  const [webSearchEnabled, setWebSearchEnabled] = useState(true);
   const [messages, setMessages] = useState<MessageItem[]>([
     {
       id: "welcome",
       sender: "assistant",
-      text: "Hello! I am **HS Solutions Mini Star LLM**, your assistant for HS AI Solutions. Ask me anything about our AI models, applications, or features.",
+      text: "Hello! I am **HS Solutions Mini Star LLM**, equipped with real-time Web Search tools and verified studio intelligence. Ask me about our AI products, programming questions, or live web topics.",
       timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
     },
   ]);
@@ -83,7 +85,10 @@ export function WebsiteAssistantWidget() {
       const res = await fetch("/api/assistant/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: text }),
+        body: JSON.stringify({
+          message: text,
+          enableWebSearch: webSearchEnabled,
+        }),
       });
 
       const data = await res.json();
@@ -95,6 +100,7 @@ export function WebsiteAssistantWidget() {
         id: `bot_${Date.now()}`,
         sender: "assistant",
         text: data.message,
+        webSearched: data.webSearched,
         products: data.products,
         sources: data.sources,
         timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
@@ -132,7 +138,7 @@ export function WebsiteAssistantWidget() {
           </span>
           <div className="flex flex-col text-left">
             <span className="font-mono text-[9.5px] uppercase tracking-wider text-purple-300">
-              Mini Star LLM
+              Mini Star + Web Tool
             </span>
             <span className="text-[12.5px] font-semibold text-white/90 group-hover:text-white">
               Ask Assistant
@@ -171,24 +177,44 @@ export function WebsiteAssistantWidget() {
                     <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
                   </div>
                   <span className="font-mono text-[10px] text-white/45">
-                    Website Assistant · HS AI Solutions
+                    Website & Web Tool Assistant · HS AI Solutions
                   </span>
                 </div>
               </div>
 
-              <button
-                type="button"
-                onClick={() => setIsOpen(false)}
-                className="rounded-full p-1.5 text-white/40 hover:text-white hover:bg-white/5 transition"
-                aria-label="Close assistant"
-              >
-                ✕
-              </button>
+              <div className="flex items-center gap-2">
+                {/* Web Tool Toggle Button */}
+                <button
+                  type="button"
+                  onClick={() => setWebSearchEnabled(!webSearchEnabled)}
+                  title={webSearchEnabled ? "Web Tool Active" : "Web Tool Disabled"}
+                  className={`flex items-center gap-1 rounded-full px-2 py-0.5 font-mono text-[9px] transition ${
+                    webSearchEnabled
+                      ? "border border-cyan-400/40 bg-cyan-500/15 text-cyan-300"
+                      : "border border-white/10 bg-white/5 text-white/40"
+                  }`}
+                >
+                  <span>🌐</span>
+                  <span>{webSearchEnabled ? "Web ON" : "Web OFF"}</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setIsOpen(false)}
+                  className="rounded-full p-1.5 text-white/40 hover:text-white hover:bg-white/5 transition"
+                  aria-label="Close assistant"
+                >
+                  ✕
+                </button>
+              </div>
             </div>
 
             {/* Freshness Bar */}
             <div className="flex items-center justify-between px-4 py-1.5 bg-black/40 border-b border-white/5 text-[9.5px] font-mono text-white/40">
-              <span>Verified Knowledge Base</span>
+              <span className="flex items-center gap-1.5">
+                <span className="h-1 w-1 rounded-full bg-cyan-400" />
+                Live Web Tool + Studio Intelligence
+              </span>
               <span>{lastSync ? `Synced: ${lastSync}` : "Live Connected"}</span>
             </div>
 
@@ -206,6 +232,14 @@ export function WebsiteAssistantWidget() {
                         : "border border-white/10 bg-white/[0.04] text-white/90"
                     }`}
                   >
+                    {/* Web Searched Badge indicator */}
+                    {m.webSearched && (
+                      <div className="mb-2 flex items-center gap-1 rounded-md border border-cyan-400/20 bg-cyan-500/10 px-2 py-0.5 font-mono text-[8.5px] text-cyan-300 w-fit">
+                        <span>🌐</span>
+                        <span>Researched via Live Web Tool</span>
+                      </div>
+                    )}
+
                     <p className="whitespace-pre-line">{m.text}</p>
 
                     {/* Matched Product Cards */}
@@ -234,6 +268,23 @@ export function WebsiteAssistantWidget() {
                         ))}
                       </div>
                     )}
+
+                    {/* External Web Sources */}
+                    {m.sources && m.sources.length > 0 && (
+                      <div className="mt-2.5 flex flex-wrap gap-1 border-t border-white/5 pt-2">
+                        {m.sources.slice(0, 2).map((s, idx) => (
+                          <a
+                            key={idx}
+                            href={s.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1 rounded bg-white/5 px-1.5 py-0.5 font-mono text-[8.5px] text-cyan-300 hover:text-white transition truncate max-w-[180px]"
+                          >
+                            🔗 {s.title}
+                          </a>
+                        ))}
+                      </div>
+                    )}
                   </div>
                   <span className="mt-1 font-mono text-[8.5px] text-white/30 px-1">
                     {m.timestamp}
@@ -246,7 +297,7 @@ export function WebsiteAssistantWidget() {
                   <span className="h-1.5 w-1.5 rounded-full bg-purple-400 animate-bounce" />
                   <span className="h-1.5 w-1.5 rounded-full bg-purple-400 animate-bounce [animation-delay:0.2s]" />
                   <span className="h-1.5 w-1.5 rounded-full bg-purple-400 animate-bounce [animation-delay:0.4s]" />
-                  <span className="font-mono text-[10px] ml-1">Searching knowledge...</span>
+                  <span className="font-mono text-[10px] ml-1">Searching web & knowledge...</span>
                 </div>
               )}
               <div ref={messagesEndRef} />
@@ -280,7 +331,7 @@ export function WebsiteAssistantWidget() {
                 type="text"
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
-                placeholder="Ask about Lumina, Galaxy Vision, models..."
+                placeholder="Ask about Lumina, Python, research the web..."
                 className="flex-1 rounded-xl border border-white/12 bg-white/[0.04] px-3.5 py-2 text-xs text-white placeholder-white/30 outline-none focus:border-purple-400/60"
               />
               <button
