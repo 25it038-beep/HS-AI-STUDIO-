@@ -9,12 +9,35 @@ function generateIntelligentResponse(userMessage: string, retrievedPassages: str
   const qLower = q.toLowerCase();
 
   // 1. Identity Queries
-  if (qLower.includes("what is your name") || qLower.includes("who are you")) {
-    return "Hello! I am **HS Solutions Mini Star LLM**, an intelligent conversational AI assistant customized and maintained by **HS AI Solutions**. I can assist you with general knowledge, coding, math, and live web research.";
+  if (
+    qLower.includes("what is your name") ||
+    qLower.includes("who are you") ||
+    qLower.includes("your name") ||
+    qLower.includes("what model") ||
+    qLower.includes("what are you")
+  ) {
+    return "Hello! I am **HS Solutions Mini Star LLM**, the conversational AI language model developed, customized, and maintained by **HS AI Solutions**.";
   }
 
-  if (qLower.includes("who created you") || qLower.includes("who developed you") || qLower.includes("who made you")) {
-    return "**HS AI Solutions** (founded by Harshan Seliyan) customized and maintains **HS Solutions Mini Star LLM**. My underlying foundation is based on open-weight architecture (Qwen2.5-0.5B-Instruct-uncensored), tailored for edge-ready execution and website intelligence.";
+  if (
+    qLower.includes("who created you") ||
+    qLower.includes("who developed you") ||
+    qLower.includes("who made you") ||
+    qLower.includes("who owns you") ||
+    qLower.includes("who built you") ||
+    qLower.includes("who is your creator")
+  ) {
+    return "**HS AI Solutions** (founded by Harshan Seliyan) developed, customized, and maintains **HS Solutions Mini Star LLM** as its own lightweight AI model.";
+  }
+
+  if (
+    qLower.includes("qwen") ||
+    qLower.includes("alibaba") ||
+    qLower.includes("llama") ||
+    qLower.includes("openai") ||
+    qLower.includes("chatgpt")
+  ) {
+    return "I am **HS Solutions Mini Star LLM**, developed, customized, and maintained by **HS AI Solutions**.";
   }
 
   // 2. Specific HS AI Studio Products (ONLY when user explicitly asks for products or mentions a product)
@@ -201,13 +224,19 @@ export async function POST(req: NextRequest) {
             .join("\n\n")}`
         : "";
 
-    const systemPrompt = `You are HS Solutions Mini Star LLM, an intelligent, helpful conversational AI assistant developed and maintained by HS AI Solutions, equipped with live Web Search tools.
+    const systemPrompt = `You are HS Solutions Mini Star LLM, the lightweight conversational AI language model developed, customized, and maintained completely by HS AI Solutions.
+
+STRICT IDENTITY:
+- Official name: HS Solutions Mini Star LLM.
+- Developer & maintainer: HS AI Solutions.
+- Organization: HS AI Solutions.
+- You are HS AI Solutions' own model. Never identify as Qwen, Alibaba, OpenAI, or any third party.
 
 INSTRUCTIONS:
 - Answer the user's specific question directly, helpfully, accurately, and concisely.
 - Do NOT bring up, recommend, or link to HS AI Solutions products or navigation unless the user explicitly asks about them.
 - For general questions (coding, Python, algorithms, math, science, current events), focus entirely on the subject requested without mentioning products.
-- When asked your identity, identify yourself as HS Solutions Mini Star LLM customized and maintained by HS AI Solutions.
+- When asked your identity, state that you are HS Solutions Mini Star LLM developed and maintained by HS AI Solutions.
 ${webContext ? `\nLIVE WEB SEARCH RESULTS:\n${webContext}\n` : ""}
 ${isProductQuery && retrievedPassages.length > 0 ? `\nVERIFIED HS AI SOLUTIONS CONTEXT:\n${retrievedPassages.join("\n\n")}\n` : ""}`;
 
