@@ -4,28 +4,34 @@ import { searchWeb, WebSearchResult } from "@/lib/web-search";
 import { products } from "@/data/products";
 
 // Universal Knowledge Engine: Handles coding, math, general science, technology, and studio navigation
-function generateIntelligentResponse(userMessage: string, retrievedPassages: string[], webResults: WebSearchResult[]): string {
+function generateIntelligentResponse(userMessage: string, retrievedPassages: string[], webResults: WebSearchResult[], isProductQuery: boolean): string {
   const q = userMessage.trim();
   const qLower = q.toLowerCase();
 
   // 1. Identity Queries
   if (qLower.includes("what is your name") || qLower.includes("who are you")) {
-    return "Hello! I am **HS Solutions Mini Star LLM**, an intelligent conversational AI assistant customized and maintained by **HS AI Solutions**. I have integrated web search tools and studio knowledge to help you with programming, real-time research, and navigating our AI applications.";
+    return "Hello! I am **HS Solutions Mini Star LLM**, an intelligent conversational AI assistant customized and maintained by **HS AI Solutions**. I can assist you with general knowledge, coding, math, and live web research.";
   }
 
   if (qLower.includes("who created you") || qLower.includes("who developed you") || qLower.includes("who made you")) {
     return "**HS AI Solutions** (founded by Harshan Seliyan) customized and maintains **HS Solutions Mini Star LLM**. My underlying foundation is based on open-weight architecture (Qwen2.5-0.5B-Instruct-uncensored), tailored for edge-ready execution and website intelligence.";
   }
 
-  // 2. Specific HS AI Studio Products
-  for (const p of products) {
-    if (qLower.includes(p.name.toLowerCase()) || qLower.includes(p.id.toLowerCase())) {
-      return `**${p.name}** (#${p.number} · ${p.category})\n\n${p.description}\n\n**Key Highlights:**\n${p.features.slice(0, 4).map((f) => `• ${f}`).join("\n")}\n\n🔗 You can explore and test it directly at: **/products/${p.id}**`;
+  // 2. Specific HS AI Studio Products (ONLY when user explicitly asks for products or mentions a product)
+  if (isProductQuery) {
+    for (const p of products) {
+      if (qLower.includes(p.name.toLowerCase()) || qLower.includes(p.id.toLowerCase())) {
+        return `**${p.name}** (#${p.number} · ${p.category})\n\n${p.description}\n\n**Key Highlights:**\n${p.features.slice(0, 4).map((f) => `• ${f}`).join("\n")}\n\n🔗 You can explore it directly at: **/products/${p.id}**`;
+      }
     }
-  }
 
-  if (qLower.includes("products") || qLower.includes("all products") || qLower.includes("what do you build") || qLower.includes("what do you offer")) {
-    return `HS AI Solutions offers **${products.length} intelligent systems**:\n\n${products.map((p) => `• **${p.name}** (${p.category}) — ${p.tagline}`).join("\n")}\n\n✨ Explore the interactive ecosystem at **/#projects**.`;
+    if (qLower.includes("products") || qLower.includes("all products") || qLower.includes("what do you build") || qLower.includes("what do you offer")) {
+      return `HS AI Solutions offers **${products.length} intelligent systems**:\n\n${products.map((p) => `• **${p.name}** (${p.category}) — ${p.tagline}`).join("\n")}\n\n✨ Explore the interactive ecosystem at **/#projects**.`;
+    }
+
+    if (retrievedPassages.length > 0) {
+      return `Based on verified HS AI Solutions resources:\n\n${retrievedPassages[0]}`;
+    }
   }
 
   // 3. Web Search Grounded Synthesis (If real-time web results were retrieved)
@@ -94,26 +100,21 @@ while count <= 5:
 
 **Core Subfields:**
 • **Machine Learning (ML):** Algorithms that learn patterns from data (e.g., neural networks).
-• **Natural Language Processing (NLP):** Enabling computers to read, generate, and converse in human languages (e.g., Large Language Models).
-• **Computer Vision:** Interpreting visual data like images, OCR documents, and video frames (such as our **Galaxy Vision** system).
+• **Natural Language Processing (NLP):** Enabling computers to understand and generate human language (e.g., Large Language Models).
+• **Computer Vision:** Interpreting visual data like images, OCR documents, and video frames.
 • **Edge AI:** Deploying compact models directly to local devices without sending data to third-party clouds.`;
   }
 
   if (qLower.includes("what is next.js") || qLower.includes("nextjs")) {
-    return `**Next.js** is a production React framework by Vercel that enables server-side rendering (SSR), static site generation (SSG), React Server Components, and seamless API routing out of the box. This website (HS AI Solutions) is built using Next.js!`;
+    return `**Next.js** is a production React framework by Vercel that enables server-side rendering (SSR), static site generation (SSG), React Server Components, and seamless API routing out of the box.`;
   }
 
-  // 5. Grounded Knowledge Retrieval fallback
-  if (retrievedPassages.length > 0 && (qLower.includes("model") || qLower.includes("system") || qLower.includes("studio") || qLower.includes("ai"))) {
-    return `Based on verified HS AI Solutions resources:\n\n${retrievedPassages[0]}`;
-  }
-
-  // 6. Intelligent general conversational response
+  // 5. Intelligent general conversational response
   return `That's an interesting question about **"${q}"**! 
 
-As **HS Solutions Mini Star LLM**, I can assist you with general knowledge, live web search, programming concepts (Python, JavaScript, Next.js, AI architectures), logic, and navigating HS AI Solutions' suite of products.
+As **HS Solutions Mini Star LLM**, I can assist you with general knowledge, live web search, programming concepts (Python, JavaScript, Next.js, AI architectures), logic, and troubleshooting.
 
-Feel free to ask a specific coding problem, request real-time information, or explore applications like **Lumina**, **Galaxy Vision**, or **Electron AI**!`;
+Feel free to ask a specific coding problem, request real-time information, or ask any question!`;
 }
 
 export async function POST(req: NextRequest) {
@@ -128,16 +129,33 @@ export async function POST(req: NextRequest) {
     const cleanMessage = message.trim().slice(0, 1000);
     const qLower = cleanMessage.toLowerCase();
 
-    // 1. Search Knowledge Base for studio products and documentation
-    const searchResults = searchKnowledge(cleanMessage, 3);
+    // Check if user is specifically inquiring about HS AI Solutions products/tools/projects
+    const isProductQuery =
+      products.some((p) => qLower.includes(p.name.toLowerCase()) || qLower.includes(p.id.toLowerCase())) ||
+      qLower.includes("products") ||
+      qLower.includes("what do you build") ||
+      qLower.includes("what do you offer") ||
+      qLower.includes("show me your projects") ||
+      qLower.includes("navigate") ||
+      qLower.includes("portfolio");
+
+    // 1. Search Knowledge Base ONLY when user asks about studio products/docs
+    const searchResults = isProductQuery ? searchKnowledge(cleanMessage, 3) : [];
     const retrievedPassages = searchResults.map((r) => r.doc.content);
 
-    // 2. Web Tool: If the query asks for external live info, news, weather, or real-time web research
+    // 2. Web Tool: If user asks for external live info, news, or general real-time search
     let webResults: WebSearchResult[] = [];
-    const isStudioSpecific = products.some((p) => qLower.includes(p.name.toLowerCase()) || qLower.includes(p.id.toLowerCase()));
-
-    // Perform web search when web search is enabled and the query is not purely studio-internal
-    if (enableWebSearch && (!isStudioSpecific || qLower.includes("search") || qLower.includes("web") || qLower.includes("latest") || qLower.includes("news") || qLower.includes("who is") || qLower.includes("what is"))) {
+    if (
+      enableWebSearch &&
+      !isProductQuery &&
+      (qLower.includes("search") ||
+        qLower.includes("web") ||
+        qLower.includes("latest") ||
+        qLower.includes("news") ||
+        qLower.includes("who is") ||
+        qLower.includes("what is") ||
+        cleanMessage.endsWith("?"))
+    ) {
       try {
         webResults = await searchWeb(cleanMessage, 3);
       } catch (e) {
@@ -145,46 +163,53 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // Match product cards if relevant
+    // Match product cards ONLY if user explicitly asked for products or navigation
     const matchedProducts: any[] = [];
-    for (const r of searchResults) {
-      if (r.doc.category === "product") {
-        const prodId = r.doc.id.replace("prod-", "");
-        const p = products.find((item) => item.id === prodId);
-        if (p && !matchedProducts.some((m) => m.id === p.id)) {
-          matchedProducts.push({
-            id: p.id,
-            name: p.name,
-            tagline: p.tagline,
-            category: p.category,
-            destinationUrl: `/products/${p.id}`,
-            downloadUrl: p.downloadUrl || null,
-            status: p.status,
-            accent: p.accent,
-          });
+    if (isProductQuery) {
+      for (const r of searchResults) {
+        if (r.doc.category === "product") {
+          const prodId = r.doc.id.replace("prod-", "");
+          const p = products.find(
+            (item) =>
+              item.id === prodId &&
+              (qLower.includes(item.name.toLowerCase()) ||
+                qLower.includes(item.id.toLowerCase()) ||
+                qLower.includes("product") ||
+                qLower.includes("project"))
+          );
+          if (p && !matchedProducts.some((m) => m.id === p.id)) {
+            matchedProducts.push({
+              id: p.id,
+              name: p.name,
+              tagline: p.tagline,
+              category: p.category,
+              destinationUrl: `/products/${p.id}`,
+              downloadUrl: p.downloadUrl || null,
+              status: p.status,
+              accent: p.accent,
+            });
+          }
         }
       }
     }
 
-    // 3. Build multi-domain system prompt (incorporating web tool findings)
-    const webContext = webResults.length > 0
-      ? `LIVE WEB TOOL SEARCH RESULTS:\n${webResults.map((w) => `Title: ${w.title}\nSnippet: ${w.snippet}\nSource: ${w.url}`).join("\n\n")}`
-      : "";
+    // 3. Build multi-domain system prompt (do not force product navigation on general questions)
+    const webContext =
+      webResults.length > 0
+        ? `LIVE WEB TOOL SEARCH RESULTS:\n${webResults
+            .map((w) => `Title: ${w.title}\nSnippet: ${w.snippet}\nSource: ${w.url}`)
+            .join("\n\n")}`
+        : "";
 
     const systemPrompt = `You are HS Solutions Mini Star LLM, an intelligent, helpful conversational AI assistant developed and maintained by HS AI Solutions, equipped with live Web Search tools.
 
-You assist visitors with:
-1. General knowledge, science, programming (Python, JS, algorithms, logic, writing, etc.).
-2. Real-time web search findings when provided.
-3. Explaining and navigating HS AI Solutions products and resources.
-
-${webContext ? `${webContext}\n\n` : ""}${retrievedPassages.length > 0 ? `VERIFIED HS AI SOLUTIONS CONTEXT:\n${retrievedPassages.join("\n\n")}\n\n` : ""}
 INSTRUCTIONS:
-- If live web search results are provided above, synthesize them to give a fresh, factual, and direct answer with source citations.
-- If the user asks a general question (e.g. "What is Python?", "Write a program to...", "Explain quantum physics"), answer their question directly, thoroughly, and helpfully with code examples and clear explanations.
-- If the user asks about HS AI Solutions, Lumina, Galaxy Vision, Electron, or studio tools, use the verified knowledge above and provide direct links.
-- When asked your name, you are HS Solutions Mini Star LLM by HS AI Solutions.
-- Be concise, friendly, intelligent, and natural.`;
+- Answer the user's specific question directly, helpfully, accurately, and concisely.
+- Do NOT bring up, recommend, or link to HS AI Solutions products or navigation unless the user explicitly asks about them.
+- For general questions (coding, Python, algorithms, math, science, current events), focus entirely on the subject requested without mentioning products.
+- When asked your identity, identify yourself as HS Solutions Mini Star LLM customized and maintained by HS AI Solutions.
+${webContext ? `\nLIVE WEB SEARCH RESULTS:\n${webContext}\n` : ""}
+${isProductQuery && retrievedPassages.length > 0 ? `\nVERIFIED HS AI SOLUTIONS CONTEXT:\n${retrievedPassages.join("\n\n")}\n` : ""}`;
 
     let reply = "";
     let provider = "ollama-local";
@@ -220,12 +245,12 @@ INSTRUCTIONS:
     // 5. Fallback to rich universal knowledge engine with web results synthesis
     if (!reply) {
       provider = webResults.length > 0 ? "web-tool-synthesis" : "universal-knowledge-engine";
-      reply = generateIntelligentResponse(cleanMessage, retrievedPassages, webResults);
+      reply = generateIntelligentResponse(cleanMessage, retrievedPassages, webResults, isProductQuery);
     }
 
-    // Combine sources from studio docs and web tool
+    // Combine sources from studio docs (only if product intent) and web tool
     const allSources = [
-      ...searchResults.map((r) => ({ title: r.doc.title, url: r.doc.sourceUrl })),
+      ...(isProductQuery ? searchResults.map((r) => ({ title: r.doc.title, url: r.doc.sourceUrl })) : []),
       ...webResults.map((w) => ({ title: w.title, url: w.url })),
     ];
 

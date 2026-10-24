@@ -54,11 +54,62 @@ export function WebsiteAssistantWidget() {
   const webllmEngineRef = useRef<any>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // Check WebGPU compatibility
+  // Check WebGPU compatibility and automatically load the in-browser model
   useEffect(() => {
-    if (typeof window !== "undefined" && (navigator as any).gpu) {
+    let isCancelled = false;
+
+    async function autoLoadModel() {
+      if (typeof window === "undefined" || !(navigator as any).gpu) {
+        return;
+      }
       setWebGPUSupported(true);
+
+      try {
+        setClientLLMLoading(true);
+        setEngineInitProgress("Auto-loading in-browser 650MB model...");
+
+        const { CreateMLCEngine } = await import("@mlc-ai/web-llm");
+
+        if (isCancelled) return;
+
+        const engine = await CreateMLCEngine("Qwen2.5-0.5B-Instruct-q4f16_1-MLC", {
+          initProgressCallback: (report) => {
+            if (!isCancelled) {
+              setEngineInitProgress(report.text);
+            }
+          },
+        });
+
+        if (isCancelled) return;
+
+        webllmEngineRef.current = engine;
+        setClientLLMActive(true);
+        setClientLLMLoading(false);
+        setEngineInitProgress("");
+
+        setMessages((prev) => [
+          ...prev,
+          {
+            id: `sys_${Date.now()}`,
+            sender: "assistant",
+            text: "⚡ **In-Browser WebGPU LLM Loaded!** HS Solutions Mini Star is running directly inside your browser GPU with zero cloud latency.",
+            timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+          },
+        ]);
+      } catch (err) {
+        console.warn("WebGPU in-browser LLM auto-load skipped or unsupported:", err);
+        if (!isCancelled) {
+          setClientLLMLoading(false);
+          setEngineInitProgress("");
+        }
+      }
     }
+
+    autoLoadModel();
+
+    return () => {
+      isCancelled = true;
+    };
   }, []);
 
   useEffect(() => {
@@ -66,44 +117,6 @@ export function WebsiteAssistantWidget() {
       messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     }
   }, [messages, isOpen]);
-
-  // Load in-browser WebGPU LLM on demand
-  const handleEnableInBrowserLLM = async () => {
-    if (!webGPUSupported) {
-      alert("WebGPU is not enabled or supported on this browser/hardware.");
-      return;
-    }
-
-    try {
-      setClientLLMLoading(true);
-      setEngineInitProgress("Initializing WebGPU runtime...");
-
-      const { CreateMLCEngine } = await import("@mlc-ai/web-llm");
-
-      // Load lightweight Qwen2.5 0.5B model directly into browser VRAM
-      const engine = await CreateMLCEngine("Qwen2.5-0.5B-Instruct-q4f16_1-MLC", {
-        initProgressCallback: (report) => {
-          setEngineInitProgress(report.text);
-        },
-      });
-
-      webllmEngineRef.current = engine;
-      setClientLLMActive(true);
-      setClientLLMLoading(false);
-
-      const readyMsg: MessageItem = {
-        id: `sys_${Date.now()}`,
-        sender: "assistant",
-        text: "⚡ **In-Browser WebGPU LLM Loaded!** HS Solutions Mini Star is now running directly inside your browser GPU with zero cloud latency.",
-        timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
-      };
-      setMessages((prev) => [...prev, readyMsg]);
-    } catch (err: any) {
-      setClientLLMLoading(false);
-      setEngineInitProgress("");
-      alert("Failed to load in-browser LLM: " + (err.message || err));
-    }
-  };
 
   const handleSend = async (textToSend?: string) => {
     const text = (textToSend || inputValue).trim();
@@ -121,28 +134,61 @@ export function WebsiteAssistantWidget() {
     setIsLoading(true);
 
     try {
-      // 1. If Client-side WebGPU Engine is loaded, run inference directly in the browser!
+      // 1. If Client-side WebGPU Engine is loaded, run inference directly in the browser with REAL-TIME STREAMING!
       if (clientLLMActive && webllmEngineRef.current) {
-        const sysPrompt = "You are HS Solutions Mini Star LLM, a conversational AI customized and maintained by HS AI Solutions. Answer questions clearly, accurately, and assist with coding, general topics, and product inquiries.";
-        
-        const chunks = await webllmEngineRef.current.chat.completions.create({
-          messages: [
-            { role: "system", content: sysPrompt },
-            { role: "user", content: text },
-          ],
-        });
+        const sysPrompt = `You are HS Solutions Mini Star LLM, an intelligent, helpful conversational AI assistant customized and maintained by HS AI Solutions.
+CRITICAL RULES:
+- Answer the user's specific prompt directly, helpfully, accurately, and concisely.
+- Do NOT mention, plug, or link to HS AI Solutions products or navigation unless the user specifically asks for products or navigation.
+- If asked general questions (Python, coding, math, general science, logic), answer directly with clear explanations and code. Never mention studio products for general questions.
+- If asked your name: you are HS Solutions Mini Star LLM by HS AI Solutions.`;
 
-        const reply = chunks.choices[0]?.message?.content || "No response generated.";
-
-        const botMsg: MessageItem = {
-          id: `bot_${Date.now()}`,
+        const botId = `bot_${Date.now()}`;
+        const initialBotMsg: MessageItem = {
+          id: botId,
           sender: "assistant",
-          text: reply,
-          provider: "In-Browser WebGPU LLM",
+          text: "",
+          provider: "In-Browser WebGPU LLM (⚡ Real-time GPU)",
           timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
         };
 
-        setMessages((prev) => [...prev, botMsg]);
+        setMessages((prev) => [...prev, initialBotMsg]);
+
+        try {
+          const stream = await webllmEngineRef.current.chat.completions.create({
+            messages: [
+              { role: "system", content: sysPrompt },
+              { role: "user", content: text },
+            ],
+            stream: true,
+            temperature: 0.6,
+            max_tokens: 512,
+          });
+
+          let accumulated = "";
+          for await (const chunk of stream) {
+            const delta = chunk.choices[0]?.delta?.content || "";
+            accumulated += delta;
+            setMessages((prev) =>
+              prev.map((m) => (m.id === botId ? { ...m, text: accumulated } : m))
+            );
+          }
+        } catch (streamErr) {
+          console.warn("WebGPU streaming failed, falling back to non-stream:", streamErr);
+          const completion = await webllmEngineRef.current.chat.completions.create({
+            messages: [
+              { role: "system", content: sysPrompt },
+              { role: "user", content: text },
+            ],
+            temperature: 0.6,
+            max_tokens: 512,
+          });
+          const reply = completion.choices[0]?.message?.content || "No response generated.";
+          setMessages((prev) =>
+            prev.map((m) => (m.id === botId ? { ...m, text: reply } : m))
+          );
+        }
+
         setIsLoading(false);
         return;
       }
@@ -276,27 +322,28 @@ export function WebsiteAssistantWidget() {
               </div>
             </div>
 
-            {/* In-Browser WebGPU Runner Bar */}
-            {webGPUSupported && !clientLLMActive && (
-              <div className="flex items-center justify-between px-4 py-2 bg-purple-950/40 border-b border-purple-500/20 text-xs">
-                <div>
-                  <p className="font-semibold text-purple-200 text-[11px]">Run LLM Directly in Browser?</p>
-                  <p className="text-[10px] text-white/50">Run 650MB model locally in your browser GPU (zero server needed).</p>
+            {/* In-Browser WebGPU Auto-Loading Status Bar */}
+            {clientLLMLoading && (
+              <div className="flex items-center gap-2 px-4 py-2 bg-purple-950/50 border-b border-purple-500/20 text-xs">
+                <span className="h-2 w-2 rounded-full bg-purple-400 animate-ping shrink-0" />
+                <div className="min-w-0 flex-1">
+                  <p className="font-semibold text-purple-200 text-[11px] truncate">Auto-loading 650MB Model into Browser GPU...</p>
+                  <p className="text-[9.5px] font-mono text-purple-300/80 truncate">
+                    {engineInitProgress || "Initializing WebGPU runtime and caching weights..."}
+                  </p>
                 </div>
-                <button
-                  type="button"
-                  disabled={clientLLMLoading}
-                  onClick={handleEnableInBrowserLLM}
-                  className="rounded-lg bg-gradient-to-r from-purple-500 to-indigo-600 px-2.5 py-1 text-[10px] font-semibold text-white shadow transition hover:brightness-110 disabled:opacity-50"
-                >
-                  {clientLLMLoading ? "Loading..." : "Load Model"}
-                </button>
               </div>
             )}
 
-            {clientLLMLoading && (
-              <div className="px-4 py-1.5 bg-black/60 border-b border-purple-500/30 text-[9.5px] font-mono text-purple-300 truncate">
-                {engineInitProgress || "Downloading & caching model weights..."}
+            {clientLLMActive && (
+              <div className="flex items-center justify-between px-4 py-1.5 bg-emerald-950/30 border-b border-emerald-500/20 text-xs">
+                <div className="flex items-center gap-1.5">
+                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                  <span className="font-mono text-[10px] text-emerald-300 font-medium">
+                    ⚡ In-Browser WebGPU LLM Active
+                  </span>
+                </div>
+                <span className="font-mono text-[9px] text-white/40">100% Client-Side GPU</span>
               </div>
             )}
 
