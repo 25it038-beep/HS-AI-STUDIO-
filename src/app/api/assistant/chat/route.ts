@@ -152,33 +152,29 @@ export async function POST(req: NextRequest) {
     const cleanMessage = message.trim().slice(0, 1000);
     const qLower = cleanMessage.toLowerCase();
 
-    // Check if user is specifically inquiring about HS AI Solutions products/tools/projects
-    const isProductQuery =
+    // Check if user is inquiring about HS AI Solutions products/tools/announcements/services
+    const isHSStudioQuery =
       products.some((p) => qLower.includes(p.name.toLowerCase()) || qLower.includes(p.id.toLowerCase())) ||
+      qLower.includes("hs ai") ||
+      qLower.includes("hs solutions") ||
+      qLower.includes("harshan") ||
+      qLower.includes("studio") ||
       qLower.includes("products") ||
       qLower.includes("what do you build") ||
       qLower.includes("what do you offer") ||
       qLower.includes("show me your projects") ||
       qLower.includes("navigate") ||
-      qLower.includes("portfolio");
+      qLower.includes("portfolio") ||
+      qLower.includes("announcement") ||
+      qLower.includes("release");
 
-    // 1. Search Knowledge Base ONLY when user asks about studio products/docs
-    const searchResults = isProductQuery ? searchKnowledge(cleanMessage, 3) : [];
+    // 1. Search Live Knowledge Base for HS AI Solutions resources
+    const searchResults = isHSStudioQuery ? searchKnowledge(cleanMessage, 3) : [];
     const retrievedPassages = searchResults.map((r) => r.doc.content);
 
-    // 2. Web Tool: If user asks for external live info, news, or general real-time search
+    // 2. Real-time Live Web Search Tool: Triggers whenever query is external or not in local studio data
     let webResults: WebSearchResult[] = [];
-    if (
-      enableWebSearch &&
-      !isProductQuery &&
-      (qLower.includes("search") ||
-        qLower.includes("web") ||
-        qLower.includes("latest") ||
-        qLower.includes("news") ||
-        qLower.includes("who is") ||
-        qLower.includes("what is") ||
-        cleanMessage.endsWith("?"))
-    ) {
+    if (enableWebSearch && !isHSStudioQuery) {
       try {
         webResults = await searchWeb(cleanMessage, 3);
       } catch (e) {
@@ -188,7 +184,7 @@ export async function POST(req: NextRequest) {
 
     // Match product cards ONLY if user explicitly asked for products or navigation
     const matchedProducts: any[] = [];
-    if (isProductQuery) {
+    if (isHSStudioQuery) {
       for (const r of searchResults) {
         if (r.doc.category === "product") {
           const prodId = r.doc.id.replace("prod-", "");
@@ -219,10 +215,29 @@ export async function POST(req: NextRequest) {
     // 3. Build multi-domain system prompt (do not force product navigation on general questions)
     const webContext =
       webResults.length > 0
-        ? `LIVE WEB TOOL SEARCH RESULTS:\n${webResults
+        ? `LIVE WEB SEARCH RESULTS:\n${webResults
             .map((w) => `Title: ${w.title}\nSnippet: ${w.snippet}\nSource: ${w.url}`)
             .join("\n\n")}`
         : "";
+
+    // Combine sources from studio docs (only if product intent) and web tool
+    const allSources = [
+      ...(isHSStudioQuery ? searchResults.map((r) => ({ title: r.doc.title, url: r.doc.sourceUrl })) : []),
+      ...webResults.map((w) => ({ title: w.title, url: w.url })),
+    ];
+
+    // If caller only requested augmented context (used by in-browser WebGPU runtime)
+    if (body.contextOnly) {
+      return NextResponse.json({
+        success: true,
+        isHSStudioQuery,
+        retrievedPassages,
+        webResults,
+        webContext,
+        matchedProducts,
+        sources: allSources,
+      });
+    }
 
     const systemPrompt = `You are HS Solutions Mini Star LLM, the lightweight conversational AI language model developed, customized, and maintained completely by HS AI Solutions.
 
@@ -238,7 +253,7 @@ INSTRUCTIONS:
 - For general questions (coding, Python, algorithms, math, science, current events), focus entirely on the subject requested without mentioning products.
 - When asked your identity, state that you are HS Solutions Mini Star LLM developed and maintained by HS AI Solutions.
 ${webContext ? `\nLIVE WEB SEARCH RESULTS:\n${webContext}\n` : ""}
-${isProductQuery && retrievedPassages.length > 0 ? `\nVERIFIED HS AI SOLUTIONS CONTEXT:\n${retrievedPassages.join("\n\n")}\n` : ""}`;
+${isHSStudioQuery && retrievedPassages.length > 0 ? `\nVERIFIED HS AI SOLUTIONS CONTEXT:\n${retrievedPassages.join("\n\n")}\n` : ""}`;
 
     let reply = "";
     let provider = "ollama-local";
@@ -274,14 +289,8 @@ ${isProductQuery && retrievedPassages.length > 0 ? `\nVERIFIED HS AI SOLUTIONS C
     // 5. Fallback to rich universal knowledge engine with web results synthesis
     if (!reply) {
       provider = webResults.length > 0 ? "web-tool-synthesis" : "universal-knowledge-engine";
-      reply = generateIntelligentResponse(cleanMessage, retrievedPassages, webResults, isProductQuery);
+      reply = generateIntelligentResponse(cleanMessage, retrievedPassages, webResults, isHSStudioQuery);
     }
-
-    // Combine sources from studio docs (only if product intent) and web tool
-    const allSources = [
-      ...(isProductQuery ? searchResults.map((r) => ({ title: r.doc.title, url: r.doc.sourceUrl })) : []),
-      ...webResults.map((w) => ({ title: w.title, url: w.url })),
-    ];
 
     return NextResponse.json({
       success: true,

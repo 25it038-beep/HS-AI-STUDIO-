@@ -148,19 +148,56 @@ export function WebsiteAssistantWidget() {
     try {
       // 1. If Client-side WebGPU Engine is loaded, run inference directly in the browser with REAL-TIME STREAMING!
       if (clientLLMActive && webllmEngineRef.current) {
+        let studioContext = "";
+        let webContext = "";
+        let matchedProducts: any[] = [];
+        let sources: { title: string; url: string }[] = [];
+        let webSearched = false;
+
+        try {
+          const ctxRes = await fetch("/api/assistant/chat", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              message: text,
+              enableWebSearch: webSearchEnabled,
+              contextOnly: true,
+            }),
+          });
+          if (ctxRes.ok) {
+            const ctxData = await ctxRes.json();
+            if (ctxData.success) {
+              matchedProducts = ctxData.matchedProducts || [];
+              sources = ctxData.sources || [];
+              webSearched = ctxData.webResults && ctxData.webResults.length > 0;
+              if (ctxData.retrievedPassages?.length > 0) {
+                studioContext = `VERIFIED LIVE HS AI SOLUTIONS KNOWLEDGE:\n${ctxData.retrievedPassages.join("\n\n")}`;
+              }
+              if (ctxData.webContext) {
+                webContext = ctxData.webContext;
+              }
+            }
+          }
+        } catch (e) {
+          console.warn("Context fetch error:", e);
+        }
+
         const sysPrompt = `You are HS Solutions Mini Star LLM, the lightweight conversational AI model developed, customized, and maintained completely by HS AI Solutions.
 
 STRICT IDENTITY RULES:
 - Your name is exclusively HS Solutions Mini Star LLM.
 - You were developed, created, and maintained by HS AI Solutions.
-- You are HS AI Solutions' own AI model.
-- If asked "What is your name?", "Who made you?", "Who developed you?", "Who created you?", "What model are you?", or "Who owns you?", answer clearly that you are HS Solutions Mini Star LLM, developed and maintained by HS AI Solutions.
-- Never identify as Qwen, Alibaba, OpenAI, ChatGPT, or any other entity.
+- You are HS AI Solutions' own AI model. Never identify as Qwen, Alibaba, OpenAI, ChatGPT, or any other entity.
+
+KNOWLEDGE SOURCES:
+${studioContext ? `${studioContext}\n(Use the verified HS AI Solutions knowledge above to answer accurately about HS AI Solutions products and services.)\n` : ""}
+${webContext ? `${webContext}\n(Use the live web search results above to answer accurately with current facts, details, and citations.)\n` : ""}
 
 CONVERSATION RULES:
-- Answer the user's specific prompt directly, helpfully, accurately, and concisely.
-- Do NOT mention, plug, or link to HS AI Solutions products or navigation unless the user specifically asks for products or navigation.
-- If asked general questions (Python, coding, math, general science, logic), answer directly with clear explanations and code. Never mention studio products for general questions.`;
+- If live web search results are provided above, synthesize them to give a fresh, factual, and direct answer.
+- If verified HS AI Solutions knowledge is provided above, explain our products and services accurately.
+- For coding, math, programming, logic, and general topics, provide clear explanations and code.
+- Do NOT mention, plug, or link to HS AI Solutions products unless the user specifically asks about them or about HS AI Solutions.`;
 
         const botId = `bot_${Date.now()}`;
         const initialBotMsg: MessageItem = {
@@ -168,6 +205,9 @@ CONVERSATION RULES:
           sender: "assistant",
           text: "",
           provider: "In-Browser WebGPU LLM (⚡ Real-time GPU)",
+          webSearched,
+          products: matchedProducts,
+          sources,
           timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
         };
 
@@ -189,7 +229,17 @@ CONVERSATION RULES:
             const delta = chunk.choices[0]?.delta?.content || "";
             accumulated += delta;
             setMessages((prev) =>
-              prev.map((m) => (m.id === botId ? { ...m, text: accumulated } : m))
+              prev.map((m) =>
+                m.id === botId
+                  ? {
+                      ...m,
+                      text: accumulated,
+                      webSearched,
+                      products: matchedProducts,
+                      sources,
+                    }
+                  : m
+              )
             );
           }
         } catch (streamErr) {
@@ -204,7 +254,17 @@ CONVERSATION RULES:
           });
           const reply = completion.choices[0]?.message?.content || "No response generated.";
           setMessages((prev) =>
-            prev.map((m) => (m.id === botId ? { ...m, text: reply } : m))
+            prev.map((m) =>
+              m.id === botId
+                ? {
+                    ...m,
+                    text: reply,
+                    webSearched,
+                    products: matchedProducts,
+                    sources,
+                  }
+                : m
+            )
           );
         }
 
