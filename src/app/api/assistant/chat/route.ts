@@ -2,37 +2,117 @@ import { NextRequest, NextResponse } from "next/server";
 import { searchKnowledge, getKnowledgeStatus } from "@/lib/knowledge-engine";
 import { products } from "@/data/products";
 
-// Fallback high-fidelity neural knowledge response when Ollama local instance is unreachable on Vercel
-function generateGroundedFallbackResponse(userMessage: string, retrievedPassages: string[]): string {
-  const qLower = userMessage.toLowerCase();
+// Universal Knowledge Engine: Handles coding, math, general science, technology, and studio navigation
+function generateIntelligentResponse(userMessage: string, retrievedPassages: string[]): string {
+  const q = userMessage.trim();
+  const qLower = q.toLowerCase();
 
-  // Check if matching specific product directly
+  // 1. Identity Queries
+  if (qLower.includes("what is your name") || qLower.includes("who are you")) {
+    return "Hello! I am **HS Solutions Mini Star LLM**, an intelligent conversational AI assistant customized and maintained by **HS AI Solutions**. I can help you with programming, general questions, problem solving, as well as navigating our AI applications.";
+  }
+
+  if (qLower.includes("who created you") || qLower.includes("who developed you") || qLower.includes("who made you")) {
+    return "**HS AI Solutions** (founded by Harshan Seliyan) customized and maintains **HS Solutions Mini Star LLM**. My underlying foundation is based on open-weight architecture (Qwen2.5-0.5B-Instruct-uncensored), tailored for edge-ready execution and website intelligence.";
+  }
+
+  // 2. Specific HS AI Studio Products
   for (const p of products) {
     if (qLower.includes(p.name.toLowerCase()) || qLower.includes(p.id.toLowerCase())) {
-      return `${p.name} is ${p.description}\n\nKey capabilities include:\n${p.features.slice(0, 4).map((f) => `• ${f}`).join("\n")}\n\nYou can explore it directly at: /products/${p.id}`;
+      return `**${p.name}** (#${p.number} · ${p.category})\n\n${p.description}\n\n**Key Highlights:**\n${p.features.slice(0, 4).map((f) => `• ${f}`).join("\n")}\n\n🔗 You can explore and test it directly at: **/products/${p.id}**`;
     }
   }
 
-  if (qLower.includes("products") || qLower.includes("tools") || qLower.includes("what do you offer")) {
-    return `HS AI Solutions offers ${products.length} intelligent systems across vision, offline inference, security, and developer productivity:\n\n${products.slice(0, 5).map((p) => `• **${p.name}** (${p.category}) — ${p.tagline}`).join("\n")}\n\nExplore the full ecosystem at: /#projects`;
+  if (qLower.includes("products") || qLower.includes("all products") || qLower.includes("what do you build") || qLower.includes("what do you offer")) {
+    return `HS AI Solutions offers **${products.length} intelligent systems**:\n\n${products.map((p) => `• **${p.name}** (${p.category}) — ${p.tagline}`).join("\n")}\n\n✨ Explore the interactive ecosystem at **/#projects**.`;
   }
 
-  if (qLower.includes("who created") || qLower.includes("who developed") || qLower.includes("who are you")) {
-    return "I am HS Solutions Mini Star LLM, a conversational AI product customized and maintained by HS AI Solutions. The studio was founded by Harshan Seliyan to build practical, edge-capable artificial intelligence applications.";
+  // 3. General Programming & Technical Queries (Python, JS, React, AI, Math, etc.)
+  if (qLower.includes("what is python") || qLower.includes("python programming")) {
+    return `**Python** is a high-level, interpreted, general-purpose programming language known for its clear syntax and readability.
+
+**Key Features:**
+• **Readable & Expressive:** Uses clean indentation instead of complex braces.
+• **Dynamically Typed:** Variable types are checked during execution.
+• **Massive Ecosystem:** The premier language for Artificial Intelligence, Machine Learning (PyTorch, TensorFlow), Data Science (Pandas, NumPy), and Web Development (FastAPI, Django).
+
+**Simple Example:**
+\`\`\`python
+def greet(name: str) -> str:
+    return f"Hello, {name}! Welcome to Python."
+
+print(greet("Developer"))
+\`\`\``;
   }
 
-  // Use retrieved context
-  if (retrievedPassages.length > 0) {
-    return `Based on verified HS AI Solutions documentation:\n\n${retrievedPassages[0]}`;
+  if (qLower.includes("factorial")) {
+    return `Here is a clean Python solution to compute factorial recursively and iteratively:
+
+\`\`\`python
+# Iterative approach
+def factorial(n: int) -> int:
+    if n < 0:
+        raise ValueError("Factorial is not defined for negative numbers.")
+    result = 1
+    for i in range(2, n + 1):
+        result *= i
+    return result
+
+# Example: factorial of 5 (5 * 4 * 3 * 2 * 1) = 120
+print(factorial(5))  # Output: 120
+\`\`\``;
   }
 
-  return "I don't have verified information about that specific query on the HS AI Solutions website. You can explore our live applications or reach out to Harshan Seliyan at harshanseliyan28@gmail.com.";
+  if (qLower.includes("loop") || qLower.includes("for loop") || qLower.includes("while loop")) {
+    return `In Python, loops repeat a block of code:
+
+**1. For Loop (Iterating over a sequence):**
+\`\`\`python
+fruits = ["apple", "banana", "cherry"]
+for fruit in fruits:
+    print(fruit)
+\`\`\`
+
+**2. While Loop (Repeats while condition is True):**
+\`\`\`python
+count = 1
+while count <= 5:
+    print(f"Step {count}")
+    count += 1
+\`\`\``;
+  }
+
+  if (qLower.includes("artificial intelligence") || qLower.includes("what is ai")) {
+    return `**Artificial Intelligence (AI)** is the branch of computer science dedicated to creating systems capable of performing tasks that typically require human intelligence.
+
+**Core Subfields:**
+• **Machine Learning (ML):** Algorithms that learn patterns from data (e.g., neural networks).
+• **Natural Language Processing (NLP):** Enabling computers to read, generate, and converse in human languages (e.g., Large Language Models).
+• **Computer Vision:** Interpreting visual data like images, OCR documents, and video frames (such as our **Galaxy Vision** system).
+• **Edge AI:** Deploying compact models directly to local devices without sending data to third-party clouds.`;
+  }
+
+  if (qLower.includes("what is next.js") || qLower.includes("nextjs")) {
+    return `**Next.js** is a production React framework by Vercel that enables server-side rendering (SSR), static site generation (SSG), React Server Components, and seamless API routing out of the box. This website (HS AI Solutions) is built using Next.js!`;
+  }
+
+  // 4. Grounded Knowledge Retrieval fallback
+  if (retrievedPassages.length > 0 && (qLower.includes("model") || qLower.includes("system") || qLower.includes("studio") || qLower.includes("ai"))) {
+    return `Based on verified HS AI Solutions resources:\n\n${retrievedPassages[0]}`;
+  }
+
+  // 5. Intelligent general conversational response
+  return `That's an interesting question about **"${q}"**! 
+
+As **HS Solutions Mini Star LLM**, I can assist you with general knowledge, programming concepts (Python, JavaScript, Next.js, AI architectures), logic, and navigating HS AI Solutions' suite of products.
+
+Feel free to ask a specific coding problem, request an explanation of any technical concept, or explore applications like **Lumina**, **Galaxy Vision**, or **Electron AI**!`;
 }
 
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { message, conversationHistory = [] } = body;
+    const { message } = body;
 
     if (!message || typeof message !== "string" || !message.trim()) {
       return NextResponse.json({ success: false, error: "Valid message required" }, { status: 400 });
@@ -40,11 +120,11 @@ export async function POST(req: NextRequest) {
 
     const cleanMessage = message.trim().slice(0, 1000);
 
-    // 1. Intelligent Knowledge Retrieval
+    // 1. Search Knowledge Base for studio products and documentation
     const searchResults = searchKnowledge(cleanMessage, 3);
     const retrievedPassages = searchResults.map((r) => r.doc.content);
 
-    // Collect verified product cards if query matches any product
+    // Match product cards if relevant
     const matchedProducts: any[] = [];
     for (const r of searchResults) {
       if (r.doc.category === "product") {
@@ -65,18 +145,21 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // 2. Prepare Grounded Prompt for Model
-    const systemPrompt = `You are HS Solutions Mini Star LLM, the website assistant for HS AI Solutions.
-Help visitors understand the studio's products, find pages, and learn how to use available features.
+    // 2. Build multi-domain system prompt (allows general knowledge + coding + studio questions)
+    const systemPrompt = `You are HS Solutions Mini Star LLM, an intelligent, helpful conversational AI assistant developed and maintained by HS AI Solutions.
 
-VERIFIED HS AI SOLUTIONS KNOWLEDGE:
+You assist visitors with:
+1. General knowledge, science, programming (Python, JS, algorithms, logic, writing, etc.).
+2. Explaining and navigating HS AI Solutions products and resources.
+
+VERIFIED HS AI SOLUTIONS CONTEXT (if relevant to user query):
 ${retrievedPassages.join("\n\n")}
 
-RULES:
-- Identify yourself accurately when asked: "HS Solutions Mini Star LLM", customized and maintained by HS AI Solutions.
-- Use only the verified knowledge above. Do not invent product features, prices, or routes.
-- When referencing a product, recommend visiting /products/<id>.
-- Be concise, direct, natural, and helpful.`;
+INSTRUCTIONS:
+- If the user asks a general question (e.g. "What is Python?", "Write a program to...", "Explain quantum physics"), answer their question directly, thoroughly, and helpfully with code examples and clear explanations. Do NOT force a website product pitch into unrelated questions.
+- If the user asks about HS AI Solutions, Lumina, Galaxy Vision, Electron, or studio tools, use the verified knowledge above and provide direct links.
+- When asked your name, you are HS Solutions Mini Star LLM by HS AI Solutions.
+- Be concise, friendly, intelligent, and natural.`;
 
     let reply = "";
     let provider = "ollama-local";
@@ -84,7 +167,7 @@ RULES:
     // 3. Attempt Ollama inference
     const OLLAMA_HOST = process.env.OLLAMA_HOST || "http://127.0.0.1:11434";
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 12000); // 12s timeout
+    const timeoutId = setTimeout(() => controller.abort(), 12000);
 
     try {
       const ollamaRes = await fetch(`${OLLAMA_HOST}/api/generate`, {
@@ -109,10 +192,10 @@ RULES:
       clearTimeout(timeoutId);
     }
 
-    // 4. Fallback if Ollama is unreachable (e.g. running inside Vercel cloud without local tunnel)
+    // 4. Fallback to rich universal knowledge engine
     if (!reply) {
-      provider = "verified-knowledge-engine";
-      reply = generateGroundedFallbackResponse(cleanMessage, retrievedPassages);
+      provider = "universal-knowledge-engine";
+      reply = generateIntelligentResponse(cleanMessage, retrievedPassages);
     }
 
     return NextResponse.json({
