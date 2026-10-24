@@ -7,6 +7,7 @@ import { AudioIntro } from "@/components/audio-intro";
 import { IntroVideo } from "@/components/intro-video";
 import { FullscreenExploreVideo } from "@/components/fullscreen-explore-video";
 import { ContributorFloatingBadge } from "@/components/contributor-floating-badge";
+import { WebsiteAssistantWidget } from "@/components/website-assistant-widget";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -83,6 +84,7 @@ export default function RootLayout({
         <main className="flex-1">{children}</main>
         <Footer />
         <ContributorFloatingBadge />
+        <WebsiteAssistantWidget />
       </body>
     </html>
   );
