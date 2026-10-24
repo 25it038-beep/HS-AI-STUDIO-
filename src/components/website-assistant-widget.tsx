@@ -9,6 +9,7 @@ interface MessageItem {
   id: string;
   sender: "user" | "assistant";
   text: string;
+  provider?: string;
   webSearched?: boolean;
   products?: {
     id: string;
@@ -25,39 +26,39 @@ interface MessageItem {
 }
 
 const SUGGESTED_QUERIES = [
-  "What is Lumina?",
   "What is Python?",
+  "What is Lumina?",
+  "Write factorial in Python",
   "Latest AI news",
-  "Where can I find Galaxy Vision?",
 ];
 
 export function WebsiteAssistantWidget() {
   const [isOpen, setIsOpen] = useState(false);
   const [webSearchEnabled, setWebSearchEnabled] = useState(true);
+  const [clientLLMActive, setClientLLMActive] = useState(false);
+  const [clientLLMLoading, setClientLLMLoading] = useState(false);
+  const [engineInitProgress, setEngineInitProgress] = useState("");
+  const [webGPUSupported, setWebGPUSupported] = useState(false);
+
   const [messages, setMessages] = useState<MessageItem[]>([
     {
       id: "welcome",
       sender: "assistant",
-      text: "Hello! I am **HS Solutions Mini Star LLM**, equipped with real-time Web Search tools and verified studio intelligence. Ask me about our AI products, programming questions, or live web topics.",
+      text: "Hello! I am **HS Solutions Mini Star LLM**. I can answer general programming questions (Python, algorithms), search the live web, or guide you through HS AI Solutions tools.",
       timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
     },
   ]);
   const [inputValue, setInputValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [lastSync, setLastSync] = useState<string | null>(null);
 
+  const webllmEngineRef = useRef<any>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // Fetch knowledge freshness status
+  // Check WebGPU compatibility
   useEffect(() => {
-    fetch("/api/knowledge/status")
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.lastSync) {
-          setLastSync(new Date(data.lastSync).toLocaleDateString());
-        }
-      })
-      .catch(() => {});
+    if (typeof window !== "undefined" && (navigator as any).gpu) {
+      setWebGPUSupported(true);
+    }
   }, []);
 
   useEffect(() => {
@@ -65,6 +66,44 @@ export function WebsiteAssistantWidget() {
       messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     }
   }, [messages, isOpen]);
+
+  // Load in-browser WebGPU LLM on demand
+  const handleEnableInBrowserLLM = async () => {
+    if (!webGPUSupported) {
+      alert("WebGPU is not enabled or supported on this browser/hardware.");
+      return;
+    }
+
+    try {
+      setClientLLMLoading(true);
+      setEngineInitProgress("Initializing WebGPU runtime...");
+
+      const { CreateMLCEngine } = await import("@mlc-ai/web-llm");
+
+      // Load lightweight Qwen2.5 0.5B model directly into browser VRAM
+      const engine = await CreateMLCEngine("Qwen2.5-0.5B-Instruct-q4f16_1-MLC", {
+        initProgressCallback: (report) => {
+          setEngineInitProgress(report.text);
+        },
+      });
+
+      webllmEngineRef.current = engine;
+      setClientLLMActive(true);
+      setClientLLMLoading(false);
+
+      const readyMsg: MessageItem = {
+        id: `sys_${Date.now()}`,
+        sender: "assistant",
+        text: "⚡ **In-Browser WebGPU LLM Loaded!** HS Solutions Mini Star is now running directly inside your browser GPU with zero cloud latency.",
+        timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+      };
+      setMessages((prev) => [...prev, readyMsg]);
+    } catch (err: any) {
+      setClientLLMLoading(false);
+      setEngineInitProgress("");
+      alert("Failed to load in-browser LLM: " + (err.message || err));
+    }
+  };
 
   const handleSend = async (textToSend?: string) => {
     const text = (textToSend || inputValue).trim();
@@ -82,6 +121,33 @@ export function WebsiteAssistantWidget() {
     setIsLoading(true);
 
     try {
+      // 1. If Client-side WebGPU Engine is loaded, run inference directly in the browser!
+      if (clientLLMActive && webllmEngineRef.current) {
+        const sysPrompt = "You are HS Solutions Mini Star LLM, a conversational AI customized and maintained by HS AI Solutions. Answer questions clearly, accurately, and assist with coding, general topics, and product inquiries.";
+        
+        const chunks = await webllmEngineRef.current.chat.completions.create({
+          messages: [
+            { role: "system", content: sysPrompt },
+            { role: "user", content: text },
+          ],
+        });
+
+        const reply = chunks.choices[0]?.message?.content || "No response generated.";
+
+        const botMsg: MessageItem = {
+          id: `bot_${Date.now()}`,
+          sender: "assistant",
+          text: reply,
+          provider: "In-Browser WebGPU LLM",
+          timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+        };
+
+        setMessages((prev) => [...prev, botMsg]);
+        setIsLoading(false);
+        return;
+      }
+
+      // 2. Otherwise run through Next.js server endpoint (which connects to Ollama, Web Tool, and Studio RAG)
       const res = await fetch("/api/assistant/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -103,6 +169,7 @@ export function WebsiteAssistantWidget() {
         webSearched: data.webSearched,
         products: data.products,
         sources: data.sources,
+        provider: data.provider,
         timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
       };
 
@@ -138,7 +205,7 @@ export function WebsiteAssistantWidget() {
           </span>
           <div className="flex flex-col text-left">
             <span className="font-mono text-[9.5px] uppercase tracking-wider text-purple-300">
-              Mini Star + Web Tool
+              Mini Star LLM {clientLLMActive ? "• WebGPU Active" : ""}
             </span>
             <span className="text-[12.5px] font-semibold text-white/90 group-hover:text-white">
               Ask Assistant
@@ -177,13 +244,13 @@ export function WebsiteAssistantWidget() {
                     <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
                   </div>
                   <span className="font-mono text-[10px] text-white/45">
-                    Website & Web Tool Assistant · HS AI Solutions
+                    {clientLLMActive ? "Running inside browser GPU (WebGPU)" : "HS AI Solutions Assistant"}
                   </span>
                 </div>
               </div>
 
               <div className="flex items-center gap-2">
-                {/* Web Tool Toggle Button */}
+                {/* Web Tool Toggle */}
                 <button
                   type="button"
                   onClick={() => setWebSearchEnabled(!webSearchEnabled)}
@@ -209,14 +276,29 @@ export function WebsiteAssistantWidget() {
               </div>
             </div>
 
-            {/* Freshness Bar */}
-            <div className="flex items-center justify-between px-4 py-1.5 bg-black/40 border-b border-white/5 text-[9.5px] font-mono text-white/40">
-              <span className="flex items-center gap-1.5">
-                <span className="h-1 w-1 rounded-full bg-cyan-400" />
-                Live Web Tool + Studio Intelligence
-              </span>
-              <span>{lastSync ? `Synced: ${lastSync}` : "Live Connected"}</span>
-            </div>
+            {/* In-Browser WebGPU Runner Bar */}
+            {webGPUSupported && !clientLLMActive && (
+              <div className="flex items-center justify-between px-4 py-2 bg-purple-950/40 border-b border-purple-500/20 text-xs">
+                <div>
+                  <p className="font-semibold text-purple-200 text-[11px]">Run LLM Directly in Browser?</p>
+                  <p className="text-[10px] text-white/50">Run 650MB model locally in your browser GPU (zero server needed).</p>
+                </div>
+                <button
+                  type="button"
+                  disabled={clientLLMLoading}
+                  onClick={handleEnableInBrowserLLM}
+                  className="rounded-lg bg-gradient-to-r from-purple-500 to-indigo-600 px-2.5 py-1 text-[10px] font-semibold text-white shadow transition hover:brightness-110 disabled:opacity-50"
+                >
+                  {clientLLMLoading ? "Loading..." : "Load Model"}
+                </button>
+              </div>
+            )}
+
+            {clientLLMLoading && (
+              <div className="px-4 py-1.5 bg-black/60 border-b border-purple-500/30 text-[9.5px] font-mono text-purple-300 truncate">
+                {engineInitProgress || "Downloading & caching model weights..."}
+              </div>
+            )}
 
             {/* Message Thread */}
             <div className="flex-1 overflow-y-auto p-4 space-y-3.5">
@@ -232,7 +314,7 @@ export function WebsiteAssistantWidget() {
                         : "border border-white/10 bg-white/[0.04] text-white/90"
                     }`}
                   >
-                    {/* Web Searched Badge indicator */}
+                    {/* Web Searched Badge */}
                     {m.webSearched && (
                       <div className="mb-2 flex items-center gap-1 rounded-md border border-cyan-400/20 bg-cyan-500/10 px-2 py-0.5 font-mono text-[8.5px] text-cyan-300 w-fit">
                         <span>🌐</span>
@@ -269,7 +351,7 @@ export function WebsiteAssistantWidget() {
                       </div>
                     )}
 
-                    {/* External Web Sources */}
+                    {/* Sources */}
                     {m.sources && m.sources.length > 0 && (
                       <div className="mt-2.5 flex flex-wrap gap-1 border-t border-white/5 pt-2">
                         {m.sources.slice(0, 2).map((s, idx) => (
@@ -287,7 +369,7 @@ export function WebsiteAssistantWidget() {
                     )}
                   </div>
                   <span className="mt-1 font-mono text-[8.5px] text-white/30 px-1">
-                    {m.timestamp}
+                    {m.timestamp} {m.provider ? `• ${m.provider}` : ""}
                   </span>
                 </div>
               ))}
@@ -297,7 +379,7 @@ export function WebsiteAssistantWidget() {
                   <span className="h-1.5 w-1.5 rounded-full bg-purple-400 animate-bounce" />
                   <span className="h-1.5 w-1.5 rounded-full bg-purple-400 animate-bounce [animation-delay:0.2s]" />
                   <span className="h-1.5 w-1.5 rounded-full bg-purple-400 animate-bounce [animation-delay:0.4s]" />
-                  <span className="font-mono text-[10px] ml-1">Searching web & knowledge...</span>
+                  <span className="font-mono text-[10px] ml-1">Generating response...</span>
                 </div>
               )}
               <div ref={messagesEndRef} />
@@ -331,7 +413,7 @@ export function WebsiteAssistantWidget() {
                 type="text"
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
-                placeholder="Ask about Lumina, Python, research the web..."
+                placeholder="Ask anything, code in Python, search web..."
                 className="flex-1 rounded-xl border border-white/12 bg-white/[0.04] px-3.5 py-2 text-xs text-white placeholder-white/30 outline-none focus:border-purple-400/60"
               />
               <button
