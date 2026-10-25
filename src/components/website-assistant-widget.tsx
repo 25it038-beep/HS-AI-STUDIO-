@@ -4,6 +4,80 @@ import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowUpRight } from "@/components/ui/icons";
+import { products } from "@/data/products";
+
+interface SiteTelemetry {
+  pathname: string;
+  pageTitle: string;
+  activeProduct?: {
+    id: string;
+    name: string;
+    number?: string;
+    tagline: string;
+    category: string;
+    description: string;
+    features: string[];
+  } | null;
+  currentSection?: string;
+  device: "desktop" | "mobile";
+  scrollPercent: number;
+}
+
+function getLiveSiteTelemetry(): SiteTelemetry {
+  if (typeof window === "undefined") {
+    return { pathname: "/", pageTitle: "HS AI Solutions", device: "desktop", scrollPercent: 0 };
+  }
+
+  const pathname = window.location.pathname;
+  let activeProduct = null;
+  if (pathname.startsWith("/products/")) {
+    const slug = pathname.replace("/products/", "").split("/")[0];
+    const found = products.find((p) => p.id === slug);
+    if (found) {
+      activeProduct = {
+        id: found.id,
+        name: found.name,
+        number: found.number,
+        tagline: found.tagline,
+        category: found.category,
+        description: found.description,
+        features: found.features,
+      };
+    }
+  }
+
+  let currentSection = "Main Studio View";
+  if (typeof document !== "undefined") {
+    const scrollY = window.scrollY || 0;
+    const projects = document.getElementById("projects");
+    const announcements = document.getElementById("announcements");
+    const models = document.getElementById("models");
+
+    if (projects && scrollY >= projects.offsetTop - 200) {
+      currentSection = "Projects & Ecosystem Showcase";
+    } else if (announcements && scrollY >= announcements.offsetTop - 200) {
+      currentSection = "Latest Announcements & Releases";
+    } else if (models && scrollY >= models.offsetTop - 200) {
+      currentSection = "AI Models & Architectures";
+    } else if (pathname.startsWith("/products/")) {
+      currentSection = `Product Detail: ${activeProduct?.name || "Product"}`;
+    } else if (pathname.startsWith("/admin")) {
+      currentSection = "Administration Portal";
+    }
+  }
+
+  const maxScroll = typeof document !== "undefined" ? Math.max(document.body.scrollHeight - window.innerHeight, 1) : 1;
+  const scrollPercent = typeof window !== "undefined" ? Math.round(((window.scrollY || 0) / maxScroll) * 100) : 0;
+
+  return {
+    pathname,
+    pageTitle: typeof document !== "undefined" ? document.title : "HS AI Solutions",
+    activeProduct,
+    currentSection,
+    device: typeof window !== "undefined" && window.innerWidth < 768 ? "mobile" : "desktop",
+    scrollPercent,
+  };
+}
 
 interface MessageItem {
   id: string;
@@ -28,24 +102,29 @@ interface MessageItem {
 const SUGGESTED_QUERIES = [
   "What is Python?",
   "What is Lumina?",
-  "Write factorial in Python",
-  "Latest AI news",
+  "Who is the CM of Tamil Nadu?",
+  "What is today's date?",
 ];
 
 export function WebsiteAssistantWidget() {
   const [isOpen, setIsOpen] = useState(false);
   const [webSearchEnabled, setWebSearchEnabled] = useState(true);
   const [clientLLMActive, setClientLLMActive] = useState(false);
-  const [clientLLMLoading, setClientLLMLoading] = useState(true);
-  const [isModelReady, setIsModelReady] = useState(false);
-  const [engineInitProgress, setEngineInitProgress] = useState("Initializing model environment...");
+  const [clientLLMLoading, setClientLLMLoading] = useState(false);
+  const [engineInitProgress, setEngineInitProgress] = useState("");
   const [webGPUSupported, setWebGPUSupported] = useState(false);
+  const [telemetry, setTelemetry] = useState<SiteTelemetry>({
+    pathname: "/",
+    pageTitle: "HS AI Solutions",
+    device: "desktop",
+    scrollPercent: 0,
+  });
 
   const [messages, setMessages] = useState<MessageItem[]>([
     {
       id: "welcome",
       sender: "assistant",
-      text: "Hello! I am **HS Solutions Mini Star LLM**. I can answer general programming questions (Python, algorithms), search the live web, or assist with your AI workflow.",
+      text: "Hello! I am **HS Solutions Mini Star LLM**. I can answer general programming questions, search live real-time information, and help you navigate the HS AI Solutions ecosystem.",
       timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
     },
   ]);
@@ -55,32 +134,32 @@ export function WebsiteAssistantWidget() {
   const webllmEngineRef = useRef<any>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // Check WebGPU compatibility and automatically load the in-browser model
+  // Sync live site telemetry on modal open or navigation
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setTelemetry(getLiveSiteTelemetry());
+    }
+  }, [isOpen]);
+
+  // Fast background auto-load for in-browser WebGPU model (non-blocking)
   useEffect(() => {
     let isCancelled = false;
 
     async function autoLoadModel() {
-      if (typeof window === "undefined") return;
-
-      if (!(navigator as any).gpu) {
-        // Fallback for browsers without WebGPU hardware
-        setClientLLMLoading(false);
-        setIsModelReady(true);
-        setEngineInitProgress("");
+      if (typeof window === "undefined" || !(navigator as any).gpu) {
         return;
       }
-
       setWebGPUSupported(true);
 
       try {
         setClientLLMLoading(true);
-        setIsModelReady(false);
-        setEngineInitProgress("Loading HS Solutions Mini Star into GPU...");
+        setEngineInitProgress("Initializing local WebGPU engine...");
 
         const { CreateMLCEngine } = await import("@mlc-ai/web-llm");
 
         if (isCancelled) return;
 
+        // Load compact model directly into browser VRAM with instant local caching
         const engine = await CreateMLCEngine("Qwen2.5-0.5B-Instruct-q4f16_1-MLC", {
           initProgressCallback: (report) => {
             if (!isCancelled) {
@@ -94,7 +173,6 @@ export function WebsiteAssistantWidget() {
         webllmEngineRef.current = engine;
         setClientLLMActive(true);
         setClientLLMLoading(false);
-        setIsModelReady(true);
         setEngineInitProgress("");
 
         setMessages((prev) => [
@@ -102,15 +180,14 @@ export function WebsiteAssistantWidget() {
           {
             id: `sys_${Date.now()}`,
             sender: "assistant",
-            text: "⚡ **HS Solutions Mini Star LLM Ready!** Running directly inside your GPU. You can now chat.",
+            text: "⚡ **In-Browser WebGPU GPU Model Active!** Responses now stream directly from your device.",
             timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
           },
         ]);
       } catch (err) {
-        console.warn("WebGPU in-browser LLM auto-load skipped or unsupported, falling back to server:", err);
+        console.warn("WebGPU in-browser LLM background load skipped, using server engine:", err);
         if (!isCancelled) {
           setClientLLMLoading(false);
-          setIsModelReady(true);
           setEngineInitProgress("");
         }
       }
@@ -130,9 +207,11 @@ export function WebsiteAssistantWidget() {
   }, [messages, isOpen]);
 
   const handleSend = async (textToSend?: string) => {
-    if (!isModelReady) return;
     const text = (textToSend || inputValue).trim();
     if (!text || isLoading) return;
+
+    const liveTel = getLiveSiteTelemetry();
+    setTelemetry(liveTel);
 
     const userMsg: MessageItem = {
       id: `usr_${Date.now()}`,
@@ -161,6 +240,7 @@ export function WebsiteAssistantWidget() {
             body: JSON.stringify({
               message: text,
               enableWebSearch: webSearchEnabled,
+              telemetry: liveTel,
               contextOnly: true,
             }),
           });
@@ -189,15 +269,21 @@ STRICT IDENTITY RULES:
 - You were developed, created, and maintained by HS AI Solutions.
 - You are HS AI Solutions' own AI model. Never identify as Qwen, Alibaba, OpenAI, ChatGPT, or any other entity.
 
+VISITOR SITE TELEMETRY:
+• Visitor's Current Page: ${liveTel.pathname} (${liveTel.pageTitle})
+${liveTel.activeProduct ? `• Currently Inspecting Product: ${liveTel.activeProduct.name} (${liveTel.activeProduct.category}) — ${liveTel.activeProduct.tagline}` : ""}
+• Visible Section: ${liveTel.currentSection} (${liveTel.scrollPercent}% down the page on ${liveTel.device})
+INSTRUCTION: Proactively use this site telemetry to assist and guide the visitor with questions about this specific page, active product features, or site navigation.
+
 KNOWLEDGE SOURCES:
 ${studioContext ? `${studioContext}\n(Use the verified HS AI Solutions knowledge above to answer accurately about HS AI Solutions products and services.)\n` : ""}
-${webContext ? `${webContext}\n(Use the live web search results above to answer accurately with current facts, details, and citations.)\n` : ""}
+${webContext ? `${webContext}\n(Synthesize the live web research above into a clear, direct, accurate answer. Do NOT output a raw list of search snippets or say "Here is what I found". Give the exact real-world answer directly.)\n` : ""}
 
 CONVERSATION RULES:
-- If live web search results are provided above, synthesize them to give a fresh, factual, and direct answer.
-- If verified HS AI Solutions knowledge is provided above, explain our products and services accurately.
+- If asked about current events, date, politics, or facts with web research above, give a direct, accurate, and live answer.
+- If asked about HS AI Solutions, use the verified knowledge and site telemetry above to guide the visitor.
 - For coding, math, programming, logic, and general topics, provide clear explanations and code.
-- Do NOT mention, plug, or link to HS AI Solutions products unless the user specifically asks about them or about HS AI Solutions.`;
+- Do NOT mention or plug other products unless the user specifically asks for products or navigation.`;
 
         const botId = `bot_${Date.now()}`;
         const initialBotMsg: MessageItem = {
@@ -279,6 +365,7 @@ CONVERSATION RULES:
         body: JSON.stringify({
           message: text,
           enableWebSearch: webSearchEnabled,
+          telemetry: liveTel,
         }),
       });
 
@@ -327,16 +414,13 @@ CONVERSATION RULES:
         >
           <div className="relative flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-tr from-purple-500 to-indigo-500 text-xs font-bold text-white shadow-md">
             <span>⭐</span>
-            {!isModelReady && (
-              <span className="absolute -inset-1 rounded-full border-2 border-purple-400 border-t-transparent animate-spin" />
-            )}
           </div>
           <div className="flex flex-col text-left">
             <span className="font-mono text-[9.5px] uppercase tracking-wider text-purple-300">
-              Mini Star LLM {!isModelReady ? "• Loading..." : clientLLMActive ? "• WebGPU Active" : ""}
+              Mini Star LLM {clientLLMActive ? "• WebGPU Active" : "• Live Assistant"}
             </span>
             <span className="text-[12.5px] font-semibold text-white/90 group-hover:text-white">
-              {!isModelReady ? "Model Loading..." : "Ask Assistant"}
+              Ask Assistant
             </span>
           </div>
         </motion.button>
@@ -359,7 +443,7 @@ CONVERSATION RULES:
             />
 
             {/* Header */}
-            <div className="relative flex items-center justify-between border-b border-white/10 px-4 py-3.5 bg-white/[0.02]">
+            <div className="relative flex items-center justify-between border-b border-white/10 px-4 py-3 bg-white/[0.02]">
               <div className="flex items-center gap-2.5">
                 <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-tr from-purple-500 to-indigo-500 text-xs font-bold text-white shadow">
                   ⭐
@@ -382,7 +466,7 @@ CONVERSATION RULES:
                 <button
                   type="button"
                   onClick={() => setWebSearchEnabled(!webSearchEnabled)}
-                  title={webSearchEnabled ? "Web Tool Active" : "Web Tool Disabled"}
+                  title={webSearchEnabled ? "Live Web Search Active" : "Web Tool Disabled"}
                   className={`flex items-center gap-1 rounded-full px-2 py-0.5 font-mono text-[9px] transition ${
                     webSearchEnabled
                       ? "border border-cyan-400/40 bg-cyan-500/15 text-cyan-300"
@@ -404,14 +488,31 @@ CONVERSATION RULES:
               </div>
             </div>
 
-            {/* In-Browser WebGPU Auto-Loading Status Bar */}
+            {/* Live Site Telemetry Pill */}
+            <div className="flex items-center justify-between px-4 py-1.5 bg-white/[0.02] border-b border-white/5 text-[10px]">
+              <div className="flex items-center gap-1.5 min-w-0">
+                <span className="text-[11px]">📍</span>
+                <span className="text-white/40">Location:</span>
+                <span className="font-semibold text-purple-200 truncate max-w-[210px]">
+                  {telemetry.activeProduct
+                    ? `${telemetry.activeProduct.name} (#${telemetry.activeProduct.number || ""})`
+                    : telemetry.pathname === "/"
+                    ? "HS AI Studio Home"
+                    : telemetry.pathname}
+                </span>
+              </div>
+              <span className="font-mono text-[9px] text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-1.5 py-0.5 rounded-full shrink-0">
+                Live Telemetry
+              </span>
+            </div>
+
+            {/* In-Browser WebGPU Fast Background Warming Bar */}
             {clientLLMLoading && (
-              <div className="flex items-center gap-2 px-4 py-2 bg-purple-950/50 border-b border-purple-500/20 text-xs">
-                <span className="h-2 w-2 rounded-full bg-purple-400 animate-ping shrink-0" />
+              <div className="flex items-center gap-2 px-4 py-1.5 bg-purple-950/40 border-b border-purple-500/20 text-xs">
+                <span className="h-1.5 w-1.5 rounded-full bg-purple-400 animate-ping shrink-0" />
                 <div className="min-w-0 flex-1">
-                  <p className="font-semibold text-purple-200 text-[11px] truncate">Auto-loading 650MB Model into Browser GPU...</p>
-                  <p className="text-[9.5px] font-mono text-purple-300/80 truncate">
-                    {engineInitProgress || "Initializing WebGPU runtime and caching weights..."}
+                  <p className="text-[9.5px] font-mono text-purple-200/90 truncate">
+                    ⚡ Accelerating in-browser GPU: {engineInitProgress || "Caching local weights..."}
                   </p>
                 </div>
               </div>
@@ -425,40 +526,12 @@ CONVERSATION RULES:
                     ⚡ In-Browser WebGPU LLM Active
                   </span>
                 </div>
-                <span className="font-mono text-[9px] text-white/40">100% Client-Side GPU</span>
+                <span className="font-mono text-[9px] text-white/40">100% Client GPU</span>
               </div>
             )}
 
-            {/* Chat Body & Dedicated Loading Barrier */}
+            {/* Chat Body */}
             <div className="relative flex-1 min-h-0 flex flex-col overflow-hidden">
-              {/* Blocking Loading Overlay until model is fully loaded */}
-              {!isModelReady && (
-                <div className="absolute inset-0 z-30 flex flex-col items-center justify-center bg-[#0e0d16]/95 p-6 text-center backdrop-blur-md">
-                  <div className="relative mb-5 flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-tr from-purple-600 to-indigo-600 shadow-[0_0_40px_rgba(168,85,247,0.55)]">
-                    <span className="text-2xl animate-spin [animation-duration:3s]">⭐</span>
-                    <span className="absolute -inset-1.5 rounded-2xl border-2 border-purple-400/40 animate-ping opacity-30" />
-                  </div>
-                  <h4 className="font-display text-base font-semibold text-white tracking-wide">
-                    Loading HS Solutions Mini Star LLM
-                  </h4>
-                  <p className="mt-2 max-w-[300px] text-[11px] font-mono text-purple-200/90 leading-relaxed truncate">
-                    {engineInitProgress || "Initializing GPU environment & model weights..."}
-                  </p>
-
-                  {/* Progress Bar Animation */}
-                  <div className="mt-5 w-60 h-2 rounded-full bg-white/10 p-0.5 overflow-hidden">
-                    <div className="h-full bg-gradient-to-r from-purple-500 via-indigo-400 to-cyan-400 rounded-full animate-pulse w-full" />
-                  </div>
-
-                  <div className="mt-4 flex items-center gap-2 rounded-full bg-white/5 border border-white/10 px-3 py-1">
-                    <span className="h-2 w-2 rounded-full bg-amber-400 animate-ping shrink-0" />
-                    <p className="text-[10px] text-white/60 font-mono">
-                      Chat is locked until the model finishes loading
-                    </p>
-                  </div>
-                </div>
-              )}
-
               {/* Message Thread */}
               <div className="flex-1 overflow-y-auto p-4 space-y-3.5">
                 {messages.map((m) => (
@@ -477,7 +550,7 @@ CONVERSATION RULES:
                       {m.webSearched && (
                         <div className="mb-2 flex items-center gap-1 rounded-md border border-cyan-400/20 bg-cyan-500/10 px-2 py-0.5 font-mono text-[8.5px] text-cyan-300 w-fit">
                           <span>🌐</span>
-                          <span>Researched via Live Web Tool</span>
+                          <span>Live Web Research Synthesized</span>
                         </div>
                       )}
 
@@ -538,23 +611,22 @@ CONVERSATION RULES:
                     <span className="h-1.5 w-1.5 rounded-full bg-purple-400 animate-bounce" />
                     <span className="h-1.5 w-1.5 rounded-full bg-purple-400 animate-bounce [animation-delay:0.2s]" />
                     <span className="h-1.5 w-1.5 rounded-full bg-purple-400 animate-bounce [animation-delay:0.4s]" />
-                    <span className="font-mono text-[10px] ml-1">Generating response...</span>
+                    <span className="font-mono text-[10px] ml-1">Synthesizing live response...</span>
                   </div>
                 )}
                 <div ref={messagesEndRef} />
               </div>
             </div>
 
-            {/* Suggested Queries Chips (Unlocked only when model is ready) */}
-            {isModelReady && messages.length <= 3 && (
+            {/* Suggested Queries Chips */}
+            {messages.length <= 3 && (
               <div className="px-4 py-1.5 flex flex-wrap gap-1.5 bg-white/[0.01] border-t border-white/5">
                 {SUGGESTED_QUERIES.map((q) => (
                   <button
                     key={q}
                     type="button"
-                    disabled={!isModelReady}
                     onClick={() => handleSend(q)}
-                    className="rounded-full border border-white/10 bg-white/[0.03] px-2.5 py-1 text-[10px] text-white/70 hover:border-purple-400/40 hover:text-white transition disabled:opacity-40"
+                    className="rounded-full border border-white/10 bg-white/[0.03] px-2.5 py-1 text-[10px] text-white/70 hover:border-purple-400/40 hover:text-white transition"
                   >
                     {q}
                   </button>
@@ -562,7 +634,7 @@ CONVERSATION RULES:
               </div>
             )}
 
-            {/* Input Bar (Locked until model is loaded) */}
+            {/* Input Bar */}
             <form
               onSubmit={(e) => {
                 e.preventDefault();
@@ -573,19 +645,15 @@ CONVERSATION RULES:
               <input
                 type="text"
                 value={inputValue}
-                disabled={!isModelReady || isLoading}
+                disabled={isLoading}
                 onChange={(e) => setInputValue(e.target.value)}
-                placeholder={
-                  !isModelReady
-                    ? "Model loading... Please wait"
-                    : "Ask anything, code in Python, search web..."
-                }
-                className="flex-1 rounded-xl border border-white/12 bg-white/[0.04] px-3.5 py-2 text-xs text-white placeholder-white/30 outline-none focus:border-purple-400/60 disabled:opacity-40 disabled:cursor-not-allowed"
+                placeholder="Ask anything, site navigation, code, or live web..."
+                className="flex-1 rounded-xl border border-white/12 bg-white/[0.04] px-3.5 py-2 text-xs text-white placeholder-white/30 outline-none focus:border-purple-400/60"
               />
               <button
                 type="submit"
-                disabled={!isModelReady || isLoading || !inputValue.trim()}
-                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-purple-600 text-white transition hover:bg-purple-500 disabled:opacity-40 disabled:cursor-not-allowed"
+                disabled={isLoading || !inputValue.trim()}
+                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-purple-600 text-white transition hover:bg-purple-500 disabled:opacity-40"
               >
                 ↑
               </button>
