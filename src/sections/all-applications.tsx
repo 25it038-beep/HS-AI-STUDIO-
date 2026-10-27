@@ -5,10 +5,10 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { products, type ProductDetail } from "@/data/products";
 import { PreviewRenderer } from "@/components/previews/PreviewRenderer";
-import { DemoVideo, DEMO_VIDEOS } from "@/components/previews/DemoVideo";
 import { Reveal } from "@/components/ui/Reveal";
 import { ArrowUpRight } from "@/components/ui/icons";
 import { CollaboratorModal } from "@/components/CollaboratorModal";
+import { triggerFullscreenExploreVideo } from "@/components/fullscreen-explore-video";
 
 function ProductCell({
   product,
@@ -28,6 +28,10 @@ function ProductCell({
     >
       <Link
         href={`/products/${product.id}`}
+        onClick={(e) => {
+          e.preventDefault();
+          triggerFullscreenExploreVideo(`/products/${product.id}`);
+        }}
         aria-label={`Open ${product.name} details`}
         className="relative block overflow-hidden rounded-xl"
       >
@@ -102,6 +106,10 @@ function ProductCell({
           )}
           <Link
             href={`/products/${product.id}`}
+            onClick={(e) => {
+              e.preventDefault();
+              triggerFullscreenExploreVideo(`/products/${product.id}`);
+            }}
             className="group/link inline-flex items-center gap-1 text-[12.5px] font-medium text-white/55 transition-colors hover:text-white"
           >
             View details

@@ -2,23 +2,33 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import { useRouter } from "next/navigation";
 
 export const EXPLORE_VIDEO_SRC = "/videos/explore-hs.mp4";
 export const EXPLORE_POSTER_SRC = "/videos/explore-poster.jpg";
 
-export function triggerFullscreenExploreVideo() {
+export function triggerFullscreenExploreVideo(destinationUrl?: string) {
   if (typeof window === "undefined") return;
-  window.dispatchEvent(new CustomEvent("hs-open-fullscreen-explore-video"));
+  window.dispatchEvent(
+    new CustomEvent("hs-open-fullscreen-explore-video", {
+      detail: destinationUrl ? { destinationUrl } : undefined,
+    })
+  );
 }
 
 export const triggerExploreVideo = triggerFullscreenExploreVideo;
 
 export function FullscreenExploreVideo() {
+  const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const [soundBlocked, setSoundBlocked] = useState(false);
+  const [destination, setDestination] = useState<string | null>(null);
+  const destinationRef = useRef<string | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
 
-  const openVideo = useCallback(() => {
+  const openVideo = useCallback((targetUrl?: string | null) => {
+    destinationRef.current = targetUrl ?? null;
+    setDestination(targetUrl ?? null);
     setSoundBlocked(false);
     setIsOpen(true);
   }, []);
@@ -27,6 +37,8 @@ export function FullscreenExploreVideo() {
     if (videoRef.current) {
       videoRef.current.pause();
     }
+    destinationRef.current = null;
+    setDestination(null);
     setIsOpen(false);
   }, []);
 
@@ -48,16 +60,30 @@ export function FullscreenExploreVideo() {
     }
   }, [closeVideo]);
 
-  const handleVideoEnded = useCallback(() => {
-    // Graceful brief moment on the final logo screen before automatically scrolling to Explore Applications
-    setTimeout(() => {
+  const handleProceed = useCallback(() => {
+    const target = destinationRef.current;
+    if (target) {
+      closeVideo();
+      router.push(target);
+    } else {
       handleGoToProjects();
+    }
+  }, [closeVideo, handleGoToProjects, router]);
+
+  const handleVideoEnded = useCallback(() => {
+    // Graceful brief moment on the final logo screen before automatic navigation
+    setTimeout(() => {
+      handleProceed();
     }, 350);
-  }, [handleGoToProjects]);
+  }, [handleProceed]);
 
   // Listen for global open event
   useEffect(() => {
-    const onOpen = () => openVideo();
+    const onOpen = (e: Event) => {
+      const custom = e as CustomEvent<{ destinationUrl?: string }>;
+      const target = custom?.detail?.destinationUrl || null;
+      openVideo(target);
+    };
     window.addEventListener("hs-open-fullscreen-explore-video", onOpen);
     return () => {
       window.removeEventListener("hs-open-fullscreen-explore-video", onOpen);
@@ -193,16 +219,16 @@ export function FullscreenExploreVideo() {
             </motion.div>
           )}
 
-          {/* Skip directly to Explore Applications */}
+          {/* Skip button: to destination product details or applications list */}
           <button
             type="button"
             onClick={(e) => {
               e.stopPropagation();
-              handleGoToProjects();
+              handleProceed();
             }}
             className="absolute bottom-6 right-6 sm:bottom-8 sm:right-8 z-20 rounded-full border border-white/20 bg-black/60 px-4 py-1.5 text-xs uppercase tracking-widest text-white/80 backdrop-blur transition hover:bg-white/20 hover:text-white active:scale-95"
           >
-            Skip to Applications →
+            {destination ? "Skip to Details →" : "Skip to Applications →"}
           </button>
         </motion.div>
       )}

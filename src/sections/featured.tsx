@@ -11,6 +11,7 @@ import { GravityLLMPreview } from "@/components/previews/GravityLLMPreview";
 import { GalaxyVisionPreview } from "@/components/previews/GalaxyVisionPreview";
 import { ElectronPreview } from "@/components/previews/ElectronPreview";
 import { CollaboratorModal } from "@/components/CollaboratorModal";
+import { triggerFullscreenExploreVideo } from "@/components/fullscreen-explore-video";
 
 export function Featured() {
   const [collabModalOpen, setCollabModalOpen] = useState(false);
@@ -28,12 +29,15 @@ export function Featured() {
       />
       <div
         className="pointer-events-none absolute -right-40 top-[50%] h-[560px] w-[640px] rounded-full blur-[140px] opacity-20"
-        style={{ background: "radial-gradient(closest-side, rgba(192,132,252,0.25), transparent)" }}
+        style={{ background: "radial-gradient(closest-side, rgba(168,85,247,0.25), transparent)" }}
       />
-      <div className="bg-grid-dark pointer-events-none absolute inset-0 opacity-30 [mask-image:radial-gradient(ellipse_60%_60%_at_50%_40%,black,transparent)]" />
+      <div
+        className="pointer-events-none absolute -left-40 bottom-10 h-[560px] w-[640px] rounded-full blur-[140px] opacity-20"
+        style={{ background: "radial-gradient(closest-side, rgba(56,189,248,0.2), transparent)" }}
+      />
 
       {/* ========================================================= */}
-      {/* SPOTLIGHT 01: GRAVITY LLM (Autonomous Local AI Suite)    */}
+      {/* SPOTLIGHT 01: GRAVITY LLM (Flagship Autonomous Local AI)  */}
       {/* ========================================================= */}
       <div className="container-x relative grid items-center gap-14 lg:grid-cols-[0.95fr_1.05fr]">
         <div>
@@ -43,7 +47,7 @@ export function Featured() {
                 className="h-1.5 w-1.5 rounded-full"
                 style={{ background: gravity.accent, boxShadow: `0 0 10px ${gravity.accent}` }}
               />
-              {gravity.number} · Flagship Spotlight · {gravity.category}
+              {gravity.number} · Flagship Local AI · {gravity.category}
             </p>
           </Reveal>
 
@@ -80,6 +84,10 @@ export function Featured() {
               </button>
               <MagneticButton
                 href={`/products/${gravity.id}`}
+                onClick={(e) => {
+                  e.preventDefault();
+                  triggerFullscreenExploreVideo(`/products/${gravity.id}`);
+                }}
                 variant="ghost"
                 lg
                 accent={gravity.accent}
@@ -98,27 +106,40 @@ export function Featured() {
               <span className="text-white/30">→</span>
               <span>2. Click Any Interface BAT</span>
               <span className="text-white/30">→</span>
-              <span className="font-mono font-semibold text-white">gravity_desktop.bat</span>
+              <span className="font-mono font-semibold text-white">3. Prompt Away</span>
+            </div>
+          </Reveal>
+
+          {/* Hardware notice alert */}
+          <Reveal y={18} delay={0.28}>
+            <div className="mt-3 space-y-1.5 text-xs text-white/55">
+              <p className="flex items-start gap-1.5 text-amber-300/90">
+                <span className="font-bold">⚠️ Important:</span>
+                <span>First token generation may experience initial warmup delay while neural layers allocate into VRAM.</span>
+              </p>
+              <p className="text-white/45">
+                Ensure usage matches your hardware specifications; performance scales dynamically based on VRAM capacity.
+              </p>
             </div>
           </Reveal>
 
           <Reveal y={18} delay={0.3}>
             <p className="mt-8 font-mono text-[11px] uppercase tracking-[0.25em] text-white/35">
-              44 Autonomous Tools · RTX CUDA &amp; CPU · Dynamic VRAM · 100% Air-Gapped
+              44 Integrated Tools · PDF/Office Docs · Web Search · Python Sandbox · Edge-TTS
             </p>
           </Reveal>
         </div>
 
-        <Parallax depth={-46}>
+        <Parallax depth={-40}>
           <GravityLLMPreview className="w-full" />
         </Parallax>
       </div>
 
       {/* ========================================================= */}
-      {/* SPOTLIGHT 02: GALAXY VISION (Multimodal Vision-Language AI) */}
+      {/* SPOTLIGHT 02: GALAXY VISION (Self-Hosted Vision & Voice)  */}
       {/* ========================================================= */}
       <div className="container-x relative mt-24 border-t border-white/8 pt-24 md:mt-32 md:pt-32 grid items-center gap-14 lg:grid-cols-[1.05fr_0.95fr]">
-        <Parallax depth={-46} className="order-2 lg:order-1">
+        <Parallax depth={40} className="order-2 lg:order-1">
           <GalaxyVisionPreview className="w-full" />
         </Parallax>
 
@@ -161,6 +182,10 @@ export function Featured() {
               </MagneticButton>
               <MagneticButton
                 href={`/products/${galaxy.id}`}
+                onClick={(e) => {
+                  e.preventDefault();
+                  triggerFullscreenExploreVideo(`/products/${galaxy.id}`);
+                }}
                 variant="ghost"
                 lg
                 accent={galaxy.accent}
@@ -234,6 +259,10 @@ export function Featured() {
               </MagneticButton>
               <MagneticButton
                 href={`/products/${electron.id}`}
+                onClick={(e) => {
+                  e.preventDefault();
+                  triggerFullscreenExploreVideo(`/products/${electron.id}`);
+                }}
                 variant="ghost"
                 lg
                 accent={electron.accent}
