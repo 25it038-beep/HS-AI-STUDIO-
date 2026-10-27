@@ -3,14 +3,7 @@ import fs from "fs";
 import path from "path";
 import { validateCollaboratorId } from "@/lib/collaborator";
 
-// Fallback cloud storage mirror (e.g. Google Drive, OneDrive, Hugging Face, or Cloudflare R2)
-// Can be set via environment variable GRAVITY_CLOUD_DOWNLOAD_URL or hardcoded fallback
-const CLOUD_DOWNLOAD_URL =
-  process.env.GRAVITY_CLOUD_DOWNLOAD_URL ||
-  process.env.NEXT_PUBLIC_GRAVITY_CLOUD_URL ||
-  "";
-
-// Primary local workstation location on drive E:, followed by project fallbacks
+// Primary location on drive E:, followed by local project fallbacks
 const CANDIDATE_PATHS = [
   "E:\\Gravity_LLM_HS_AI_Solutions_Portable.zip",
   path.join(process.cwd(), "public", "downloads", "Gravity_LLM_HS_AI_Solutions_Portable.zip"),
@@ -19,12 +12,8 @@ const CANDIDATE_PATHS = [
 
 function resolveGravityFilePath(): string | null {
   for (const p of CANDIDATE_PATHS) {
-    try {
-      if (fs.existsSync(/*turbopackIgnore: true*/ p)) {
-        return p;
-      }
-    } catch {
-      // Ignore filesystem access errors on cloud/serverless
+    if (fs.existsSync(/*turbopackIgnore: true*/ p)) {
+      return p;
     }
   }
   return null;
@@ -47,16 +36,13 @@ export async function POST(req: NextRequest) {
     }
 
     const filePath = resolveGravityFilePath();
-    const hasCloudMirror = Boolean(CLOUD_DOWNLOAD_URL);
-    const fileAvailable = Boolean(filePath || hasCloudMirror);
+    const fileAvailable = Boolean(filePath);
 
     return NextResponse.json({
       success: true,
       collaboratorName: validation.collaboratorName,
       downloadUrl: `/api/download/gravity?id=${encodeURIComponent(collaboratorId.trim())}`,
       fileAvailable,
-      hasCloudMirror,
-      cloudDownloadUrl: CLOUD_DOWNLOAD_URL || null,
       fileName: "Gravity_LLM_HS_AI_Solutions_Portable.zip",
     });
   } catch {
@@ -81,19 +67,12 @@ export async function GET(req: NextRequest) {
     );
   }
 
-  // 1. If a cloud mirror (Google Drive, HuggingFace, Cloudflare R2) is configured, redirect to it
-  if (CLOUD_DOWNLOAD_URL) {
-    return NextResponse.redirect(CLOUD_DOWNLOAD_URL, 302);
-  }
-
-  // 2. Otherwise check for local workstation file (e.g. running locally on localhost)
   const filePath = resolveGravityFilePath();
   if (!filePath) {
     return new NextResponse(
       JSON.stringify({
         error:
-          "Gravity LLM package is 6.12 GB and stored on local workstation Drive E:. Cloud deployments (Vercel) require a Google Drive / cloud download link.",
-        cloudSetupNeeded: true,
+          "Gravity LLM package is currently localized to workstation drive E:. Please contact Harshan Seliyan or connect the designated storage volume.",
       }),
       { status: 404, headers: { "Content-Type": "application/json" } }
     );
@@ -120,6 +99,7 @@ export async function GET(req: NextRequest) {
     const chunksize = end - start + 1;
     const fileStream = fs.createReadStream(/*turbopackIgnore: true*/ filePath, { start, end });
 
+    // Transform Node.js ReadStream into web ReadableStream
     const readable = new ReadableStream({
       start(controller) {
         fileStream.on("data", (chunk) => controller.enqueue(chunk));
