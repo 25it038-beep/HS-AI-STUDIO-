@@ -3,12 +3,14 @@ import fs from "fs";
 import path from "path";
 import { validateCollaboratorId } from "@/lib/collaborator";
 
-// Cloud mirror URL (Google Drive, OneDrive, Hugging Face, or Cloudflare R2)
-// Configured via environment variable or default cloud storage
+// Official cloud mirror URL (OneDrive / Google Drive) for Gravity LLM portable package
+const DEFAULT_ONEDRIVE_URL =
+  "https://1drv.ms/u/c/A4DE4F83095B15B0/IQC4DaN497y7SITCGrtu5OZCAct1Iz-v0p5eGAJrpDkth4w?e=HTytGp";
+
 const CLOUD_DOWNLOAD_URL =
   process.env.GRAVITY_CLOUD_DOWNLOAD_URL ||
   process.env.NEXT_PUBLIC_GRAVITY_CLOUD_URL ||
-  "";
+  DEFAULT_ONEDRIVE_URL;
 
 // Primary local workstation location on drive E:, followed by project fallbacks
 const CANDIDATE_PATHS = [
@@ -53,7 +55,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({
       success: true,
       collaboratorName: validation.collaboratorName,
-      downloadUrl: `/api/download/gravity?id=${encodeURIComponent(collaboratorId.trim())}`,
+      downloadUrl: CLOUD_DOWNLOAD_URL || `/api/download/gravity?id=${encodeURIComponent(collaboratorId.trim())}`,
       fileAvailable,
       hasCloudMirror,
       cloudDownloadUrl: CLOUD_DOWNLOAD_URL || null,
@@ -81,7 +83,7 @@ export async function GET(req: NextRequest) {
     );
   }
 
-  // 1. If cloud download mirror is configured, redirect directly to Google Drive / cloud storage
+  // 1. If cloud download mirror is configured, redirect directly to OneDrive / cloud storage
   if (CLOUD_DOWNLOAD_URL) {
     return NextResponse.redirect(CLOUD_DOWNLOAD_URL, 302);
   }
@@ -92,7 +94,7 @@ export async function GET(req: NextRequest) {
     return new NextResponse(
       JSON.stringify({
         error:
-          "Gravity LLM package is 6.12 GB and stored on local workstation Drive E:. On cloud deployments like Vercel, please connect your Google Drive download mirror.",
+          "Gravity LLM package is 6.12 GB and stored on local workstation Drive E:. On cloud deployments like Vercel, please connect your cloud download mirror.",
         cloudSetupNeeded: true,
       }),
       { status: 404, headers: { "Content-Type": "application/json" } }

@@ -20,7 +20,7 @@ export function CollaboratorModal({
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [successName, setSuccessName] = useState<string | null>(null);
-  const [cloudNotice, setCloudNotice] = useState<string | null>(null);
+  const [downloadLinkUrl, setDownloadLinkUrl] = useState<string | null>(null);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -44,7 +44,6 @@ export function CollaboratorModal({
   const handleVerifyAndDownload = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
-    setCloudNotice(null);
     setIsLoading(true);
 
     try {
@@ -77,29 +76,13 @@ export function CollaboratorModal({
         sessionStorage.setItem("hs_collaborator_id", collaboratorId.trim());
       }
 
-      // If a cloud mirror URL is returned (Google Drive, HuggingFace, etc.)
-      if (data.cloudDownloadUrl) {
-        window.location.href = data.cloudDownloadUrl;
-        setIsLoading(false);
-        return;
-      }
+      const targetUrl = data.cloudDownloadUrl || data.downloadUrl;
+      setDownloadLinkUrl(targetUrl);
 
-      // If file is not present on this host (e.g. running on Vercel without cloud mirror set)
-      if (!data.fileAvailable) {
-        setCloudNotice(
-          "Collaborator identity verified! Note: Because this package is 6.12 GB, Vercel cloud deployments require linking your Google Drive share URL. Please configure GRAVITY_CLOUD_DOWNLOAD_URL in your Vercel Project Settings, or run the site locally where Drive E: is connected."
-        );
-        setIsLoading(false);
-        return;
+      // Attempt opening high-speed download link in new tab
+      if (targetUrl) {
+        window.open(targetUrl, "_blank", "noopener,noreferrer");
       }
-
-      // Trigger automatic file download from local host
-      const downloadLink = document.createElement("a");
-      downloadLink.href = data.downloadUrl;
-      downloadLink.setAttribute("download", "Gravity_LLM_HS_AI_Solutions_Portable.zip");
-      document.body.appendChild(downloadLink);
-      downloadLink.click();
-      document.body.removeChild(downloadLink);
 
       setIsLoading(false);
     } catch {
@@ -193,45 +176,38 @@ export function CollaboratorModal({
               <motion.div
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="mt-6 rounded-xl border border-emerald-500/30 bg-emerald-950/40 p-4 text-center"
+                className="mt-6 rounded-xl border border-emerald-500/30 bg-emerald-950/40 p-5 text-center"
               >
                 <div className="mx-auto flex h-10 w-10 items-center justify-center rounded-full bg-emerald-500/20 text-emerald-300">
                   <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                   </svg>
                 </div>
-                <p className="mt-2 text-base font-semibold text-emerald-200">
+                <p className="mt-2.5 text-base font-semibold text-emerald-200">
                   Collaborator Verified: {successName}
                 </p>
+                <p className="mt-1 text-xs text-emerald-300/80">
+                  Your 6.12 GB portable package is ready for high-speed download.
+                </p>
 
-                {cloudNotice ? (
-                  <div className="mt-3 rounded-lg border border-amber-500/30 bg-amber-950/40 p-3 text-left text-xs text-amber-200 leading-relaxed">
-                    <p className="font-semibold text-amber-300 flex items-center gap-1.5">
-                      <span>☁️ Cloud Deployment Note</span>
-                    </p>
-                    <p className="mt-1 text-zinc-300">{cloudNotice}</p>
-                  </div>
-                ) : (
-                  <>
-                    <p className="mt-1 text-xs text-emerald-300/80">
-                      Your 6.12 GB portable package download has initiated.
-                    </p>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        const downloadLink = document.createElement("a");
-                        downloadLink.href = `/api/download/gravity?id=${encodeURIComponent(collaboratorId.trim())}`;
-                        downloadLink.setAttribute("download", "Gravity_LLM_HS_AI_Solutions_Portable.zip");
-                        document.body.appendChild(downloadLink);
-                        downloadLink.click();
-                        document.body.removeChild(downloadLink);
+                {downloadLinkUrl && (
+                  <div className="mt-4 flex flex-col items-center gap-2">
+                    <a
+                      href={downloadLinkUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 rounded-xl bg-emerald-500 px-6 py-2.5 text-xs font-bold text-black transition-all hover:bg-emerald-400"
+                      style={{
+                        boxShadow: "0 0 25px -4px rgba(16, 185, 129, 0.5)",
                       }}
-                      className="mt-4 inline-flex items-center gap-2 rounded-lg bg-emerald-500 px-4 py-2 text-xs font-semibold text-black transition-colors hover:bg-emerald-400"
                     >
                       <DownloadIcon className="h-3.5 w-3.5" />
-                      Click to re-download if not started
-                    </button>
-                  </>
+                      Download Gravity_LLM_Portable.zip (6.12 GB) ↗
+                    </a>
+                    <span className="text-[11px] text-zinc-400">
+                      Direct cloud mirror powered by Microsoft OneDrive
+                    </span>
+                  </div>
                 )}
               </motion.div>
             ) : (
@@ -292,7 +268,7 @@ export function CollaboratorModal({
                       </>
                     ) : (
                       <>
-                        Verify & Download Suite
+                        Verify &amp; Download Suite
                         <DownloadIcon className="h-3.5 w-3.5" />
                       </>
                     )}
