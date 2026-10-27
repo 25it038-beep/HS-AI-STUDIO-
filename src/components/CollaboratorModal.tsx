@@ -20,6 +20,7 @@ export function CollaboratorModal({
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [successName, setSuccessName] = useState<string | null>(null);
+  const [cloudNotice, setCloudNotice] = useState<string | null>(null);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -43,6 +44,7 @@ export function CollaboratorModal({
   const handleVerifyAndDownload = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+    setCloudNotice(null);
     setIsLoading(true);
 
     try {
@@ -68,13 +70,30 @@ export function CollaboratorModal({
         return;
       }
 
-      // Successful verification
-      setSuccessName(data.collaboratorName || clientValidation.collaboratorName || "Authorized Collaborator");
+      const verifiedName = data.collaboratorName || clientValidation.collaboratorName || "Authorized Collaborator";
+      setSuccessName(verifiedName);
+
       if (typeof window !== "undefined") {
         sessionStorage.setItem("hs_collaborator_id", collaboratorId.trim());
       }
 
-      // Trigger automatic file download
+      // If a cloud mirror URL is returned (Google Drive, HuggingFace, etc.)
+      if (data.cloudDownloadUrl) {
+        window.location.href = data.cloudDownloadUrl;
+        setIsLoading(false);
+        return;
+      }
+
+      // If file is not available on this server host (e.g. deployed on Vercel without local E:\)
+      if (!data.fileAvailable) {
+        setCloudNotice(
+          "Collaborator identity verified! Note: This 6.12 GB package resides on local workstation Drive E:. On cloud deployments (Vercel), please configure your Google Drive share link to enable direct cloud downloading."
+        );
+        setIsLoading(false);
+        return;
+      }
+
+      // File is available on this host (e.g. localhost with E:\ or server with public/downloads)
       const downloadLink = document.createElement("a");
       downloadLink.href = data.downloadUrl;
       downloadLink.setAttribute("download", "Gravity_LLM_HS_AI_Solutions_Portable.zip");
@@ -169,7 +188,7 @@ export function CollaboratorModal({
               </div>
             </div>
 
-            {/* Form */}
+            {/* Form & Verification State */}
             {successName ? (
               <motion.div
                 initial={{ opacity: 0, y: 10 }}
@@ -184,24 +203,38 @@ export function CollaboratorModal({
                 <p className="mt-2 text-base font-semibold text-emerald-200">
                   Collaborator Verified: {successName}
                 </p>
-                <p className="mt-1 text-xs text-emerald-300/80">
-                  Your 6.12 GB portable package download has initiated.
-                </p>
-                <button
-                  type="button"
-                  onClick={() => {
-                    const downloadLink = document.createElement("a");
-                    downloadLink.href = `/api/download/gravity?id=${encodeURIComponent(collaboratorId.trim())}`;
-                    downloadLink.setAttribute("download", "Gravity_LLM_HS_AI_Solutions_Portable.zip");
-                    document.body.appendChild(downloadLink);
-                    downloadLink.click();
-                    document.body.removeChild(downloadLink);
-                  }}
-                  className="mt-4 inline-flex items-center gap-2 rounded-lg bg-emerald-500 px-4 py-2 text-xs font-semibold text-black transition-colors hover:bg-emerald-400"
-                >
-                  <DownloadIcon className="h-3.5 w-3.5" />
-                  Click to re-download if not started
-                </button>
+
+                {cloudNotice ? (
+                  <div className="mt-3 rounded-lg border border-amber-500/30 bg-amber-950/40 p-3 text-left text-xs text-amber-200 leading-relaxed">
+                    <p className="font-semibold text-amber-300 flex items-center gap-1.5">
+                      <span>☁️ Cloud Deployment Note</span>
+                    </p>
+                    <p className="mt-1 text-zinc-300">
+                      {cloudNotice}
+                    </p>
+                  </div>
+                ) : (
+                  <>
+                    <p className="mt-1 text-xs text-emerald-300/80">
+                      Your 6.12 GB portable package download has initiated.
+                    </p>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const downloadLink = document.createElement("a");
+                        downloadLink.href = `/api/download/gravity?id=${encodeURIComponent(collaboratorId.trim())}`;
+                        downloadLink.setAttribute("download", "Gravity_LLM_HS_AI_Solutions_Portable.zip");
+                        document.body.appendChild(downloadLink);
+                        downloadLink.click();
+                        document.body.removeChild(downloadLink);
+                      }}
+                      className="mt-4 inline-flex items-center gap-2 rounded-lg bg-emerald-500 px-4 py-2 text-xs font-semibold text-black transition-colors hover:bg-emerald-400"
+                    >
+                      <DownloadIcon className="h-3.5 w-3.5" />
+                      Click to re-download if not started
+                    </button>
+                  </>
+                )}
               </motion.div>
             ) : (
               <form onSubmit={handleVerifyAndDownload} className="mt-6 space-y-4">
