@@ -94,6 +94,7 @@ export function Hero() {
           transition={{ duration: 1, delay: 1.1 }}
         >
           {[
+            { name: "Gravity LLM", c: "#10b981" },
             { name: "Galaxy Vision", c: "#c084fc" },
             { name: "Electron AI", c: "#38bdf8" },
             { name: "Pendulum", c: "#a855f7" },
@@ -111,31 +112,17 @@ export function Hero() {
           ))}
           <span className="ml-auto hidden items-center gap-2 text-sm text-white/35 sm:flex">
             <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-400" />
-            9 systems · 8 live
+            10 systems · 9 live
           </span>
         </motion.div>
       </div>
 
       <a
         href="#intro"
-        className="absolute bottom-6 left-1/2 -translate-x-1/2 text-white/35 transition-colors hover:text-white/70"
-        aria-label="Scroll to introduction"
+        className="group absolute bottom-10 left-1/2 flex -translate-x-1/2 items-center gap-2 text-xs font-mono text-white/40 transition-colors hover:text-white"
       >
-        <motion.svg
-          viewBox="0 0 16 24"
-          className="h-6 w-4"
-          animate={reduce ? undefined : { y: [0, 6, 0] }}
-          transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
-        >
-          <path
-            d="M8 2v18M2.5 14.5L8 20l5.5-5.5"
-            stroke="currentColor"
-            strokeWidth="1.4"
-            fill="none"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </motion.svg>
+        <span>SCROLL TO DISCOVER</span>
+        <span className="transition-transform duration-300 group-hover:translate-y-1">↓</span>
       </a>
     </section>
   );

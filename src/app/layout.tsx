@@ -33,8 +33,12 @@ export const metadata: Metadata = {
     template: "%s — HS AI Solutions",
   },
   description:
-    "A growing collection of intelligent applications built to create, communicate, protect, and unlock human potential. Electron AI · Galaxy Vision · Pendulum · Lumina · HSBot · Ledger · Phishing Defence · HS CODE · Academia AI.",
+    "A growing collection of intelligent applications built to create, communicate, protect, and unlock human potential. Gravity LLM · Galaxy Vision · Electron AI · Pendulum · Lumina · HSBot · Ledger · Phishing Defence · HS CODE · Academia AI.",
   keywords: [
+    "Gravity LLM",
+    "Autonomous Local AI Suite",
+    "GGUF Runtime",
+    "Local AI Tools",
     "Electron AI",
     "Galaxy Vision",
     "Multimodal AI",
@@ -58,11 +62,17 @@ export const metadata: Metadata = {
   openGraph: {
     title: "HS AI Solutions — Building AI That Does More",
     description:
-      "Nine systems. Nine problems. One AI-driven ecosystem of real, deployed applications.",
+      "A growing collection of intelligent applications built to create, communicate, protect, and unlock human potential.",
+    url: "https://hs-ai-studio-4i7i-git-main-harshanseliyan28-1638s-projects.vercel.app/",
+    siteName: "HS AI Solutions",
+    locale: "en_US",
     type: "website",
   },
-  verification: {
-    google: "m5kChTz1e6OpOtRi-ndPdFEFuxipn0EZRx4-ncJpm8k",
+  twitter: {
+    card: "summary_large_image",
+    title: "HS AI Solutions — Building AI That Does More",
+    description:
+      "A growing collection of intelligent applications built to create, communicate, protect, and unlock human potential.",
   },
 };
 
@@ -72,17 +82,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-      className={`${inter.variable} ${spaceGrotesk.variable} ${geistMono.variable} h-full antialiased`}
-    >
-      <body className="flex min-h-full flex-col bg-ink text-paper">
+    <html lang="en" className="dark scroll-smooth">
+      <body
+        className={`${inter.variable} ${spaceGrotesk.variable} ${geistMono.variable} min-h-screen bg-ink text-paper antialiased selection:bg-lumina selection:text-ink font-sans`}
+      >
+        <Nav />
+        <main>{children}</main>
+        <Footer />
         <AudioIntro />
         <IntroVideo />
         <FullscreenExploreVideo />
-        <Nav />
-        <main className="flex-1">{children}</main>
-        <Footer />
         <ContributorFloatingBadge />
         <WebsiteAssistantWidget />
       </body>

@@ -40,6 +40,18 @@ export interface DeliveryLog {
 // Initial seed announcements showcasing the studio's releases
 const INITIAL_ANNOUNCEMENTS: Announcement[] = [
   {
+    id: "ann-gravity-llm-launch",
+    title: "Gravity LLM 1.0.0 Autonomous Suite Released!",
+    message: "Enterprise-grade local AI workspace with 44 built-in agentic tools, dynamic RTX VRAM auto-tuning, visible live reasoning with active letter tracking, and zero cloud dependency.",
+    category: "AI Model",
+    imageUrl: "/images/galaxy-vision-preview.png",
+    destinationUrl: "/products/gravity-llm",
+    channels: "both",
+    status: "published",
+    publishedAt: new Date(Date.now() - 1000 * 60 * 5).toISOString(),
+    createdAt: new Date(Date.now() - 1000 * 60 * 5).toISOString(),
+  },
+  {
     id: "ann-galaxy-vision-launch",
     title: "Galaxy Vision 1.0.0 Launched!",
     message: "Locally-hosted multimodal vision-language AI by HS AI Solutions. Real-world document OCR, video frames, and pronoun memory on your RTX GPU.",

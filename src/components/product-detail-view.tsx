@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { products, type ProductDetail } from "@/data/products";
@@ -9,8 +10,10 @@ import { DownloadIcon, ArrowUpRight, TerminalIcon } from "@/components/ui/icons"
 import { Reveal } from "@/components/ui/Reveal";
 import { MagneticButton } from "@/components/ui/MagneticButton";
 import { SectionHeading } from "@/components/ui/SectionHeading";
+import { CollaboratorModal } from "@/components/CollaboratorModal";
 
 export function ProductDetailView({ product }: { product: ProductDetail }) {
+  const [collabModalOpen, setCollabModalOpen] = useState(false);
   const others = products.filter((p) => p.id !== product.id);
 
   return (
@@ -39,35 +42,38 @@ export function ProductDetailView({ product }: { product: ProductDetail }) {
             </Link>
           </motion.div>
 
-          <div className="mt-10 grid items-end gap-10 lg:grid-cols-[1.1fr_0.9fr]">
+          <div className="mt-8 grid items-center gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:gap-16">
             <div>
-              <motion.p
-                className="eyebrow flex items-center gap-3 text-white/45"
-                initial={{ opacity: 0, y: 14 }}
+              <motion.div
+                className="flex items-center gap-3"
+                initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.05, duration: 0.6 }}
+                transition={{ delay: 0.1, duration: 0.5 }}
               >
+                <span className="font-mono text-xs text-white/40">{product.number}</span>
                 <span
-                  className="h-1.5 w-1.5 rounded-full"
+                  className="h-1 w-1 rounded-full"
                   style={{ background: product.accent }}
                 />
-                {product.number} · {product.category}
-              </motion.p>
+                <span className="eyebrow" style={{ color: product.accent }}>
+                  {product.category}
+                </span>
+              </motion.div>
 
               <motion.h1
-                className="display-xl mt-6 text-[clamp(2.4rem,8.5vw,7rem)]"
-                initial={{ opacity: 0, y: 24 }}
+                className="display-xl mt-4 text-[clamp(2.5rem,6vw,5.5rem)]"
+                initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.12, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+                transition={{ delay: 0.15, duration: 0.7 }}
               >
                 {product.name}
               </motion.h1>
 
               <motion.p
-                className="mt-4 font-display text-xl font-medium text-white/80 md:text-2xl"
+                className="mt-4 font-display text-2xl font-medium text-white/85"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2, duration: 0.7 }}
+                transition={{ delay: 0.22, duration: 0.7 }}
               >
                 {product.tagline}
               </motion.p>
@@ -89,11 +95,36 @@ export function ProductDetailView({ product }: { product: ProductDetail }) {
               >
                 {product.downloadUrl ? (
                   <>
-                    <MagneticButton href={product.downloadUrl} lg accent={product.accent}>
-                      {product.id === "electron" ? "Download Standalone ZIP" : product.id === "galaxy-vision" ? "Download Portable ZIP" : "Download for Windows"}
-                      <DownloadIcon className="h-4 w-4" />
-                    </MagneticButton>
-                    {product.status === "development" ? (
+                    {product.collaboratorOnly ? (
+                      <button
+                        type="button"
+                        onClick={() => setCollabModalOpen(true)}
+                        className="inline-flex h-12 items-center gap-2 rounded-full px-7 text-sm font-semibold transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
+                        style={{
+                          background: product.accent,
+                          color: "#000",
+                          boxShadow: `0 0 25px -4px ${product.accent}80`,
+                        }}
+                      >
+                        <span>Download Collaborator Suite</span>
+                        <DownloadIcon className="h-4 w-4" />
+                      </button>
+                    ) : (
+                      <MagneticButton href={product.downloadUrl} lg accent={product.accent}>
+                        {product.id === "electron"
+                          ? "Download Standalone ZIP"
+                          : product.id === "galaxy-vision"
+                          ? "Download Portable ZIP"
+                          : "Download for Windows"}
+                        <DownloadIcon className="h-4 w-4" />
+                      </MagneticButton>
+                    )}
+                    {product.collaboratorOnly ? (
+                      <span className="inline-flex items-center gap-2 rounded-full border border-emerald-400/30 bg-emerald-950/40 px-4 py-2.5 text-[12.5px] font-medium text-emerald-300">
+                        <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                        Collaborator Access · GGUF 5.24GB · 44 Tools
+                      </span>
+                    ) : product.status === "development" ? (
                       <span className="inline-flex items-center gap-2 rounded-full border border-amber-400/25 px-4 py-2.5 text-[12.5px] font-medium text-amber-300/90">
                         <span className="h-1.5 w-1.5 rounded-full bg-amber-400" />
                         In development · v0.1.0
@@ -122,6 +153,41 @@ export function ProductDetailView({ product }: { product: ProductDetail }) {
                   </>
                 )}
               </motion.div>
+
+              {/* Special Product Operational & Hardware Notices */}
+              {product.notices && (
+                <motion.div
+                  initial={{ opacity: 0, y: 15 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.4 }}
+                  className="mt-8 space-y-2.5 rounded-2xl border border-white/10 bg-white/[0.02] p-4 text-xs sm:p-5"
+                >
+                  {product.notices.extractionNote && (
+                    <div className="flex items-start gap-2.5">
+                      <span className="shrink-0 font-bold text-emerald-400">⚡ Setup Instruction:</span>
+                      <span className="leading-relaxed text-zinc-300">{product.notices.extractionNote}</span>
+                    </div>
+                  )}
+                  {product.notices.latencyNotice && (
+                    <div className="flex items-start gap-2.5">
+                      <span className="shrink-0 font-bold text-amber-400">⏱️ Latency Notice:</span>
+                      <span className="leading-relaxed text-zinc-300">{product.notices.latencyNotice}</span>
+                    </div>
+                  )}
+                  {product.notices.hardwareAdvisory && (
+                    <div className="flex items-start gap-2.5">
+                      <span className="shrink-0 font-bold text-sky-400">🖥️ Hardware Advisory:</span>
+                      <span className="leading-relaxed text-zinc-300">{product.notices.hardwareAdvisory}</span>
+                    </div>
+                  )}
+                  {product.notices.securityNote && (
+                    <div className="flex items-start gap-2.5">
+                      <span className="shrink-0 font-bold text-purple-400">🔒 Collaborator Access:</span>
+                      <span className="leading-relaxed text-zinc-300">{product.notices.securityNote}</span>
+                    </div>
+                  )}
+                </motion.div>
+              )}
             </div>
 
             <motion.div
@@ -287,7 +353,7 @@ export function ProductDetailView({ product }: { product: ProductDetail }) {
                 >
                   <div>
                     <div className="flex items-center justify-between">
-                      <span className="inline-flex items-center gap-1.5 rounded-lg border border-purple-400/30 bg-purple-500/10 px-2.5 py-1 font-mono text-[12px] font-semibold text-purple-300">
+                      <span className="inline-flex items-center gap-1.5 rounded-lg border border-emerald-400/30 bg-emerald-500/10 px-2.5 py-1 font-mono text-[12px] font-semibold text-emerald-300">
                         <TerminalIcon className="h-3.5 w-3.5" />
                         {b.file}
                       </span>
@@ -459,6 +525,13 @@ export function ProductDetailView({ product }: { product: ProductDetail }) {
           </div>
         </div>
       </section>
+
+      {/* Collaborator Access Modal */}
+      <CollaboratorModal
+        isOpen={collabModalOpen}
+        onClose={() => setCollabModalOpen(false)}
+        accent={product.accent}
+      />
     </div>
   );
 }

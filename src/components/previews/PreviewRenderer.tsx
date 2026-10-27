@@ -7,8 +7,10 @@ import { HSCODEPreview } from "@/components/previews/HSCODEPreview";
 import { AcademiaPreview } from "@/components/previews/AcademiaPreview";
 import { PendulumPreview } from "@/components/previews/PendulumPreview";
 import { GalaxyVisionPreview } from "@/components/previews/GalaxyVisionPreview";
+import { GravityLLMPreview } from "@/components/previews/GravityLLMPreview";
 
 const registry: Record<string, React.ComponentType<{ className?: string }>> = {
+  "gravity-llm": GravityLLMPreview,
   electron: ElectronPreview,
   pendulum: PendulumPreview,
   lumina: LuminaPreview,

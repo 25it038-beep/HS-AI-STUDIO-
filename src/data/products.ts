@@ -12,6 +12,13 @@ export interface Product {
   technologies: string[];
   accent: string;
   preview: string;
+  collaboratorOnly?: boolean;
+  notices?: {
+    extractionNote?: string;
+    latencyNotice?: string;
+    hardwareAdvisory?: string;
+    securityNote?: string;
+  };
 }
 
 export interface ProductDetail extends Product {
@@ -25,8 +32,146 @@ export interface ProductDetail extends Product {
 
 export const products: ProductDetail[] = [
   {
-    id: "galaxy-vision",
+    id: "gravity-llm",
     number: "01",
+    name: "Gravity LLM",
+    tagline:
+      "Private. Blazing Fast. Fully Autonomous. The Next-Generation Local Intelligence Engine with 44 Built-in Tools, Instant GPU Acceleration, and Zero Cloud Dependency.",
+    description:
+      "An enterprise-grade, standalone local AI workspace developed by HS AI Solutions. Gravity runs 100% locally on your hardware with zero latency, zero cloud dependency, and complete privacy. Powered by a high-performance native GGUF tensor runtime, Gravity delivers visible live reasoning with active letter tracking (▌), dynamic VRAM auto-tuning, an autonomous suite of 44 integrated tools (native PDF/DOCX/XLSX/PPTX publication, sandboxed Python AST execution, DuckDuckGo scraping, offline Whisper voice), and triple-interface freedom across Desktop, Web, and CLI.",
+    long: "Gravity LLM is an enterprise-grade, standalone local AI workspace engineered by HS AI Solutions to eliminate cloud latency, recurring API costs, and corporate data leakage. Running 100% locally on your workstation, Gravity pairs a specialized high-throughput GGUF runtime with dynamic hardware layer offloading (26 to 33 layers on modern RTX GPUs, with intelligent multi-core CPU vector fallback). It features transparent chain-of-thought live reasoning with an active letter-tracking cursor (▌) that automatically collapses upon completion, leaving solutions front-and-center. Beyond standard conversation, Gravity functions as an autonomous multi-step agent equipped with 44 built-in tools: compiling publication-grade PDF, Word, Excel, and PowerPoint decks; executing sandboxed Python scripts with AST syntax verification and recursive self-healing; conducting live web research and scraping via DuckDuckGo without API keys; processing offline Whisper voice input; and handling local SQLite queries and Git repository workflows across three native interfaces: frameless Desktop App, reactive Web UI, and high-speed Rich Terminal CLI.",
+    category: "AUTONOMOUS LOCAL AI SUITE",
+    url: "",
+    status: "live",
+    downloadUrl: "/api/download/gravity",
+    collaboratorOnly: true,
+    notices: {
+      extractionNote:
+        "After ZIP extraction, launch any interface directly by clicking the corresponding BAT file (gravity_desktop.bat, gravity.bat, or gravity.bat --cli).",
+      latencyNotice:
+        "Important: First token may be delayed during initial cold-start while tensors and KV caches are dynamically allocated into VRAM/RAM.",
+      hardwareAdvisory:
+        "More important: Use this according to your hardware specification. Model performance and inference speeds may be reduced on systems with limited GPU VRAM or lower CPU core limits.",
+      securityNote:
+        "Collaborator Edition: Download access is restricted strictly to authorized HS AI Solutions collaborators with a valid Collaborator ID.",
+    },
+    features: [
+      "Zero-Latency Native GGUF Inference: Sub-0.9s TTFT with custom-compiled high-throughput C++ execution binaries",
+      "Smart VRAM Auto-Tuning: Dynamic layer offload (26-33 layers) across RTX 3050, 40-series, or CPU fallback",
+      "Visible Live Reasoning: Real-time chain-of-thought with active letter-tracking cursor (▌) and auto-collapsing thoughts",
+      "Autonomous Agentic Suite (44 Tools): Native PDF, DOCX, XLSX & PPTX document compilation, web scraping, and SQLite workflows",
+      "Sandboxed Python Code Execution: Built-in engine with automated AST syntax validation and error self-healing",
+      "Offline Voice & Speech: Integrated MediaRecorder, offline Whisper speech-to-text, and natural Edge-TTS speech output",
+      "Triple-Interface Freedom: Frameless Desktop App, Reactive Web UI, and High-Speed Rich CLI Console",
+      "100% Air-Gapped & Confidential: Complete offline execution with built-in asset tampering protection",
+    ],
+    technologies: [
+      "Autonomous Multi-Step Agent",
+      "44 Integrated Tool Engine",
+      "Quantized GGUF Runtime (5.24 GB)",
+      "RTX CUDA Dynamic Offload (26-33 Layers)",
+      "Whisper STT & Edge-TTS Speech",
+      "In-Process Python Sandbox (AST)",
+      "Triple Interface (Desktop/Web/CLI)",
+      "OpenAI-Compatible API & SSE",
+    ],
+    accent: "#10b981",
+    preview: "gravity-llm",
+    flow: [
+      {
+        step: "Authorized Collaborator Verification",
+        detail:
+          "Validate your personal Collaborator ID to unlock and download Gravity_LLM_HS_AI_Solutions_Portable.zip.",
+      },
+      {
+        step: "Extract Anywhere",
+        detail:
+          "Extract the portable suite to any drive without needing administrator privileges or python installation.",
+      },
+      {
+        step: "Hardware-Aware Layer Offload",
+        detail:
+          "Dynamic allocator auto-detects GPU VRAM (RTX 3050, 40-series, or CPU) and allocates optimal tensor layers.",
+      },
+      {
+        step: "Click Any Interface BAT",
+        detail:
+          "Double-click gravity_desktop.bat for frameless GUI, gravity.bat for reactive Web UI, or gravity.bat --cli for terminal.",
+      },
+      {
+        step: "Autonomous Agent Execution",
+        detail:
+          "Execute 44 built-in tools, live reasoning, document publication, and sandboxed Python with 100% privacy.",
+      },
+    ],
+    capabilities: [
+      "Sub-0.9s TTFT local inference on RTX hardware",
+      "Real-time visible chain-of-thought with letter tracking (▌)",
+      "Autonomous 44-tool execution engine",
+      "Publication-grade PDF, DOCX, XLSX, and PPTX generation",
+      "AST-validated Python sandboxed code runner",
+      "DuckDuckGo live web search and scraping without API keys",
+      "Offline Whisper speech recognition & Edge-TTS voice synthesis",
+      "OpenAI-compatible /v1/chat/completions drop-in endpoint",
+    ],
+    useCases: [
+      {
+        title: "Confidential enterprise document generation",
+        description:
+          "Compile publication-ready PDFs, DOCX briefs, XLSX financial sheets, and PPTX presentations locally without sending proprietary data to cloud APIs.",
+      },
+      {
+        title: "Sandboxed autonomous scripting & coding",
+        description:
+          "Write, AST-validate, and execute Python code in real-time with automated syntax checks and error self-healing directly on your machine.",
+      },
+      {
+        title: "Air-gapped technical research & web scraping",
+        description:
+          "Search and scrape technical documentation via DuckDuckGo and local knowledge caches with zero telemetry or API keys.",
+      },
+      {
+        title: "Offline voice-driven technical workflows",
+        description:
+          "Dictate complex prompts and listen to technical walkthroughs with zero internet connection via embedded Whisper STT and Edge-TTS.",
+      },
+    ],
+    technicalSpecs: [
+      { property: "Product Name", value: "Gravity LLM" },
+      { property: "Version", value: "1.0.0 (Production Suite)" },
+      { property: "Engineering Organization", value: "HS AI Solutions" },
+      { property: "Model Format", value: "Quantized GGUF (Gravity_LLM_HS_AI_Solutions_1.0.0.gguf)" },
+      { property: "Model Size", value: "5.24 GB (Optimized for 6GB–8GB+ VRAM & CPU Fallback)" },
+      { property: "GPU Layer Offload", value: "26 Layers (RTX 3050 6GB) / 33 Layers (8GB+ GPUs)" },
+      { property: "Time to First Token (TTFT)", value: "0.45s – 0.88s across all interfaces" },
+      { property: "Context Window", value: "4,096 to 16,384 tokens (Configurable via Profiles)" },
+      { property: "Performance Profiles", value: "Fast · Balanced · High Performance · High Context · Low Memory" },
+      { property: "Protocols Supported", value: "OpenAI-Compatible (/v1/chat/completions) · NDJSON · SSE" },
+      { property: "Supported Interfaces", value: "Desktop App (.bat) · Web UI (.bat) · Terminal CLI (--cli)" },
+      { property: "Integrated Tool Suite", value: "44 Built-in Tools (PDF, DOCX, XLSX, PPTX, Web, Python, Voice, SQLite)" },
+      { property: "Data & Privacy Policy", value: "100% Air-Gapped Local Workstation · Zero Cloud Dependency" },
+    ],
+    batLaunchers: [
+      {
+        file: "gravity_desktop.bat",
+        title: "Native Desktop Window",
+        desc: "Modern, frameless native desktop application with zero browser tabs needed.",
+      },
+      {
+        file: "gravity.bat",
+        title: "Single-Page Web UI",
+        desc: "Fast reactive interface with dark/light themes, prompt accelerators, workspace file managers, and live markdown preview.",
+      },
+      {
+        file: "gravity.bat --cli",
+        title: "Interactive Terminal CLI",
+        desc: "High-speed terminal console with streaming Rich markdown, syntax highlighting, and persistent session history.",
+      },
+    ],
+  },
+  {
+    id: "galaxy-vision",
+    number: "02",
     name: "Galaxy Vision",
     tagline: "The AI that understands what it sees — and what you mean.",
     description:
@@ -126,7 +271,7 @@ export const products: ProductDetail[] = [
   },
   {
     id: "electron",
-    number: "02",
+    number: "03",
     name: "Electron AI",
     tagline: "Proprietary Offline AI Model & Real-Time Web Search",
     description:
@@ -179,7 +324,7 @@ export const products: ProductDetail[] = [
   },
   {
     id: "pendulum",
-    number: "03",
+    number: "04",
     name: "Pendulum",
     tagline: "Automated Private Browser",
     description:
@@ -233,7 +378,7 @@ export const products: ProductDetail[] = [
   },
   {
     id: "lumina",
-    number: "04",
+    number: "05",
     name: "Lumina",
     tagline: "AI Presentation Generator",
     description:
@@ -287,7 +432,7 @@ export const products: ProductDetail[] = [
   },
   {
     id: "hsbot",
-    number: "05",
+    number: "06",
     name: "HSBot",
     tagline: "Multi-Model AI Chatbot",
     description:
@@ -339,7 +484,7 @@ export const products: ProductDetail[] = [
   },
   {
     id: "ledger",
-    number: "06",
+    number: "07",
     name: "Ledger",
     tagline: "AI Digital Identity & Career Intelligence",
     description:
@@ -401,7 +546,7 @@ export const products: ProductDetail[] = [
   },
   {
     id: "phishing-defence",
-    number: "07",
+    number: "08",
     name: "Phishing Defence",
     tagline: "AI Phishing & Malicious Link Protection",
     description:
@@ -453,7 +598,7 @@ export const products: ProductDetail[] = [
   },
   {
     id: "hs-code",
-    number: "08",
+    number: "09",
     name: "HS CODE",
     tagline: "AI Code Companion · Windows Desktop",
     description:
@@ -500,7 +645,7 @@ export const products: ProductDetail[] = [
   },
   {
     id: "academia",
-    number: "09",
+    number: "10",
     name: "Academia AI",
     tagline: "Personal AI Learning Operating System",
     description:
