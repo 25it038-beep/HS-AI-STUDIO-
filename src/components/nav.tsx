@@ -50,9 +50,14 @@ export function Nav() {
               <span className="absolute -inset-1 -translate-x-6 bg-gradient-to-r from-transparent via-black/20 to-transparent opacity-0 transition-all duration-500 group-hover:translate-x-6 group-hover:opacity-100" />
               HS
             </span>
-            <span className="font-display text-[14px] font-semibold tracking-[0.14em]">
-              HS AI Solutions
-            </span>
+            <div className="flex flex-col">
+              <span className="font-display text-[14px] font-semibold tracking-[0.14em] leading-tight text-white">
+                HS AI Solutions
+              </span>
+              <span className="text-[9.5px] font-mono tracking-wider text-white/50">
+                Harshan Seliyan B S
+              </span>
+            </div>
           </Link>
 
           <nav className="hidden items-center gap-8 md:flex">
@@ -131,7 +136,7 @@ export function Nav() {
               ))}
             </nav>
             <motion.div
-              className="container-x pb-10"
+              className="container-x pb-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.4 }}
@@ -146,6 +151,9 @@ export function Nav() {
               >
                 Explore the ecosystem <ArrowUpRight className="h-4 w-4" />
               </button>
+              <p className="text-xs font-mono text-white/45">
+                Engineered by Harshan Seliyan B S
+              </p>
             </motion.div>
           </motion.div>
         ) : null}

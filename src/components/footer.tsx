@@ -19,7 +19,10 @@ export function Footer() {
                 HS AI Solutions
               </span>
             </div>
-            <p className="mt-4 text-sm leading-relaxed text-muted-dark">
+            <p className="mt-2 text-xs font-mono text-emerald-400">
+              Founded &amp; Engineered by Harshan Seliyan B S
+            </p>
+            <p className="mt-3 text-sm leading-relaxed text-muted-dark">
               Nine systems. Eight live, one in development. One AI-driven ecosystem of real, deployed
               applications.
             </p>
@@ -64,6 +67,9 @@ export function Footer() {
             <div>
               <p className="eyebrow text-muted-dark">Connect</p>
               <ul className="mt-4 space-y-2.5 text-sm text-white/70">
+                <li className="font-medium text-white/90">
+                  Harshan Seliyan B S
+                </li>
                 <li>
                   <a
                     className="inline-flex items-center gap-1.5 transition-colors hover:text-white"
@@ -96,8 +102,8 @@ export function Footer() {
         </div>
 
         <div className="mt-12 flex flex-col items-start justify-between gap-3 border-t border-white/8 pt-6 text-xs text-white/35 sm:flex-row">
-          <p>© {new Date().getFullYear()} HS AI Solutions — Independent AI product studio.</p>
-          <p className="font-mono">built with intention · shipped publicly</p>
+          <p>© {new Date().getFullYear()} HS AI Solutions · Harshan Seliyan B S — Independent AI product studio.</p>
+          <p className="font-mono">Engineered by Harshan Seliyan B S · shipped publicly</p>
         </div>
       </div>
     </footer>

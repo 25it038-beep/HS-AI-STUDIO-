@@ -60,8 +60,9 @@ export function FinalCta() {
           viewport={{ once: true }}
           transition={{ duration: 0.8, delay: 0.15 }}
         >
-          Nine applications. Nine different problems. One continuous experiment in building useful
-          intelligence.
+          Nine applications. Nine different problems. Engineered by{" "}
+          <span className="font-medium text-white">Harshan Seliyan B S</span> as one continuous
+          experiment in building useful intelligence.
         </motion.p>
 
         <motion.div
@@ -102,6 +103,8 @@ export function FinalCta() {
           viewport={{ once: true }}
           transition={{ duration: 0.8, delay: 0.35 }}
         >
+          <span className="font-medium text-white/80">Harshan Seliyan B S</span>
+          <span className="h-1 w-1 rounded-full bg-white/20" />
           <a
             href="mailto:harshanseliyan28@gmail.com"
             className="inline-flex items-center gap-1.5 transition-colors hover:text-white"

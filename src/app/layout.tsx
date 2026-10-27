@@ -29,12 +29,23 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "HS AI Solutions — Building AI That Does More",
-    template: "%s — HS AI Solutions",
+    default: "HS AI Solutions — Building AI That Does More · Harshan Seliyan B S",
+    template: "%s — HS AI Solutions · Harshan Seliyan B S",
   },
+  authors: [
+    {
+      name: "Harshan Seliyan B S",
+      url: "https://www.linkedin.com/in/harshan-seliyan-b-s-5339b4282",
+    },
+  ],
+  creator: "Harshan Seliyan B S",
+  publisher: "Harshan Seliyan B S",
   description:
-    "A growing collection of intelligent applications built to create, communicate, protect, and unlock human potential. Gravity LLM · Galaxy Vision · Electron AI · Pendulum · Lumina · HSBot · Ledger · Phishing Defence · HS CODE · Academia AI.",
+    "A growing collection of intelligent applications built by Harshan Seliyan B S to create, communicate, protect, and unlock human potential. Gravity LLM · Galaxy Vision · Electron AI · Pendulum · Lumina · HSBot · Ledger · Phishing Defence · HS CODE · Academia AI.",
   keywords: [
+    "Harshan Seliyan B S",
+    "Harshan Seliyan",
+    "HS AI Solutions",
     "Gravity LLM",
     "Autonomous Local AI Suite",
     "GGUF Runtime",
@@ -57,22 +68,21 @@ export const metadata: Metadata = {
     "Academia AI",
     "AI portfolio",
     "AI solutions",
-    "HS AI Solutions",
   ],
   openGraph: {
-    title: "HS AI Solutions — Building AI That Does More",
+    title: "HS AI Solutions — Building AI That Does More · Harshan Seliyan B S",
     description:
-      "A growing collection of intelligent applications built to create, communicate, protect, and unlock human potential.",
+      "A growing collection of intelligent applications built by Harshan Seliyan B S to create, communicate, protect, and unlock human potential.",
     url: "https://hs-ai-studio-4i7i-git-main-harshanseliyan28-1638s-projects.vercel.app/",
-    siteName: "HS AI Solutions",
+    siteName: "HS AI Solutions · Harshan Seliyan B S",
     locale: "en_US",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "HS AI Solutions — Building AI That Does More",
+    title: "HS AI Solutions — Building AI That Does More · Harshan Seliyan B S",
     description:
-      "A growing collection of intelligent applications built to create, communicate, protect, and unlock human potential.",
+      "A growing collection of intelligent applications built by Harshan Seliyan B S to create, communicate, protect, and unlock human potential.",
   },
 };
 

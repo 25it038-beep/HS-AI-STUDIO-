@@ -198,7 +198,7 @@ export function ContributorFloatingBadge() {
                     Become a Part.
                   </h3>
                   <p className="mt-2 text-[13.5px] leading-relaxed text-muted-dark">
-                    We’re looking for developers, AI researchers, designers, and open-source contributors to build next-generation multimodal models and tools. Submitting this directly messages Harshan on WhatsApp.
+                    We’re looking for developers, AI researchers, designers, and open-source contributors to build next-generation multimodal models and tools. Submitting this directly messages Harshan Seliyan B S on WhatsApp.
                   </p>
 
                   <form onSubmit={handleSubmit} className="mt-6 space-y-4">
@@ -211,7 +211,7 @@ export function ContributorFloatingBadge() {
                         required
                         value={formData.name}
                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                        placeholder="e.g. Harshan Seliyan"
+                        placeholder="e.g. Harshan Seliyan B S"
                         className="mt-1.5 w-full rounded-xl border border-white/12 bg-white/[0.04] px-3.5 py-2.5 text-sm text-white placeholder-white/25 outline-none transition focus:border-cyan-400/60 focus:bg-white/[0.07]"
                       />
                     </div>
@@ -226,47 +226,45 @@ export function ContributorFloatingBadge() {
                           required
                           value={formData.contact}
                           onChange={(e) => setFormData({ ...formData, contact: e.target.value })}
-                          placeholder="+91... or email"
+                          placeholder="+91 ... or email"
                           className="mt-1.5 w-full rounded-xl border border-white/12 bg-white/[0.04] px-3.5 py-2.5 text-sm text-white placeholder-white/25 outline-none transition focus:border-cyan-400/60 focus:bg-white/[0.07]"
                         />
                       </div>
 
                       <div>
                         <label className="block font-mono text-[11px] uppercase tracking-wider text-white/70">
-                          GitHub / Portfolio URL
+                          Domain / Interest
                         </label>
-                        <input
-                          type="text"
-                          value={formData.github}
-                          onChange={(e) => setFormData({ ...formData, github: e.target.value })}
-                          placeholder="github.com/your-handle"
-                          className="mt-1.5 w-full rounded-xl border border-white/12 bg-white/[0.04] px-3.5 py-2.5 text-sm text-white placeholder-white/25 outline-none transition focus:border-cyan-400/60 focus:bg-white/[0.07]"
-                        />
+                        <select
+                          value={formData.role}
+                          onChange={(e) => setFormData({ ...formData, role: e.target.value })}
+                          className="mt-1.5 w-full rounded-xl border border-white/12 bg-[#161524] px-3.5 py-2.5 text-sm text-white outline-none transition focus:border-cyan-400/60"
+                        >
+                          <option>Multimodal AI & Computer Vision</option>
+                          <option>Offline GGUF & Tensor Engineering</option>
+                          <option>Web Intelligence & Agent Automation</option>
+                          <option>Frontend / Generative UI & Design</option>
+                          <option>Security & Defense Systems</option>
+                        </select>
                       </div>
                     </div>
 
                     <div>
                       <label className="block font-mono text-[11px] uppercase tracking-wider text-white/70">
-                        Domain of Interest / Skill
+                        Portfolio / GitHub / LinkedIn (Optional)
                       </label>
-                      <select
-                        value={formData.role}
-                        onChange={(e) => setFormData({ ...formData, role: e.target.value })}
-                        className="mt-1.5 w-full rounded-xl border border-white/12 bg-[#171622] px-3.5 py-2.5 text-sm text-white outline-none transition focus:border-cyan-400/60"
-                      >
-                        <option value="Multimodal AI & Computer Vision">Multimodal AI & Computer Vision</option>
-                        <option value="LLM Fine-Tuning & Knowledge Distillation">LLM Fine-Tuning & Knowledge Distillation</option>
-                        <option value="Full-Stack Dev (Next.js, Python, FastAPI)">Full-Stack Dev (Next.js, Python, FastAPI)</option>
-                        <option value="UI/UX & Product Design">UI/UX & Product Design</option>
-                        <option value="Model Quantization & Offline Inference (GGUF)">Model Quantization & Offline Inference (GGUF)</option>
-                        <option value="Open Source Contributor & Testing">Open Source Contributor & Testing</option>
-                        <option value="Community & Other Ideas">Community & Other Ideas</option>
-                      </select>
+                      <input
+                        type="url"
+                        value={formData.github}
+                        onChange={(e) => setFormData({ ...formData, github: e.target.value })}
+                        placeholder="https://github.com/your-username"
+                        className="mt-1.5 w-full rounded-xl border border-white/12 bg-white/[0.04] px-3.5 py-2.5 text-sm text-white placeholder-white/25 outline-none transition focus:border-cyan-400/60 focus:bg-white/[0.07]"
+                      />
                     </div>
 
                     <div>
                       <label className="block font-mono text-[11px] uppercase tracking-wider text-white/70">
-                        How would you like to contribute?
+                        What would you like to collaborate on? (Optional)
                       </label>
                       <textarea
                         rows={3}
@@ -288,7 +286,7 @@ export function ContributorFloatingBadge() {
                         <span>Send Registration to WhatsApp (9629263719)</span>
                       </button>
                       <p className="mt-2 text-center font-mono text-[10.5px] text-white/40">
-                        Direct WhatsApp dispatch to Harshan Seliyan (+91 9629263719)
+                        Direct WhatsApp dispatch to Harshan Seliyan B S (+91 9629263719)
                       </p>
                     </div>
                   </form>

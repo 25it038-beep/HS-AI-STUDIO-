@@ -50,7 +50,7 @@ export function buildVerifiedKnowledgeBase(): KnowledgeDocument[] {
     sourceUrl: "/",
     title: "HS AI Solutions — Studio Overview",
     category: "company",
-    content: "HS AI Solutions is an independent AI product studio founded and developed by Harshan Seliyan. The studio builds practical, deployed artificial intelligence applications designed to create, communicate, protect, distill, and understand. All applications solve distinct real-world problems ranging from offline edge models to multimodal document vision.",
+    content: "HS AI Solutions is an independent AI product studio founded and developed by Harshan Seliyan B S. The studio builds practical, deployed artificial intelligence applications designed to create, communicate, protect, distill, and understand. All applications solve distinct real-world problems ranging from offline edge models to multimodal document vision.",
     features: ["Independent AI studio", "Local & edge AI focus", "Real-world deployed systems", "Open-weights distillation"],
     lastIndexed: now,
     contentHash: simpleHash("studio-overview"),

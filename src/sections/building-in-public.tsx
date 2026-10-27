@@ -15,15 +15,15 @@ export function BuildingInPublic() {
         <div className="grid gap-14 lg:grid-cols-[1fr_1.2fr] lg:items-center">
           <div>
             <Reveal y={16}>
-              <p className="eyebrow text-ink/45">Building in public</p>
+              <p className="eyebrow text-ink/45">Building in public · Harshan Seliyan B S</p>
             </Reveal>
             <Reveal y={24} delay={0.05}>
               <h2 className="display-lg mt-5 text-[clamp(2.2rem,5vw,4rem)]">Still Building.</h2>
             </Reveal>
             <Reveal y={20} delay={0.12}>
               <p className="mt-6 max-w-md text-[16px] leading-relaxed text-ink/55">
-                These applications are part of an ongoing exploration into AI, software
-                engineering, intelligent automation, and real-world problem solving. The studio is
+                These applications are part of an ongoing exploration by Harshan Seliyan B S into AI,
+                software engineering, intelligent automation, and real-world problem solving. The studio is
                 never finished.
               </p>
             </Reveal>

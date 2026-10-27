@@ -32,7 +32,9 @@ export function Hero() {
           transition={{ duration: 0.8, ease }}
         >
           <span className="inline-block h-1.5 w-1.5 rounded-full bg-lumina" />
-          HS AI Solutions
+          <span>HS AI Solutions</span>
+          <span className="text-white/20">/</span>
+          <span className="font-mono text-white/70">Harshan Seliyan B S</span>
         </motion.p>
 
         <h1 className="display-xl mt-7 max-w-5xl text-[clamp(2.4rem,8.5vw,7.25rem)]">
@@ -57,7 +59,8 @@ export function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.9, delay: 0.7, ease }}
         >
-          A growing collection of intelligent applications built to{" "}
+          A growing collection of intelligent applications engineered by{" "}
+          <span className="font-medium text-white">Harshan Seliyan B S</span> to{" "}
           <span className="text-white">create</span>,{" "}
           <span className="text-white">communicate</span>,{" "}
           <span className="text-white">protect</span>, and{" "}

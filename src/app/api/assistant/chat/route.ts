@@ -33,7 +33,7 @@ function generateIntelligentResponse(
     qLower.includes("who built you") ||
     qLower.includes("who is your creator")
   ) {
-    return "**HS AI Solutions** (founded by Harshan Seliyan) developed, customized, and maintains **HS Solutions Mini Star LLM** as its own lightweight AI model.";
+    return "**HS AI Solutions** (founded and engineered by Harshan Seliyan B S) developed, customized, and maintains **HS Solutions Mini Star LLM** as its own lightweight AI model.";
   }
 
   if (
