@@ -110,7 +110,7 @@ export function ProductDetailView({ product }: { product: ProductDetail }) {
                         <DownloadIcon className="h-4 w-4" />
                       </button>
                     ) : (
-                      <MagneticButton href={product.downloadUrl} lg accent={product.accent}>
+                      <MagneticButton href={product.downloadUrl} external={product.downloadUrl.startsWith("http")} lg accent={product.accent}>
                         {product.id === "electron"
                           ? "Download Standalone ZIP"
                           : product.id === "galaxy-vision"

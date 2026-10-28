@@ -280,7 +280,7 @@ export const products: ProductDetail[] = [
     category: "OWN AI MODEL",
     url: "",
     status: "live",
-    downloadUrl: "/downloads/Electron-AI-Standalone-NoOllama.zip",
+    downloadUrl: "https://1drv.ms/u/c/A4DE4F83095B15B0/IQDY8K9iXhZkQayEL_CMStd_AU2Kq61gd1RgfIles4t9BrE?e=76ltt3",
     features: [
       "100% Offline execution without network",
       "Universal real-time web search integration",

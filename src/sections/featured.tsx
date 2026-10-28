@@ -250,7 +250,7 @@ export function Featured() {
           <Reveal y={20} delay={0.22}>
             <div className="mt-8 flex flex-wrap items-center gap-4">
               <MagneticButton
-                href={electron.downloadUrl ?? "/downloads/Electron-AI-Standalone-NoOllama.zip"}
+                href={electron.downloadUrl ?? "https://1drv.ms/u/c/A4DE4F83095B15B0/IQDY8K9iXhZkQayEL_CMStd_AU2Kq61gd1RgfIles4t9BrE?e=76ltt3"} external={true}
                 lg
                 accent={electron.accent}
               >
