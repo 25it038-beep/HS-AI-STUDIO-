@@ -5,7 +5,7 @@ import { validateCollaboratorId } from "@/lib/collaborator";
 
 // Official cloud mirror URL (OneDrive / Google Drive) for Gravity LLM portable package
 const DEFAULT_ONEDRIVE_URL =
-  "https://1drv.ms/u/c/A4DE4F83095B15B0/IQC4DaN497y7SITCGrtu5OZCAct1Iz-v0p5eGAJrpDkth4w?e=HTytGp";
+  "https://1drv.ms/u/c/A4DE4F83095B15B0/IQDBJNvSemwQRIDCxrLUYtxqAURTChIN5YXmYrolDeUgh1U?e=SKWsrl";
 
 const CLOUD_DOWNLOAD_URL =
   process.env.GRAVITY_CLOUD_DOWNLOAD_URL ||
