@@ -112,6 +112,7 @@ export function ProductDetailView({ product }: { product: ProductDetail }) {
                     ) : (
                       <MagneticButton
                         href={product.downloadUrl}
+                        download={!product.downloadUrl.startsWith("http") ? true : undefined}
                         external={product.downloadUrl.startsWith("http")}
                         lg
                         accent={product.accent}

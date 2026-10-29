@@ -89,6 +89,7 @@ function ProductCell({
             ) : (
               <a
                 href={product.downloadUrl}
+                download={!product.downloadUrl.startsWith("http") ? true : undefined}
                 target={product.downloadUrl.startsWith("http") ? "_blank" : undefined}
                 rel={product.downloadUrl.startsWith("http") ? "noopener noreferrer" : undefined}
                 className="inline-flex h-10 items-center gap-1.5 rounded-full border border-white/20 px-4 text-[13px] font-semibold text-white transition-colors duration-300 hover:border-white/60 hover:bg-white/5"

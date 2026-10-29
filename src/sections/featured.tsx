@@ -269,9 +269,10 @@ export function Featured() {
               <MagneticButton
                 href={
                   galaxy.downloadUrl ??
-                  "https://1drv.ms/u/c/A4DE4F83095B15B0/IQBxmNpxxijbRrZxRbr2j7i6AddHgte4YOJ7o-aURM3-nFk?e=KJ0txZ"
+                  "/downloads/Galaxy-Vision-v1.0.0-Standalone.zip"
                 }
-                external={true}
+                download="Galaxy-Vision-v1.0.0-Standalone.zip"
+                external={false}
                 lg
                 accent={galaxy.accent}
               >

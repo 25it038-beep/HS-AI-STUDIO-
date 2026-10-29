@@ -281,8 +281,7 @@ export const products: ProductDetail[] = [
     category: "MULTIMODAL VISION-LANGUAGE AI",
     url: "",
     status: "live",
-    downloadUrl:
-      "https://1drv.ms/u/c/A4DE4F83095B15B0/IQBxmNpxxijbRrZxRbr2j7i6AddHgte4YOJ7o-aURM3-nFk?e=KJ0txZ",
+    downloadUrl: "/downloads/Galaxy-Vision-v1.0.0-Standalone.zip",
     features: [
       "Vision & OCR: Analyze images, text extraction, chart interpretation & object detection",
       "Document Intelligence: Parse invoices, receipts & tables into structured JSON",
