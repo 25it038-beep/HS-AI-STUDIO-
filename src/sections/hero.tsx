@@ -12,54 +12,62 @@ export function Hero() {
 
   return (
     <section id="home" className="relative min-h-dvh overflow-hidden bg-ink">
-      {/* Full-screen background video */}
-      <div
-        className="pointer-events-none absolute inset-0"
-        style={{ overflow: "hidden" }}
-      >
-        <video
-          className="absolute"
-          src="/videos/hero-terrain.mp4"
-          autoPlay
-          muted
-          loop
-          playsInline
-          aria-hidden="true"
-          style={{
-            width: "130%",
-            height: "130%",
-            top: "-5%",
-            left: "-15%",
-            objectFit: "cover",
-            objectPosition: "center top",
-            /* Crush brightness so the semi-transparent iStock watermark
-               text disappears into the dark background */
-            filter: "brightness(0.28) saturate(1.6)",
-          }}
-        />
-      </div>
-      {/* Solid bottom-right kill zone for any corner watermark */}
-      <div
-        className="pointer-events-none absolute"
+      {/* ── Background video ─────────────────────────────────────────────────── */}
+      {/*
+        Strategy:
+        1. Video fills 100% via object-fit:cover — no gaps, no cropping issues.
+        2. CSS filter crushes brightness to 0.22 so the semi-transparent iStock
+           watermark text blends into the dark background and becomes invisible.
+        3. saturate(2) pumps the purple/cyan palette back up before overlays hit.
+        4. A solid #06090e vignette covers bottom + bottom-right corner as a
+           belt-and-suspenders watermark kill zone.
+        5. Ambient purple glow + main overlay bring the hero atmosphere back.
+      */}
+      <video
+        className="pointer-events-none absolute inset-0 h-full w-full"
+        src="/videos/hero-terrain.mp4"
+        autoPlay
+        muted
+        loop
+        playsInline
+        aria-hidden="true"
         style={{
-          bottom: 0,
-          right: 0,
-          width: "55%",
-          height: "30%",
-          background:
-            "linear-gradient(135deg, transparent 0%, transparent 35%, #06090e 68%)",
+          objectFit: "cover",
+          objectPosition: "center center",
+          filter: "brightness(0.22) saturate(2) contrast(1.1)",
         }}
       />
-      {/* Restore a subtle ambient glow over the darkened video */}
+
+      {/* Bottom vignette — kills any remaining watermark text at bottom edge */}
+      <div
+        className="pointer-events-none absolute inset-x-0 bottom-0"
+        style={{
+          height: "35%",
+          background:
+            "linear-gradient(to top, #06090e 0%, #06090e 30%, transparent 100%)",
+        }}
+      />
+      {/* Right-side vignette — kills watermark on right edge */}
+      <div
+        className="pointer-events-none absolute inset-y-0 right-0"
+        style={{
+          width: "30%",
+          background:
+            "linear-gradient(to left, #06090e 0%, #06090e 15%, transparent 100%)",
+        }}
+      />
+
+      {/* Ambient purple/cyan glow to restore atmosphere over the darkened video */}
       <div
         className="pointer-events-none absolute inset-0"
         style={{
           background:
-            "radial-gradient(ellipse 70% 60% at 50% 45%, rgba(139,100,255,0.18) 0%, rgba(34,211,238,0.08) 45%, transparent 75%)",
+            "radial-gradient(ellipse 75% 65% at 50% 42%, rgba(139,92,255,0.22) 0%, rgba(34,211,238,0.09) 50%, transparent 78%)",
         }}
       />
-      {/* Main readable overlay */}
-      <div className="pointer-events-none absolute inset-0 bg-ink/55" />
+
+      {/* Final readability overlay */}
+      <div className="pointer-events-none absolute inset-0 bg-ink/50" />
 
       {/* background layers */}
       <HeroCanvas />
