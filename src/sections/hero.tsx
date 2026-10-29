@@ -12,7 +12,7 @@ export function Hero() {
 
   return (
     <section id="home" className="relative min-h-dvh overflow-hidden bg-ink">
-      {/* Full-screen background video — cropped to hide watermark via clip */}
+      {/* Full-screen background video — heavily scaled + cropped to push watermark out of frame */}
       <div
         className="pointer-events-none absolute inset-0"
         style={{ overflow: "hidden" }}
@@ -26,25 +26,42 @@ export function Hero() {
           playsInline
           aria-hidden="true"
           style={{
-            /* Scale up slightly and shift so watermark (bottom-right) falls outside the visible area */
-            width: "110%",
-            height: "110%",
+            /*
+             * Scale to 130% and anchor to center-top.
+             * iStock watermark lives in the bottom ~18% of the frame.
+             * At 130% scale the bottom of the video is pushed ~30% below
+             * the container edge — completely outside the visible area.
+             */
+            width: "130%",
+            height: "130%",
             top: "-5%",
-            left: "-5%",
+            left: "-15%",
             objectFit: "cover",
             objectPosition: "center top",
           }}
         />
       </div>
-      {/* Watermark kill — solid bg patch over bottom-right corner */}
+      {/* Hard solid bottom-right kill zone — catches any residual watermark pixels */}
       <div
         className="pointer-events-none absolute"
         style={{
           bottom: 0,
           right: 0,
-          width: "22%",
-          height: "12%",
-          background: "linear-gradient(135deg, transparent 0%, #06090e 55%)",
+          width: "40%",
+          height: "20%",
+          background: "#06090e",
+        }}
+      />
+      {/* Feather the kill zone edge so it blends naturally */}
+      <div
+        className="pointer-events-none absolute"
+        style={{
+          bottom: 0,
+          right: 0,
+          width: "55%",
+          height: "30%",
+          background:
+            "linear-gradient(135deg, transparent 0%, transparent 40%, #06090e 75%)",
         }}
       />
       {/* Dark overlay so text stays readable over video */}
