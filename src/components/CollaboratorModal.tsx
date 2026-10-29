@@ -1,9 +1,10 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { validateCollaboratorId } from "@/lib/collaborator";
-import { DownloadIcon } from "@/components/ui/icons";
+import { DownloadIcon, ArrowUpRight } from "@/components/ui/icons";
+import { triggerFastDownloadAndReturn } from "@/lib/download-helper";
 
 interface CollaboratorModalProps {
   isOpen: boolean;
@@ -25,12 +26,27 @@ export function CollaboratorModal({
   const [error, setError] = useState<string | null>(null);
   const [successName, setSuccessName] = useState<string | null>(null);
   const [downloadLinkUrl, setDownloadLinkUrl] = useState<string | null>(null);
+  const [countdown, setCountdown] = useState<number>(3);
+  const [isReturning, setIsReturning] = useState(false);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
       const saved = sessionStorage.getItem("hs_collaborator_id");
       if (saved) {
         setCollaboratorId(saved);
+      }
+    }
+  }, [isOpen]);
+
+  useEffect(() => {
+    if (!isOpen) {
+      setSuccessName(null);
+      setError(null);
+      setIsReturning(false);
+      setCountdown(3);
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
       }
     }
   }, [isOpen]);
@@ -44,6 +60,20 @@ export function CollaboratorModal({
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isOpen, onClose]);
+
+  // Countdown timer to return rapidly back to HS AI Studio
+  useEffect(() => {
+    if (isReturning && countdown > 0) {
+      timerRef.current = setTimeout(() => {
+        setCountdown((prev) => prev - 1);
+      }, 1000);
+    } else if (isReturning && countdown === 0) {
+      onClose();
+    }
+    return () => {
+      if (timerRef.current) clearTimeout(timerRef.current);
+    };
+  }, [isReturning, countdown, onClose]);
 
   const handleVerifyAndDownload = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -83,15 +113,24 @@ export function CollaboratorModal({
       const targetUrl = data.cloudDownloadUrl || data.downloadUrl;
       setDownloadLinkUrl(targetUrl);
 
-      // Attempt opening high-speed download link in new tab
+      // Trigger download and start rapid return countdown to HS AI Studio
       if (targetUrl) {
-        window.open(targetUrl, "_blank", "noopener,noreferrer");
+        triggerFastDownloadAndReturn(targetUrl);
       }
-
+      setIsReturning(true);
+      setCountdown(3);
       setIsLoading(false);
     } catch {
       setError("Network or verification error. Please try again.");
       setIsLoading(false);
+    }
+  };
+
+  const handleTriggerDownloadAgain = () => {
+    if (downloadLinkUrl) {
+      triggerFastDownloadAndReturn(downloadLinkUrl);
+      setCountdown(3);
+      setIsReturning(true);
     }
   };
 
@@ -140,37 +179,37 @@ export function CollaboratorModal({
 
             {/* Header Badge */}
             <div className="flex items-center gap-2">
-              <span className="flex h-7 items-center gap-1.5 rounded-full border border-emerald-400/30 bg-emerald-950/60 px-3 font-mono text-[11px] font-semibold text-emerald-300">
-                <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
-                Collaborator Edition · Restricted Access
+              <span className="flex h-2 w-2 rounded-full animate-ping" style={{ background: accent }} />
+              <span className="font-mono text-xs uppercase tracking-widest" style={{ color: accent }}>
+                Authorized Collaborator Access
               </span>
             </div>
 
-            <h3 className="mt-4 text-2xl font-bold tracking-tight text-white sm:text-3xl">
-              Download Gravity LLM Suite
-            </h3>
-            <p className="mt-2 text-sm leading-relaxed text-zinc-300">
-              Gravity LLM is an autonomous local AI system distributed directly to authorized research and engineering collaborators. Enter your verified Collaborator ID below to unlock and download <span className="font-mono text-emerald-300">Gravity_LLM_HS_AI_Solutions_Portable.zip</span> (6.12 GB).
+            <h2 className="mt-3 text-2xl font-bold tracking-tight text-white sm:text-3xl">
+              HS AI Studio Collaborator Release
+            </h2>
+            <p className="mt-2 text-xs leading-relaxed text-zinc-400 sm:text-sm">
+              Enter your authorized Collaborator ID below. Download initiates automatically from the high-speed mirror, and you will be returned rapidly to HS AI Studio.
             </p>
 
-            {/* Critical Notes & Operational Guidance */}
+            {/* Mandatory notices */}
             <div className="mt-5 space-y-2.5 rounded-xl border border-white/10 bg-white/[0.02] p-4 text-xs">
-              <div className="flex items-start gap-2.5">
-                <span className="shrink-0 text-amber-400 font-bold">⚠️ Note:</span>
+              <div className="flex items-start gap-2">
+                <span className="shrink-0 text-emerald-400 font-bold">⚡ Portable:</span>
                 <span className="text-zinc-300">
-                  After ZIP extraction, launch your preferred interface simply by double-clicking the BAT file (<span className="font-mono text-emerald-200">gravity_desktop.bat</span>, <span className="font-mono text-emerald-200">gravity.bat</span>, or <span className="font-mono text-emerald-200">gravity.bat --cli</span>).
+                  Self-contained runtime. Extract anywhere without needing Python or background services.
                 </span>
               </div>
-              <div className="flex items-start gap-2.5">
-                <span className="shrink-0 text-sky-400 font-bold">⏱️ Latency:</span>
+              <div className="flex items-start gap-2">
+                <span className="shrink-0 text-amber-400 font-bold">⚠️ Cold Start:</span>
                 <span className="text-zinc-300">
-                  First token generation may experience an initial initialization delay while tensors and KV caches are dynamically allocated into VRAM/RAM.
+                  Initial cold start may have slight delay while tensors load into memory.
                 </span>
               </div>
-              <div className="flex items-start gap-2.5">
+              <div className="flex items-start gap-2">
                 <span className="shrink-0 text-purple-400 font-bold">🖥️ Hardware:</span>
                 <span className="text-zinc-300">
-                  Operate according to your hardware specifications. Model throughput and autonomous agent latency may scale down based on available GPU VRAM and CPU core limits.
+                  Operate according to your hardware specs; GPU acceleration kicks in dynamically.
                 </span>
               </div>
             </div>
@@ -182,7 +221,7 @@ export function CollaboratorModal({
                 animate={{ opacity: 1, y: 0 }}
                 className="mt-6 rounded-xl border border-emerald-500/30 bg-emerald-950/40 p-5 text-center"
               >
-                <div className="mx-auto flex h-10 w-10 items-center justify-center rounded-full bg-emerald-500/20 text-emerald-300">
+                <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-emerald-500/20 text-emerald-300">
                   <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                   </svg>
@@ -191,28 +230,53 @@ export function CollaboratorModal({
                   Collaborator Verified: {successName}
                 </p>
                 <p className="mt-1 text-xs text-emerald-300/80">
-                  Your 6.12 GB portable package is ready for high-speed download.
+                  Your download has started from the secure high-speed cloud mirror.
                 </p>
 
-                {downloadLinkUrl && (
-                  <div className="mt-4 flex flex-col items-center gap-2">
-                    <a
-                      href={downloadLinkUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 rounded-xl bg-emerald-500 px-6 py-2.5 text-xs font-bold text-black transition-all hover:bg-emerald-400"
-                      style={{
-                        boxShadow: "0 0 25px -4px rgba(16, 185, 129, 0.5)",
-                      }}
-                    >
-                      <DownloadIcon className="h-3.5 w-3.5" />
-                      Download {fileName} ↗
-                    </a>
-                    <span className="text-[11px] text-zinc-400">
-                      Direct cloud mirror powered by Microsoft OneDrive
+                {/* Returning to HS AI Studio countdown & progress */}
+                <div className="mt-4 rounded-xl border border-white/10 bg-black/50 p-3.5">
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="flex items-center gap-1.5 text-emerald-300 font-medium">
+                      <span className="h-2 w-2 rounded-full bg-emerald-400 animate-ping" />
+                      Downloading {fileName}
+                    </span>
+                    <span className="font-mono text-zinc-400">
+                      Returning to HS AI Studio in <strong className="text-white text-sm">{countdown}s</strong>
                     </span>
                   </div>
-                )}
+                  <div className="mt-2.5 h-1.5 w-full overflow-hidden rounded-full bg-white/10">
+                    <motion.div
+                      className="h-full bg-emerald-400"
+                      initial={{ width: "100%" }}
+                      animate={{ width: "0%" }}
+                      transition={{ duration: 3, ease: "linear" }}
+                    />
+                  </div>
+                </div>
+
+                <div className="mt-5 flex flex-wrap items-center justify-center gap-3">
+                  <button
+                    type="button"
+                    onClick={onClose}
+                    className="inline-flex items-center gap-2 rounded-xl bg-emerald-500 px-6 py-2.5 text-xs font-bold text-black transition-all hover:bg-emerald-400"
+                    style={{
+                      boxShadow: "0 0 25px -4px rgba(16, 185, 129, 0.5)",
+                    }}
+                  >
+                    <span>Return to HS AI Studio Now</span>
+                    <ArrowUpRight className="h-3.5 w-3.5" />
+                  </button>
+                  {downloadLinkUrl && (
+                    <button
+                      type="button"
+                      onClick={handleTriggerDownloadAgain}
+                      className="inline-flex items-center gap-1.5 rounded-xl border border-white/15 bg-white/5 px-4 py-2.5 text-xs font-medium text-white/80 transition-colors hover:bg-white/10 hover:text-white"
+                    >
+                      <DownloadIcon className="h-3.5 w-3.5" />
+                      <span>Download Again</span>
+                    </button>
+                  )}
+                </div>
               </motion.div>
             ) : (
               <form onSubmit={handleVerifyAndDownload} className="mt-6 space-y-4">
