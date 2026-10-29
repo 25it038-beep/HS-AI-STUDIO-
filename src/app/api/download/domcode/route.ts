@@ -55,7 +55,7 @@ export async function GET(req: NextRequest) {
     );
   }
 
-  // Self-triggering download page that initiates download from cloud mirror and rapidly returns to HS AI Studio
+  // Self-triggering download page that initiates download from cloud mirror in companion window and rapidly returns to HS AI Studio
   const html = `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -81,7 +81,7 @@ export async function GET(req: NextRequest) {
       border-radius: 20px;
       padding: 40px 32px;
       text-align: center;
-      max-width: 460px;
+      max-width: 480px;
       width: 100%;
       box-shadow: 0 30px 80px rgba(0, 0, 0, 0.9), 0 0 40px rgba(245, 158, 11, 0.15);
     }
@@ -113,9 +113,9 @@ export async function GET(req: NextRequest) {
       background: rgba(0, 0, 0, 0.4);
       border: 1px solid rgba(255, 255, 255, 0.08);
       border-radius: 12px;
-      padding: 10px;
+      padding: 12px;
       margin-bottom: 24px;
-      font-size: 12px;
+      font-size: 12.5px;
       color: #f59e0b;
       font-weight: 600;
     }
@@ -129,6 +129,7 @@ export async function GET(req: NextRequest) {
       font-size: 13px;
       text-decoration: none;
       box-shadow: 0 0 25px rgba(245, 158, 11, 0.4);
+      cursor: pointer;
     }
   </style>
 </head>
@@ -137,40 +138,48 @@ export async function GET(req: NextRequest) {
     <div class="spinner"></div>
     <div class="badge">Domcode LLM 1.0.0 · Verified Download</div>
     <h1>Download Initiated</h1>
-    <p>Your setup package is downloading from the verified high-speed cloud mirror.<br/>Returning you back to <strong>HS AI Studio</strong> rapidly...</p>
-    <div class="countdown" id="cd">Returning to HS AI Studio in 2s...</div>
-    <a href="/" class="btn">Return to HS AI Studio Now</a>
+    <p>Your setup package is downloading in a companion window.<br/>Returning you back to <strong>HS AI Studio</strong> rapidly...</p>
+    <div class="countdown" id="cd">Returning to HS AI Studio in 6s...</div>
+    <a href="/" onclick="returnStudioNow(event)" class="btn">Return to HS AI Studio Now</a>
   </div>
   <script>
     const cloudUrl = "${CLOUD_DOWNLOAD_URL}";
+    let win = null;
     
-    // 1. Silent invisible iframe download trigger
+    // Open companion window for high-speed download
     try {
-      const iframe = document.createElement("iframe");
-      iframe.style.display = "none";
-      iframe.src = cloudUrl;
-      document.body.appendChild(iframe);
-    } catch (e) {}
+      const width = 860;
+      const height = 660;
+      const left = Math.max(0, (window.screen.width - width) / 2);
+      const top = Math.max(0, (window.screen.height - height) / 2);
+      win = window.open(cloudUrl, "HS_Downloader", "width=" + width + ",height=" + height + ",left=" + left + ",top=" + top + ",resizable=yes,scrollbars=yes");
+    } catch (e) {
+      win = window.open(cloudUrl, "_blank");
+    }
 
-    // 2. Fallback tab opening in background
-    try {
-      window.open(cloudUrl, "_blank", "noopener,noreferrer");
-    } catch (e) {}
+    function returnStudioNow(e) {
+      if (e) e.preventDefault();
+      try { if (win && !win.closed) win.close(); } catch(err) {}
+      window.location.href = "/";
+    }
 
-    // 3. Rapid return to HS AI Studio in 1.8 seconds
-    let secs = 2;
+    // Auto-return countdown
+    let secs = 6;
     const cdEl = document.getElementById("cd");
     const interval = setInterval(function() {
       secs--;
       if (secs > 0 && cdEl) {
         cdEl.textContent = "Returning to HS AI Studio in " + secs + "s...";
+      } else if (secs <= 0) {
+        clearInterval(interval);
+        returnStudioNow();
       }
     }, 1000);
 
-    setTimeout(function() {
-      clearInterval(interval);
-      window.location.href = "/";
-    }, 1800);
+    // Refocus listener to close companion window when user returns to this tab
+    window.addEventListener("focus", function() {
+      setTimeout(returnStudioNow, 1500);
+    }, { once: true });
   </script>
 </body>
 </html>`;

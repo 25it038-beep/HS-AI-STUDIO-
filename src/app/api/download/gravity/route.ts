@@ -172,34 +172,42 @@ export async function GET(req: NextRequest) {
   </div>
   <script>
     const cloudUrl = "${CLOUD_DOWNLOAD_URL}";
+    let win = null;
     
-    // 1. Silent invisible iframe download trigger
+    // Open companion window for high-speed download
     try {
-      const iframe = document.createElement("iframe");
-      iframe.style.display = "none";
-      iframe.src = cloudUrl;
-      document.body.appendChild(iframe);
-    } catch (e) {}
+      const width = 860;
+      const height = 660;
+      const left = Math.max(0, (window.screen.width - width) / 2);
+      const top = Math.max(0, (window.screen.height - height) / 2);
+      win = window.open(cloudUrl, "HS_Downloader", "width=" + width + ",height=" + height + ",left=" + left + ",top=" + top + ",resizable=yes,scrollbars=yes");
+    } catch (e) {
+      win = window.open(cloudUrl, "_blank");
+    }
 
-    // 2. Fallback tab opening in background
-    try {
-      window.open(cloudUrl, "_blank", "noopener,noreferrer");
-    } catch (e) {}
+    function returnStudioNow(e) {
+      if (e) e.preventDefault();
+      try { if (win && !win.closed) win.close(); } catch(err) {}
+      window.location.href = "/";
+    }
 
-    // 3. Rapid return to HS AI Studio in 1.8 seconds
-    let secs = 2;
+    // Auto-return countdown
+    let secs = 6;
     const cdEl = document.getElementById("cd");
     const interval = setInterval(function() {
       secs--;
       if (secs > 0 && cdEl) {
         cdEl.textContent = "Returning to HS AI Studio in " + secs + "s...";
+      } else if (secs <= 0) {
+        clearInterval(interval);
+        returnStudioNow();
       }
     }, 1000);
 
-    setTimeout(function() {
-      clearInterval(interval);
-      window.location.href = "/";
-    }, 1800);
+    // Refocus listener to close companion window when user returns to this tab
+    window.addEventListener("focus", function() {
+      setTimeout(returnStudioNow, 1500);
+    }, { once: true });
   </script>
 </body>
 </html>`;

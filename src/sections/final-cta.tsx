@@ -61,8 +61,15 @@ export function FinalCta() {
           transition={{ duration: 0.8, delay: 0.15 }}
         >
           Nine applications. Nine different problems. Engineered by{" "}
-          <span className="font-medium text-white">Harshan Seliyan B S</span> as one continuous
-          experiment in building useful intelligence.
+          <a
+            href="https://hs-prot-z1ti-qtj2izn1p-harshanseliyan28-1638s-projects.vercel.app/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-medium text-white hover:text-emerald-300 underline decoration-white/30 underline-offset-4 transition-colors"
+          >
+            Harshan Seliyan B S
+          </a>{" "}
+          as one continuous experiment in building useful intelligence.
         </motion.p>
 
         <motion.div
@@ -84,15 +91,13 @@ export function FinalCta() {
             <ArrowUpRight className="h-4 w-4" />
           </MagneticButton>
           <MagneticButton
-            href="#projects"
-            onClick={(e) => {
-              e.preventDefault();
-              triggerFullscreenExploreVideo();
-            }}
+            href="https://hs-prot-z1ti-qtj2izn1p-harshanseliyan28-1638s-projects.vercel.app/"
+            external={true}
             variant="ghost"
             lg
           >
-            View All Projects
+            Founder Portfolio
+            <ArrowUpRight className="h-4 w-4" />
           </MagneticButton>
         </motion.div>
 

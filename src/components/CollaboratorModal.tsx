@@ -4,7 +4,10 @@ import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { validateCollaboratorId } from "@/lib/collaborator";
 import { DownloadIcon, ArrowUpRight } from "@/components/ui/icons";
-import { triggerFastDownloadAndReturn } from "@/lib/download-helper";
+import {
+  triggerFastDownloadAndReturn,
+  closeActiveDownloadWindow,
+} from "@/lib/download-helper";
 
 interface CollaboratorModalProps {
   isOpen: boolean;
@@ -26,7 +29,7 @@ export function CollaboratorModal({
   const [error, setError] = useState<string | null>(null);
   const [successName, setSuccessName] = useState<string | null>(null);
   const [downloadLinkUrl, setDownloadLinkUrl] = useState<string | null>(null);
-  const [countdown, setCountdown] = useState<number>(3);
+  const [countdown, setCountdown] = useState<number>(6);
   const [isReturning, setIsReturning] = useState(false);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -44,16 +47,18 @@ export function CollaboratorModal({
       setSuccessName(null);
       setError(null);
       setIsReturning(false);
-      setCountdown(3);
+      setCountdown(6);
       if (timerRef.current) {
         clearInterval(timerRef.current);
       }
+      closeActiveDownloadWindow();
     }
   }, [isOpen]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape" && isOpen) {
+        closeActiveDownloadWindow();
         onClose();
       }
     };
@@ -68,6 +73,7 @@ export function CollaboratorModal({
         setCountdown((prev) => prev - 1);
       }, 1000);
     } else if (isReturning && countdown === 0) {
+      closeActiveDownloadWindow();
       onClose();
     }
     return () => {
@@ -113,12 +119,16 @@ export function CollaboratorModal({
       const targetUrl = data.cloudDownloadUrl || data.downloadUrl;
       setDownloadLinkUrl(targetUrl);
 
-      // Trigger download and start rapid return countdown to HS AI Studio
+      // Trigger download companion window and start return countdown
       if (targetUrl) {
-        triggerFastDownloadAndReturn(targetUrl);
+        triggerFastDownloadAndReturn(targetUrl, {
+          fileName,
+          returnDelayMs: 6000,
+          onReturn: onClose,
+        });
       }
       setIsReturning(true);
-      setCountdown(3);
+      setCountdown(6);
       setIsLoading(false);
     } catch {
       setError("Network or verification error. Please try again.");
@@ -128,10 +138,19 @@ export function CollaboratorModal({
 
   const handleTriggerDownloadAgain = () => {
     if (downloadLinkUrl) {
-      triggerFastDownloadAndReturn(downloadLinkUrl);
-      setCountdown(3);
+      triggerFastDownloadAndReturn(downloadLinkUrl, {
+        fileName,
+        returnDelayMs: 6000,
+        onReturn: onClose,
+      });
+      setCountdown(6);
       setIsReturning(true);
     }
+  };
+
+  const handleManualReturn = () => {
+    closeActiveDownloadWindow();
+    onClose();
   };
 
   return (
@@ -144,7 +163,7 @@ export function CollaboratorModal({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            onClick={onClose}
+            onClick={handleManualReturn}
           />
 
           {/* Modal Dialog */}
@@ -168,7 +187,7 @@ export function CollaboratorModal({
 
             {/* Close Button */}
             <button
-              onClick={onClose}
+              onClick={handleManualReturn}
               aria-label="Close modal"
               className="absolute right-4 top-4 rounded-full p-2 text-white/50 transition-colors hover:bg-white/10 hover:text-white"
             >
@@ -189,7 +208,7 @@ export function CollaboratorModal({
               HS AI Studio Collaborator Release
             </h2>
             <p className="mt-2 text-xs leading-relaxed text-zinc-400 sm:text-sm">
-              Enter your authorized Collaborator ID below. Download initiates automatically from the high-speed mirror, and you will be returned rapidly to HS AI Studio.
+              Enter your authorized Collaborator ID below. Download opens in a high-speed companion window, and you will return rapidly to HS AI Studio.
             </p>
 
             {/* Mandatory notices */}
@@ -230,7 +249,7 @@ export function CollaboratorModal({
                   Collaborator Verified: {successName}
                 </p>
                 <p className="mt-1 text-xs text-emerald-300/80">
-                  Your download has started from the secure high-speed cloud mirror.
+                  Download window opened for {fileName}.
                 </p>
 
                 {/* Returning to HS AI Studio countdown & progress */}
@@ -249,7 +268,7 @@ export function CollaboratorModal({
                       className="h-full bg-emerald-400"
                       initial={{ width: "100%" }}
                       animate={{ width: "0%" }}
-                      transition={{ duration: 3, ease: "linear" }}
+                      transition={{ duration: 6, ease: "linear" }}
                     />
                   </div>
                 </div>
@@ -257,8 +276,8 @@ export function CollaboratorModal({
                 <div className="mt-5 flex flex-wrap items-center justify-center gap-3">
                   <button
                     type="button"
-                    onClick={onClose}
-                    className="inline-flex items-center gap-2 rounded-xl bg-emerald-500 px-6 py-2.5 text-xs font-bold text-black transition-all hover:bg-emerald-400"
+                    onClick={handleManualReturn}
+                    className="inline-flex items-center gap-2 rounded-xl bg-emerald-500 px-5 py-2.5 text-xs font-bold text-black transition-all hover:bg-emerald-400"
                     style={{
                       boxShadow: "0 0 25px -4px rgba(16, 185, 129, 0.5)",
                     }}
@@ -273,7 +292,7 @@ export function CollaboratorModal({
                       className="inline-flex items-center gap-1.5 rounded-xl border border-white/15 bg-white/5 px-4 py-2.5 text-xs font-medium text-white/80 transition-colors hover:bg-white/10 hover:text-white"
                     >
                       <DownloadIcon className="h-3.5 w-3.5" />
-                      <span>Download Again</span>
+                      <span>Re-open Download Window</span>
                     </button>
                   )}
                 </div>
@@ -313,7 +332,7 @@ export function CollaboratorModal({
                 <div className="flex items-center justify-end gap-3 pt-2">
                   <button
                     type="button"
-                    onClick={onClose}
+                    onClick={handleManualReturn}
                     className="rounded-xl border border-white/10 px-4 py-2.5 text-xs font-medium text-zinc-300 transition-colors hover:bg-white/5 hover:text-white"
                   >
                     Cancel

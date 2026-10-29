@@ -72,6 +72,16 @@ export function Footer() {
                 </li>
                 <li>
                   <a
+                    className="inline-flex items-center gap-1.5 font-semibold text-emerald-400 transition-colors hover:text-emerald-300"
+                    href="https://hs-prot-z1ti-qtj2izn1p-harshanseliyan28-1638s-projects.vercel.app/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Founder Portfolio <ArrowUpRight className="h-3 w-3" />
+                  </a>
+                </li>
+                <li>
+                  <a
                     className="inline-flex items-center gap-1.5 transition-colors hover:text-white"
                     href="https://www.linkedin.com/in/harshan-seliyan-b-s-5339b4282"
                     target="_blank"
@@ -102,8 +112,8 @@ export function Footer() {
         </div>
 
         <div className="mt-12 flex flex-col items-start justify-between gap-3 border-t border-white/8 pt-6 text-xs text-white/35 sm:flex-row">
-          <p>© {new Date().getFullYear()} HS AI Solutions · Harshan Seliyan B S — Independent AI product studio.</p>
-          <p className="font-mono">Engineered by Harshan Seliyan B S · shipped publicly</p>
+          <p>© {new Date().getFullYear()} HS AI Solutions · <a href="https://hs-prot-z1ti-qtj2izn1p-harshanseliyan28-1638s-projects.vercel.app/" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">Harshan Seliyan B S</a> — Independent AI product studio.</p>
+          <p className="font-mono">Engineered by <a href="https://hs-prot-z1ti-qtj2izn1p-harshanseliyan28-1638s-projects.vercel.app/" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">Harshan Seliyan B S</a> · shipped publicly</p>
         </div>
       </div>
     </footer>

@@ -198,7 +198,16 @@ export function ContributorFloatingBadge() {
                     Become a Part.
                   </h3>
                   <p className="mt-2 text-[13.5px] leading-relaxed text-muted-dark">
-                    We’re looking for developers, AI researchers, designers, and open-source contributors to build next-generation multimodal models and tools. Submitting this directly messages Harshan Seliyan B S on WhatsApp.
+                    We&apos;re looking for developers, AI researchers, designers, and open-source contributors to build next-generation multimodal models and tools. Submitting this directly messages{" "}
+                    <a
+                      href="https://hs-prot-z1ti-qtj2izn1p-harshanseliyan28-1638s-projects.vercel.app/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-cyan-300 font-medium underline underline-offset-4 hover:text-white transition-colors"
+                    >
+                      Harshan Seliyan B S (Founder Portfolio)
+                    </a>{" "}
+                    on WhatsApp.
                   </p>
 
                   <form onSubmit={handleSubmit} className="mt-6 space-y-4">

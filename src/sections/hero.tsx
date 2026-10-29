@@ -60,8 +60,15 @@ export function Hero() {
           transition={{ duration: 0.9, delay: 0.7, ease }}
         >
           A growing collection of intelligent applications engineered by{" "}
-          <span className="font-medium text-white">Harshan Seliyan B S</span> to{" "}
-          <span className="text-white">create</span>,{" "}
+          <a
+            href="https://hs-prot-z1ti-qtj2izn1p-harshanseliyan28-1638s-projects.vercel.app/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-medium text-white transition-colors hover:text-emerald-300 underline decoration-white/30 underline-offset-4"
+          >
+            Harshan Seliyan B S
+          </a>{" "}
+          to <span className="text-white">create</span>,{" "}
           <span className="text-white">communicate</span>,{" "}
           <span className="text-white">protect</span>, and{" "}
           <span className="text-white">unlock human potential</span>.
@@ -75,6 +82,14 @@ export function Hero() {
         >
           <MagneticButton href="#products" lg>
             Explore My AI Products
+          </MagneticButton>
+          <MagneticButton
+            href="https://hs-prot-z1ti-qtj2izn1p-harshanseliyan28-1638s-projects.vercel.app/"
+            external={true}
+            variant="ghost"
+            lg
+          >
+            Founder Portfolio ↗
           </MagneticButton>
           <MagneticButton
             href="#projects"

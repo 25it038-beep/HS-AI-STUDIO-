@@ -7,11 +7,15 @@ import { ArrowUpRight } from "@/components/ui/icons";
 import { triggerFullscreenExploreVideo } from "@/components/fullscreen-explore-video";
 import { NotificationBell } from "@/components/notification-bell";
 
+const PORTFOLIO_URL =
+  "https://hs-prot-z1ti-qtj2izn1p-harshanseliyan28-1638s-projects.vercel.app/";
+
 const LINKS = [
   { href: "#home", label: "Home" },
   { href: "#products", label: "Products" },
   { href: "#about", label: "About" },
   { href: "#projects", label: "Projects" },
+  { href: PORTFOLIO_URL, label: "Portfolio", external: true },
 ];
 
 export function Nav() {
@@ -61,19 +65,41 @@ export function Nav() {
           </Link>
 
           <nav className="hidden items-center gap-8 md:flex">
-            {LINKS.map((l) => (
-              <Link
-                key={l.label}
-                href={l.href}
-                className="text-[13px] font-medium text-white/55 transition-colors hover:text-white"
-              >
-                {l.label}
-              </Link>
-            ))}
+            {LINKS.map((l) =>
+              l.external ? (
+                <a
+                  key={l.label}
+                  href={l.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 text-[13px] font-medium text-emerald-400 transition-colors hover:text-emerald-300"
+                >
+                  {l.label}
+                  <ArrowUpRight className="h-3 w-3" />
+                </a>
+              ) : (
+                <Link
+                  key={l.label}
+                  href={l.href}
+                  className="text-[13px] font-medium text-white/55 transition-colors hover:text-white"
+                >
+                  {l.label}
+                </Link>
+              )
+            )}
           </nav>
 
           <div className="flex items-center gap-3">
             <NotificationBell />
+            <a
+              href={PORTFOLIO_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hidden items-center gap-1.5 rounded-full border border-emerald-400/35 bg-emerald-950/25 px-3.5 py-1.5 text-[12.5px] font-semibold text-emerald-300 transition-all hover:border-emerald-400 hover:bg-emerald-900/35 md:inline-flex"
+            >
+              <span>Portfolio</span>
+              <ArrowUpRight className="h-3 w-3" />
+            </a>
             <button
               type="button"
               onClick={() => triggerFullscreenExploreVideo()}
@@ -122,14 +148,17 @@ export function Nav() {
                 >
                   <a
                     href={l.href}
+                    target={l.external ? "_blank" : undefined}
+                    rel={l.external ? "noopener noreferrer" : undefined}
                     onClick={() => setOpen(false)}
                     className="flex items-baseline gap-4 border-b border-white/8 py-5"
                   >
                     <span className="text-[10px] font-mono text-white/30">
                       0{i + 1}
                     </span>
-                    <span className="display-lg text-4xl text-white transition-colors hover:text-lumina">
+                    <span className="display-lg flex items-center gap-2 text-4xl text-white transition-colors hover:text-lumina">
                       {l.label}
+                      {l.external && <ArrowUpRight className="h-5 w-5 text-emerald-400" />}
                     </span>
                   </a>
                 </motion.div>
