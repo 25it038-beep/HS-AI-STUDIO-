@@ -13,7 +13,6 @@ import { GalaxyVisionPreview } from "@/components/previews/GalaxyVisionPreview";
 import { ElectronPreview } from "@/components/previews/ElectronPreview";
 import { CollaboratorModal } from "@/components/CollaboratorModal";
 import { triggerFullscreenExploreVideo } from "@/components/fullscreen-explore-video";
-import { triggerFastDownloadAndReturn } from "@/lib/download-helper";
 
 export function Featured() {
   const [collabModalOpen, setCollabModalOpen] = useState(false);
@@ -273,14 +272,6 @@ export function Featured() {
                   "https://1drv.ms/u/c/A4DE4F83095B15B0/IQBxmNpxxijbRrZxRbr2j7i6AddHgte4YOJ7o-aURM3-nFk?e=KJ0txZ"
                 }
                 external={true}
-                onClick={(e) => {
-                  e.preventDefault();
-                  triggerFastDownloadAndReturn(
-                    galaxy.downloadUrl ??
-                      "https://1drv.ms/u/c/A4DE4F83095B15B0/IQBxmNpxxijbRrZxRbr2j7i6AddHgte4YOJ7o-aURM3-nFk?e=KJ0txZ",
-                    { fileName: "Galaxy-Vision-v1.0.0-Standalone.zip" }
-                  );
-                }}
                 lg
                 accent={galaxy.accent}
               >
@@ -367,10 +358,6 @@ export function Featured() {
               <MagneticButton
                 href={electron.downloadUrl ?? "https://1drv.ms/u/c/A4DE4F83095B15B0/IQDY8K9iXhZkQayEL_CMStd_AU2Kq61gd1RgfIles4t9BrE?e=76ltt3"}
                 external={true}
-                onClick={(e) => {
-                  e.preventDefault();
-                  triggerFastDownloadAndReturn(electron.downloadUrl ?? "https://1drv.ms/u/c/A4DE4F83095B15B0/IQDY8K9iXhZkQayEL_CMStd_AU2Kq61gd1RgfIles4t9BrE?e=76ltt3");
-                }}
                 lg
                 accent={electron.accent}
               >

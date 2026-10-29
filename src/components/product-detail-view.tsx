@@ -11,7 +11,6 @@ import { Reveal } from "@/components/ui/Reveal";
 import { MagneticButton } from "@/components/ui/MagneticButton";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { CollaboratorModal } from "@/components/CollaboratorModal";
-import { triggerFastDownloadAndReturn } from "@/lib/download-helper";
 
 export function ProductDetailView({ product }: { product: ProductDetail }) {
   const [collabModalOpen, setCollabModalOpen] = useState(false);
@@ -114,12 +113,6 @@ export function ProductDetailView({ product }: { product: ProductDetail }) {
                       <MagneticButton
                         href={product.downloadUrl}
                         external={product.downloadUrl.startsWith("http")}
-                        onClick={(e) => {
-                          if (product.downloadUrl) {
-                            e.preventDefault();
-                            triggerFastDownloadAndReturn(product.downloadUrl);
-                          }
-                        }}
                         lg
                         accent={product.accent}
                       >

@@ -96,7 +96,7 @@ export function FinalCta() {
             variant="ghost"
             lg
           >
-            Founder Portfolio
+            Portfolio
             <ArrowUpRight className="h-4 w-4" />
           </MagneticButton>
         </motion.div>

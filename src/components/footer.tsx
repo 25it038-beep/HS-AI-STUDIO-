@@ -77,7 +77,7 @@ export function Footer() {
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    Founder Portfolio <ArrowUpRight className="h-3 w-3" />
+                    Portfolio <ArrowUpRight className="h-3 w-3" />
                   </a>
                 </li>
                 <li>

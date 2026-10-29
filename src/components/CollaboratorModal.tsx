@@ -1,13 +1,9 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { validateCollaboratorId } from "@/lib/collaborator";
 import { DownloadIcon, ArrowUpRight } from "@/components/ui/icons";
-import {
-  triggerFastDownloadAndReturn,
-  closeActiveDownloadWindow,
-} from "@/lib/download-helper";
 
 interface CollaboratorModalProps {
   isOpen: boolean;
@@ -29,9 +25,6 @@ export function CollaboratorModal({
   const [error, setError] = useState<string | null>(null);
   const [successName, setSuccessName] = useState<string | null>(null);
   const [downloadLinkUrl, setDownloadLinkUrl] = useState<string | null>(null);
-  const [countdown, setCountdown] = useState<number>(6);
-  const [isReturning, setIsReturning] = useState(false);
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -46,40 +39,18 @@ export function CollaboratorModal({
     if (!isOpen) {
       setSuccessName(null);
       setError(null);
-      setIsReturning(false);
-      setCountdown(6);
-      if (timerRef.current) {
-        clearInterval(timerRef.current);
-      }
-      closeActiveDownloadWindow();
     }
   }, [isOpen]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape" && isOpen) {
-        closeActiveDownloadWindow();
         onClose();
       }
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isOpen, onClose]);
-
-  // Countdown timer to return rapidly back to HS AI Studio
-  useEffect(() => {
-    if (isReturning && countdown > 0) {
-      timerRef.current = setTimeout(() => {
-        setCountdown((prev) => prev - 1);
-      }, 1000);
-    } else if (isReturning && countdown === 0) {
-      closeActiveDownloadWindow();
-      onClose();
-    }
-    return () => {
-      if (timerRef.current) clearTimeout(timerRef.current);
-    };
-  }, [isReturning, countdown, onClose]);
 
   const handleVerifyAndDownload = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -119,38 +90,15 @@ export function CollaboratorModal({
       const targetUrl = data.cloudDownloadUrl || data.downloadUrl;
       setDownloadLinkUrl(targetUrl);
 
-      // Trigger download companion window and start return countdown
+      // Open download mirror directly in new tab so download proceeds reliably
       if (targetUrl) {
-        triggerFastDownloadAndReturn(targetUrl, {
-          fileName,
-          returnDelayMs: 6000,
-          onReturn: onClose,
-        });
+        window.open(targetUrl, "_blank", "noopener,noreferrer");
       }
-      setIsReturning(true);
-      setCountdown(6);
       setIsLoading(false);
     } catch {
       setError("Network or verification error. Please try again.");
       setIsLoading(false);
     }
-  };
-
-  const handleTriggerDownloadAgain = () => {
-    if (downloadLinkUrl) {
-      triggerFastDownloadAndReturn(downloadLinkUrl, {
-        fileName,
-        returnDelayMs: 6000,
-        onReturn: onClose,
-      });
-      setCountdown(6);
-      setIsReturning(true);
-    }
-  };
-
-  const handleManualReturn = () => {
-    closeActiveDownloadWindow();
-    onClose();
   };
 
   return (
@@ -163,7 +111,7 @@ export function CollaboratorModal({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            onClick={handleManualReturn}
+            onClick={onClose}
           />
 
           {/* Modal Dialog */}
@@ -187,7 +135,7 @@ export function CollaboratorModal({
 
             {/* Close Button */}
             <button
-              onClick={handleManualReturn}
+              onClick={onClose}
               aria-label="Close modal"
               className="absolute right-4 top-4 rounded-full p-2 text-white/50 transition-colors hover:bg-white/10 hover:text-white"
             >
@@ -208,7 +156,7 @@ export function CollaboratorModal({
               HS AI Studio Collaborator Release
             </h2>
             <p className="mt-2 text-xs leading-relaxed text-zinc-400 sm:text-sm">
-              Enter your authorized Collaborator ID below. Download opens in a high-speed companion window, and you will return rapidly to HS AI Studio.
+              Enter your authorized Collaborator ID below. Download opens from the high-speed cloud mirror, while HS AI Studio remains open in your tab.
             </p>
 
             {/* Mandatory notices */}
@@ -249,52 +197,38 @@ export function CollaboratorModal({
                   Collaborator Verified: {successName}
                 </p>
                 <p className="mt-1 text-xs text-emerald-300/80">
-                  Download window opened for {fileName}.
+                  Your high-speed download link for {fileName} is ready.
                 </p>
 
-                {/* Returning to HS AI Studio countdown & progress */}
-                <div className="mt-4 rounded-xl border border-white/10 bg-black/50 p-3.5">
-                  <div className="flex items-center justify-between text-xs">
-                    <span className="flex items-center gap-1.5 text-emerald-300 font-medium">
-                      <span className="h-2 w-2 rounded-full bg-emerald-400 animate-ping" />
-                      Downloading {fileName}
-                    </span>
-                    <span className="font-mono text-zinc-400">
-                      Returning to HS AI Studio in <strong className="text-white text-sm">{countdown}s</strong>
+                {downloadLinkUrl && (
+                  <div className="mt-5 flex flex-col items-center gap-3">
+                    <a
+                      href={downloadLinkUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 rounded-xl bg-emerald-500 px-6 py-3 text-xs font-bold text-black transition-all hover:bg-emerald-400"
+                      style={{
+                        boxShadow: "0 0 25px -4px rgba(16, 185, 129, 0.5)",
+                      }}
+                    >
+                      <DownloadIcon className="h-4 w-4" />
+                      <span>Download {fileName} (Cloud Mirror) ↗</span>
+                    </a>
+                    <span className="text-[11.5px] text-zinc-400">
+                      Direct cloud mirror powered by Microsoft OneDrive
                     </span>
                   </div>
-                  <div className="mt-2.5 h-1.5 w-full overflow-hidden rounded-full bg-white/10">
-                    <motion.div
-                      className="h-full bg-emerald-400"
-                      initial={{ width: "100%" }}
-                      animate={{ width: "0%" }}
-                      transition={{ duration: 6, ease: "linear" }}
-                    />
-                  </div>
-                </div>
+                )}
 
-                <div className="mt-5 flex flex-wrap items-center justify-center gap-3">
+                <div className="mt-6 border-t border-white/10 pt-4 flex items-center justify-center gap-3">
                   <button
                     type="button"
-                    onClick={handleManualReturn}
-                    className="inline-flex items-center gap-2 rounded-xl bg-emerald-500 px-5 py-2.5 text-xs font-bold text-black transition-all hover:bg-emerald-400"
-                    style={{
-                      boxShadow: "0 0 25px -4px rgba(16, 185, 129, 0.5)",
-                    }}
+                    onClick={onClose}
+                    className="inline-flex items-center gap-1.5 rounded-xl border border-white/20 bg-white/5 px-5 py-2.5 text-xs font-medium text-white transition-colors hover:bg-white/10"
                   >
-                    <span>Return to HS AI Studio Now</span>
+                    <span>Return to HS AI Studio</span>
                     <ArrowUpRight className="h-3.5 w-3.5" />
                   </button>
-                  {downloadLinkUrl && (
-                    <button
-                      type="button"
-                      onClick={handleTriggerDownloadAgain}
-                      className="inline-flex items-center gap-1.5 rounded-xl border border-white/15 bg-white/5 px-4 py-2.5 text-xs font-medium text-white/80 transition-colors hover:bg-white/10 hover:text-white"
-                    >
-                      <DownloadIcon className="h-3.5 w-3.5" />
-                      <span>Re-open Download Window</span>
-                    </button>
-                  )}
                 </div>
               </motion.div>
             ) : (
@@ -332,7 +266,7 @@ export function CollaboratorModal({
                 <div className="flex items-center justify-end gap-3 pt-2">
                   <button
                     type="button"
-                    onClick={handleManualReturn}
+                    onClick={onClose}
                     className="rounded-xl border border-white/10 px-4 py-2.5 text-xs font-medium text-zinc-300 transition-colors hover:bg-white/5 hover:text-white"
                   >
                     Cancel

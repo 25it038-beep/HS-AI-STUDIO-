@@ -89,7 +89,7 @@ export function Hero() {
             variant="ghost"
             lg
           >
-            Founder Portfolio ↗
+            Portfolio ↗
           </MagneticButton>
           <MagneticButton
             href="#projects"

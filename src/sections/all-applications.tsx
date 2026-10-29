@@ -9,7 +9,6 @@ import { Reveal } from "@/components/ui/Reveal";
 import { ArrowUpRight } from "@/components/ui/icons";
 import { CollaboratorModal } from "@/components/CollaboratorModal";
 import { triggerFullscreenExploreVideo } from "@/components/fullscreen-explore-video";
-import { triggerFastDownloadAndReturn } from "@/lib/download-helper";
 
 function ProductCell({
   product,
@@ -92,12 +91,6 @@ function ProductCell({
                 href={product.downloadUrl}
                 target={product.downloadUrl.startsWith("http") ? "_blank" : undefined}
                 rel={product.downloadUrl.startsWith("http") ? "noopener noreferrer" : undefined}
-                onClick={(e) => {
-                  if (product.downloadUrl) {
-                    e.preventDefault();
-                    triggerFastDownloadAndReturn(product.downloadUrl);
-                  }
-                }}
                 className="inline-flex h-10 items-center gap-1.5 rounded-full border border-white/20 px-4 text-[13px] font-semibold text-white transition-colors duration-300 hover:border-white/60 hover:bg-white/5"
               >
                 Download <ArrowUpRight className="h-3.5 w-3.5 rotate-90" />

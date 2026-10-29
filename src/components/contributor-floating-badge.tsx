@@ -205,7 +205,7 @@ export function ContributorFloatingBadge() {
                       rel="noopener noreferrer"
                       className="text-cyan-300 font-medium underline underline-offset-4 hover:text-white transition-colors"
                     >
-                      Harshan Seliyan B S (Founder Portfolio)
+                      Harshan Seliyan B S (Portfolio)
                     </a>{" "}
                     on WhatsApp.
                   </p>
