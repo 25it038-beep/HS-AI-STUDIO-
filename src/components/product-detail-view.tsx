@@ -531,6 +531,8 @@ export function ProductDetailView({ product }: { product: ProductDetail }) {
         isOpen={collabModalOpen}
         onClose={() => setCollabModalOpen(false)}
         accent={product.accent}
+        downloadApiPath={product.downloadUrl || "/api/download/gravity"}
+        fileName={product.id === "domcode-llm" ? "DomcodeLLM-Setup.exe" : "Gravity_LLM_Portable.zip"}
       />
     </div>
   );

@@ -9,12 +9,16 @@ interface CollaboratorModalProps {
   isOpen: boolean;
   onClose: () => void;
   accent?: string;
+  downloadApiPath?: string;
+  fileName?: string;
 }
 
 export function CollaboratorModal({
   isOpen,
   onClose,
   accent = "#10b981",
+  downloadApiPath = "/api/download/gravity",
+  fileName = "Gravity_LLM_Portable.zip",
 }: CollaboratorModalProps) {
   const [collaboratorId, setCollaboratorId] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -55,7 +59,7 @@ export function CollaboratorModal({
       }
 
       // Verify with backend
-      const res = await fetch("/api/download/gravity", {
+      const res = await fetch(downloadApiPath, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ collaboratorId: collaboratorId.trim() }),
@@ -202,7 +206,7 @@ export function CollaboratorModal({
                       }}
                     >
                       <DownloadIcon className="h-3.5 w-3.5" />
-                      Download Gravity_LLM_Portable.zip (6.12 GB) ↗
+                      Download {fileName} ↗
                     </a>
                     <span className="text-[11px] text-zinc-400">
                       Direct cloud mirror powered by Microsoft OneDrive

@@ -161,6 +161,8 @@ export function AllApplications() {
         isOpen={collabModalOpen}
         onClose={() => setCollabModalOpen(false)}
         accent={selectedProduct?.accent || "#10b981"}
+        downloadApiPath={selectedProduct?.downloadUrl || "/api/download/gravity"}
+        fileName={selectedProduct?.id === "domcode-llm" ? "DomcodeLLM-Setup.exe" : "Gravity_LLM_Portable.zip"}
       />
     </section>
   );

@@ -2,12 +2,13 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { products } from "@/data/products";
+import { products, type ProductDetail } from "@/data/products";
 import { MagneticButton } from "@/components/ui/MagneticButton";
 import { ArrowUpRight, DownloadIcon } from "@/components/ui/icons";
 import { Reveal } from "@/components/ui/Reveal";
 import { Parallax } from "@/components/ui/Showcase";
 import { GravityLLMPreview } from "@/components/previews/GravityLLMPreview";
+import { DomcodeLLMPreview } from "@/components/previews/DomcodeLLMPreview";
 import { GalaxyVisionPreview } from "@/components/previews/GalaxyVisionPreview";
 import { ElectronPreview } from "@/components/previews/ElectronPreview";
 import { CollaboratorModal } from "@/components/CollaboratorModal";
@@ -15,10 +16,17 @@ import { triggerFullscreenExploreVideo } from "@/components/fullscreen-explore-v
 
 export function Featured() {
   const [collabModalOpen, setCollabModalOpen] = useState(false);
+  const [activeCollabProduct, setActiveCollabProduct] = useState<ProductDetail | null>(null);
 
   const gravity = products.find((p) => p.id === "gravity-llm")!;
+  const domcode = products.find((p) => p.id === "domcode-llm")!;
   const galaxy = products.find((p) => p.id === "galaxy-vision")!;
   const electron = products.find((p) => p.id === "electron")!;
+
+  const handleOpenCollab = (p: ProductDetail) => {
+    setActiveCollabProduct(p);
+    setCollabModalOpen(true);
+  };
 
   return (
     <section className="relative overflow-hidden bg-ink py-28 md:py-36">
@@ -28,11 +36,15 @@ export function Featured() {
         style={{ background: "radial-gradient(closest-side, rgba(16,185,129,0.3), transparent)" }}
       />
       <div
-        className="pointer-events-none absolute -right-40 top-[50%] h-[560px] w-[640px] rounded-full blur-[140px] opacity-20"
+        className="pointer-events-none absolute -right-40 top-[26%] h-[560px] w-[640px] rounded-full blur-[140px] opacity-20"
+        style={{ background: "radial-gradient(closest-side, rgba(245,158,11,0.25), transparent)" }}
+      />
+      <div
+        className="pointer-events-none absolute -left-40 top-[52%] h-[560px] w-[640px] rounded-full blur-[140px] opacity-20"
         style={{ background: "radial-gradient(closest-side, rgba(168,85,247,0.25), transparent)" }}
       />
       <div
-        className="pointer-events-none absolute -left-40 bottom-10 h-[560px] w-[640px] rounded-full blur-[140px] opacity-20"
+        className="pointer-events-none absolute -right-40 bottom-10 h-[560px] w-[640px] rounded-full blur-[140px] opacity-20"
         style={{ background: "radial-gradient(closest-side, rgba(56,189,248,0.2), transparent)" }}
       />
 
@@ -71,7 +83,7 @@ export function Featured() {
             <div className="mt-8 flex flex-wrap items-center gap-4">
               <button
                 type="button"
-                onClick={() => setCollabModalOpen(true)}
+                onClick={() => handleOpenCollab(gravity)}
                 className="inline-flex h-12 items-center gap-2 rounded-full px-7 text-sm font-semibold transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
                 style={{
                   background: gravity.accent,
@@ -136,14 +148,96 @@ export function Featured() {
       </div>
 
       {/* ========================================================= */}
-      {/* SPOTLIGHT 02: GALAXY VISION (Self-Hosted Vision & Voice)  */}
+      {/* SPOTLIGHT 02: DOMCODE LLM (Air-Gapped AI Coding Assistant) */}
       {/* ========================================================= */}
       <div className="container-x relative mt-24 border-t border-white/8 pt-24 md:mt-32 md:pt-32 grid items-center gap-14 lg:grid-cols-[1.05fr_0.95fr]">
         <Parallax depth={40} className="order-2 lg:order-1">
-          <GalaxyVisionPreview className="w-full" />
+          <DomcodeLLMPreview className="w-full" />
         </Parallax>
 
         <div className="order-1 lg:order-2">
+          <Reveal y={18}>
+            <p className="eyebrow flex items-center gap-3 text-white/45">
+              <span
+                className="h-1.5 w-1.5 rounded-full"
+                style={{ background: domcode.accent, boxShadow: `0 0 10px ${domcode.accent}` }}
+              />
+              {domcode.number} · Collaborator Spotlight · {domcode.category}
+            </p>
+          </Reveal>
+
+          <Reveal y={26} delay={0.05}>
+            <h2 className="display-lg mt-6 text-[clamp(2.4rem,7vw,6.5rem)]">{domcode.name}</h2>
+          </Reveal>
+
+          <Reveal y={22} delay={0.1}>
+            <p className="mt-3 font-display text-xl font-medium text-white/85">
+              {domcode.tagline}
+            </p>
+          </Reveal>
+
+          <Reveal y={22} delay={0.16}>
+            <p className="mt-6 max-w-xl text-[17px] leading-relaxed text-muted-dark">
+              {domcode.description}
+            </p>
+          </Reveal>
+
+          <Reveal y={20} delay={0.22}>
+            <div className="mt-8 flex flex-wrap items-center gap-4">
+              <button
+                type="button"
+                onClick={() => handleOpenCollab(domcode)}
+                className="inline-flex h-12 items-center gap-2 rounded-full px-7 text-sm font-semibold transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
+                style={{
+                  background: domcode.accent,
+                  color: "#000",
+                  boxShadow: `0 0 25px -4px ${domcode.accent}80`,
+                }}
+              >
+                <span>Download Collaborator Setup</span>
+                <DownloadIcon className="h-4 w-4" />
+              </button>
+              <MagneticButton
+                href={`/products/${domcode.id}`}
+                onClick={(e) => {
+                  e.preventDefault();
+                  triggerFullscreenExploreVideo(`/products/${domcode.id}`);
+                }}
+                variant="ghost"
+                lg
+                accent={domcode.accent}
+              >
+                View Details
+                <ArrowUpRight className="h-4 w-4" />
+              </MagneticButton>
+            </div>
+          </Reveal>
+
+          {/* Quick Start pill instructions */}
+          <Reveal y={18} delay={0.26}>
+            <div className="mt-7 inline-flex flex-wrap items-center gap-2 rounded-xl border border-amber-400/25 bg-amber-950/20 px-3.5 py-2 text-xs text-amber-200/90 backdrop-blur-sm">
+              <span className="font-semibold text-amber-300">Quick Start:</span>
+              <span>1. Run DomcodeLLM-Setup.exe</span>
+              <span className="text-white/30">→</span>
+              <span>2. 1-Click Install</span>
+              <span className="text-white/30">→</span>
+              <span className="font-mono font-semibold text-white">3. Launch & Code</span>
+            </div>
+          </Reveal>
+
+          <Reveal y={18} delay={0.3}>
+            <p className="mt-8 font-mono text-[11px] uppercase tracking-[0.25em] text-white/35">
+              Zero Ollama · In-Process C++ llama.cpp · AVX2/AVX-512 · 3.56 GB GGUF Q4_0 · Air-Gapped
+            </p>
+          </Reveal>
+        </div>
+      </div>
+
+      {/* ========================================================= */}
+      {/* SPOTLIGHT 03: GALAXY VISION (Self-Hosted Vision & Voice)  */}
+      {/* ========================================================= */}
+      <div className="container-x relative mt-24 border-t border-white/8 pt-24 md:mt-32 md:pt-32 grid items-center gap-14 lg:grid-cols-[0.95fr_1.05fr]">
+        <div>
           <Reveal y={18}>
             <p className="eyebrow flex items-center gap-3 text-white/45">
               <span
@@ -214,13 +308,21 @@ export function Featured() {
             </p>
           </Reveal>
         </div>
+
+        <Parallax depth={-40}>
+          <GalaxyVisionPreview className="w-full" />
+        </Parallax>
       </div>
 
       {/* ========================================================= */}
-      {/* SPOTLIGHT 03: ELECTRON AI (Proprietary Distilled Offline AI) */}
+      {/* SPOTLIGHT 04: ELECTRON AI (Proprietary Distilled Offline AI) */}
       {/* ========================================================= */}
-      <div className="container-x relative mt-24 border-t border-white/8 pt-24 md:mt-32 md:pt-32 grid items-center gap-14 lg:grid-cols-[0.95fr_1.05fr]">
-        <div>
+      <div className="container-x relative mt-24 border-t border-white/8 pt-24 md:mt-32 md:pt-32 grid items-center gap-14 lg:grid-cols-[1.05fr_0.95fr]">
+        <Parallax depth={40} className="order-2 lg:order-1">
+          <ElectronPreview className="w-full" />
+        </Parallax>
+
+        <div className="order-1 lg:order-2">
           <Reveal y={18}>
             <p className="eyebrow flex items-center gap-3 text-white/45">
               <span
@@ -291,20 +393,21 @@ export function Featured() {
             </p>
           </Reveal>
         </div>
-
-        <Parallax depth={-46}>
-          <ElectronPreview className="w-full" />
-        </Parallax>
       </div>
 
       <CollaboratorModal
         isOpen={collabModalOpen}
         onClose={() => setCollabModalOpen(false)}
-        accent={gravity.accent}
+        accent={activeCollabProduct?.accent || gravity.accent}
+        downloadApiPath={activeCollabProduct?.downloadUrl || "/api/download/gravity"}
+        fileName={activeCollabProduct?.id === "domcode-llm" ? "DomcodeLLM-Setup.exe" : "Gravity_LLM_Portable.zip"}
       />
 
       <Link href="/products/gravity-llm" className="sr-only">
         View Gravity LLM details
+      </Link>
+      <Link href="/products/domcode-llm" className="sr-only">
+        View Domcode LLM details
       </Link>
       <Link href="/products/galaxy-vision" className="sr-only">
         View Galaxy Vision details

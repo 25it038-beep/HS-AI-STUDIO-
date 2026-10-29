@@ -170,8 +170,109 @@ export const products: ProductDetail[] = [
     ],
   },
   {
-    id: "galaxy-vision",
+    id: "domcode-llm",
     number: "02",
+    name: "Domcode LLM",
+    tagline: "The Self-Contained, Air-Gapped AI Coding Assistant for Windows",
+    description:
+      "An enterprise-grade, standalone desktop AI programming assistant engineered by HS AI Solutions. Domcode LLM delivers high-performance code generation, technical architecture design, and real-time debugging directly on your local hardware—with zero external dependencies and zero cloud reliance. Unlike conventional AI wrappers that require Ollama, Docker, or Python runtimes, Domcode LLM runs an in-process, highly optimized C++ neural engine bundled with an all-in-one installer.",
+    long: "Domcode LLM is an enterprise-grade, standalone desktop AI programming assistant engineered by HS AI Solutions. Designed specifically for software engineers, devops teams, and researchers, Domcode LLM delivers high-performance code generation, technical architecture design, and real-time debugging directly on your local hardware—with zero external dependencies and zero cloud reliance. Unlike conventional AI wrappers that require Ollama, Docker, or Python runtimes, Domcode LLM runs an in-process, highly optimized C++ neural engine bundled with an all-in-one installer. Install once and code anywhere: on a flight, in a secure air-gapped lab, or on your daily workstation. Powered by a 3.56 GB GGUF Q4_0 quantized model embedded directly in the installer, Domcode supports a 4,096-token context window (scalable to 16,384), multi-language mastery across Python, TypeScript, JavaScript, Rust, Go, C++, C#, Java, SQL, Docker, and Kubernetes, and smart dataset-aware web search that keeps core coding tasks strictly offline while optionally grounding temporal queries via live Wikipedia and Bing synthesis.",
+    category: "AI CODING ASSISTANT",
+    url: "",
+    status: "live",
+    downloadUrl: "/api/download/domcode",
+    collaboratorOnly: true,
+    notices: {
+      securityNote:
+        "Collaborator Edition: Access restricted to authorized HS AI Solutions collaborators with a valid Collaborator ID.",
+      hardwareAdvisory:
+        "Minimum: Intel Core i5 8th Gen+ / AMD Ryzen 5 (AVX2), 8 GB RAM, 6 GB SSD. Recommended: Core i7/i9 or Ryzen 7/9, 16 GB+ RAM, NVIDIA RTX 3060+ for accelerated token streaming.",
+    },
+    features: [
+      "100% Self-Contained & Native: Zero Ollama, Docker, or Python runtime required — in-process C++ neural engine",
+      "Embedded Neural Weights: Complete 3.56 GB GGUF Q4_0 model packed directly inside the all-in-one installer",
+      "Direct Hardware Acceleration: Multi-core AVX2/AVX-512 and automatic GPU offload libraries",
+      "Large Context Window (4,096–16,384 tokens): Full multi-tier architecture and module refactoring without context clipping",
+      "Multi-Language Mastery: Python, TypeScript, JavaScript, Rust, Go, C++, C#, Java, SQL, Docker & Kubernetes",
+      "Smart Dataset-Aware Web Search: Offline coding tasks + optional dual live grounding (Wikipedia + Bing) with user toggle",
+      "Enterprise Air-Gapped Compliance: Zero telemetry, zero cloud transmission — complete data residency on local RAM",
+      "Cyber-Aesthetic Dark UI: Glassmorphism interface with streaming tokens, syntax highlighting, and 1-click clipboard copy",
+    ],
+    technologies: [
+      "GGUF Q4_0 Quantized (3.56 GB Embedded)",
+      "In-Process llama.cpp C/C++ Binding",
+      "AVX2 / AVX-512 Multi-Core",
+      "Automatic GPU Offload",
+      "Dual Live Grounding (Wikipedia + Bing)",
+      "Windows Native Standalone Installer",
+      "Zero Ollama / Docker / Python",
+    ],
+    accent: "#f59e0b",
+    preview: "domcode-llm",
+    flow: [
+      {
+        step: "Download & Run",
+        detail: "Launch DomcodeLLM-Setup.exe after verifying your Collaborator ID.",
+      },
+      {
+        step: "One-Click Installation",
+        detail:
+          "The installer unpacks the native C++ runtime, registers the 3.56 GB neural weights, and creates desktop and Start Menu shortcuts automatically.",
+      },
+      {
+        step: "Launch & Start Coding",
+        detail:
+          "Click 'Launch Domcode LLM' to open the interactive interface. Neural weights load in seconds with real-time progress indicators. Start generating production-ready code instantly.",
+      },
+    ],
+    capabilities: [
+      "Production-ready code generation with error handling, docstrings, and typing hints",
+      "Technical architecture design for microservices, REST APIs, and database schemas",
+      "Real-time debugging and code explanation across 10+ languages",
+      "Automatic GPU offload / multi-core CPU fallback inference",
+      "Dual live web grounding (Wikipedia + Bing) with user toggle",
+      "Export conversations to technical log files with a single click",
+      "Precision refactoring with 4,096–16,384 token context window",
+      "Contained activity indicator with glowing ring around chat composer",
+    ],
+    useCases: [
+      {
+        title: "Air-gapped enterprise code generation",
+        description:
+          "Generate production-ready code, APIs, and architectures on secure networks with zero cloud transmissions — ideal for defense, fintech, and healthcare environments.",
+      },
+      {
+        title: "Offline technical debugging & code review",
+        description:
+          "Diagnose bugs, perform OWASP security audits, and review entire modules without sending proprietary code to any external server.",
+      },
+      {
+        title: "Multi-language refactoring & architecture design",
+        description:
+          "Refactor large codebases across Python, TypeScript, Rust, Go, and more with a 16,384-token context window for full module awareness.",
+      },
+      {
+        title: "DevOps & infrastructure scripting",
+        description:
+          "Generate Docker Compose files, Kubernetes manifests, CI/CD pipelines, and shell automation scripts locally with expert-level precision.",
+      },
+    ],
+    technicalSpecs: [
+      { property: "Product Version", value: "1.0.0" },
+      { property: "Developer / Vendor", value: "HS AI Solutions" },
+      { property: "Target OS", value: "Windows 10 / Windows 11 (64-bit)" },
+      { property: "Model Format", value: "GGUF Q4_0 Quantized (Enhanced BPW)" },
+      { property: "Model Size", value: "3.56 GB Neural Weights (Embedded)" },
+      { property: "Engine Core", value: "In-Process llama.cpp Native C/C++ Binding" },
+      { property: "Context Window", value: "4,096 Tokens (Scalable up to 16,384)" },
+      { property: "Inference Modes", value: "Automatic GPU Offload / Multi-Core CPU Fallback" },
+      { property: "Search Capabilities", value: "Dual Live Grounding (Wikipedia + Bing) with User Toggle" },
+      { property: "Installer Type", value: "All-in-One Standalone Setup (DomcodeLLM-Setup.exe)" },
+    ],
+  },
+  {
+    id: "galaxy-vision",
+    number: "03",
     name: "Galaxy Vision",
     tagline: "The AI that understands what it sees — and what you mean.",
     description:
@@ -271,7 +372,7 @@ export const products: ProductDetail[] = [
   },
   {
     id: "electron",
-    number: "03",
+    number: "04",
     name: "Electron AI",
     tagline: "Proprietary Offline AI Model & Real-Time Web Search",
     description:
@@ -324,7 +425,7 @@ export const products: ProductDetail[] = [
   },
   {
     id: "pendulum",
-    number: "04",
+    number: "05",
     name: "Pendulum",
     tagline: "Automated Private Browser",
     description:
@@ -378,7 +479,7 @@ export const products: ProductDetail[] = [
   },
   {
     id: "lumina",
-    number: "05",
+    number: "06",
     name: "Lumina",
     tagline: "AI Presentation Generator",
     description:
@@ -432,7 +533,7 @@ export const products: ProductDetail[] = [
   },
   {
     id: "hsbot",
-    number: "06",
+    number: "07",
     name: "HSBot",
     tagline: "Multi-Model AI Chatbot",
     description:
@@ -484,7 +585,7 @@ export const products: ProductDetail[] = [
   },
   {
     id: "ledger",
-    number: "07",
+    number: "08",
     name: "Ledger",
     tagline: "AI Digital Identity & Career Intelligence",
     description:
@@ -546,7 +647,7 @@ export const products: ProductDetail[] = [
   },
   {
     id: "phishing-defence",
-    number: "08",
+    number: "09",
     name: "Phishing Defence",
     tagline: "AI Phishing & Malicious Link Protection",
     description:
@@ -598,7 +699,7 @@ export const products: ProductDetail[] = [
   },
   {
     id: "hs-code",
-    number: "09",
+    number: "10",
     name: "HS CODE",
     tagline: "AI Code Companion · Windows Desktop",
     description:
@@ -645,7 +746,7 @@ export const products: ProductDetail[] = [
   },
   {
     id: "academia",
-    number: "10",
+    number: "11",
     name: "Academia AI",
     tagline: "Personal AI Learning Operating System",
     description:
