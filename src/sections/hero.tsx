@@ -12,18 +12,43 @@ export function Hero() {
 
   return (
     <section id="home" className="relative min-h-dvh overflow-hidden bg-ink">
-      {/* Full-screen background video */}
-      <video
-        className="pointer-events-none absolute inset-0 h-full w-full object-cover"
-        src="/videos/hero-terrain.mp4"
-        autoPlay
-        muted
-        loop
-        playsInline
-        aria-hidden="true"
+      {/* Full-screen background video — cropped to hide watermark via clip */}
+      <div
+        className="pointer-events-none absolute inset-0"
+        style={{ overflow: "hidden" }}
+      >
+        <video
+          className="absolute"
+          src="/videos/hero-terrain.mp4"
+          autoPlay
+          muted
+          loop
+          playsInline
+          aria-hidden="true"
+          style={{
+            /* Scale up slightly and shift so watermark (bottom-right) falls outside the visible area */
+            width: "110%",
+            height: "110%",
+            top: "-5%",
+            left: "-5%",
+            objectFit: "cover",
+            objectPosition: "center top",
+          }}
+        />
+      </div>
+      {/* Watermark kill — solid bg patch over bottom-right corner */}
+      <div
+        className="pointer-events-none absolute"
+        style={{
+          bottom: 0,
+          right: 0,
+          width: "22%",
+          height: "12%",
+          background: "linear-gradient(135deg, transparent 0%, #06090e 55%)",
+        }}
       />
       {/* Dark overlay so text stays readable over video */}
-      <div className="pointer-events-none absolute inset-0 bg-ink/70" />
+      <div className="pointer-events-none absolute inset-0 bg-ink/65" />
 
       {/* background layers */}
       <HeroCanvas />
