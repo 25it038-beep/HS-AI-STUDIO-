@@ -12,7 +12,7 @@ export function Hero() {
 
   return (
     <section id="home" className="relative min-h-dvh overflow-hidden bg-ink">
-      {/* Full-screen background video — heavily scaled + cropped to push watermark out of frame */}
+      {/* Full-screen background video */}
       <div
         className="pointer-events-none absolute inset-0"
         style={{ overflow: "hidden" }}
@@ -26,33 +26,19 @@ export function Hero() {
           playsInline
           aria-hidden="true"
           style={{
-            /*
-             * Scale to 130% and anchor to center-top.
-             * iStock watermark lives in the bottom ~18% of the frame.
-             * At 130% scale the bottom of the video is pushed ~30% below
-             * the container edge — completely outside the visible area.
-             */
             width: "130%",
             height: "130%",
             top: "-5%",
             left: "-15%",
             objectFit: "cover",
             objectPosition: "center top",
+            /* Crush brightness so the semi-transparent iStock watermark
+               text disappears into the dark background */
+            filter: "brightness(0.28) saturate(1.6)",
           }}
         />
       </div>
-      {/* Hard solid bottom-right kill zone — catches any residual watermark pixels */}
-      <div
-        className="pointer-events-none absolute"
-        style={{
-          bottom: 0,
-          right: 0,
-          width: "40%",
-          height: "20%",
-          background: "#06090e",
-        }}
-      />
-      {/* Feather the kill zone edge so it blends naturally */}
+      {/* Solid bottom-right kill zone for any corner watermark */}
       <div
         className="pointer-events-none absolute"
         style={{
@@ -61,11 +47,19 @@ export function Hero() {
           width: "55%",
           height: "30%",
           background:
-            "linear-gradient(135deg, transparent 0%, transparent 40%, #06090e 75%)",
+            "linear-gradient(135deg, transparent 0%, transparent 35%, #06090e 68%)",
         }}
       />
-      {/* Dark overlay so text stays readable over video */}
-      <div className="pointer-events-none absolute inset-0 bg-ink/65" />
+      {/* Restore a subtle ambient glow over the darkened video */}
+      <div
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background:
+            "radial-gradient(ellipse 70% 60% at 50% 45%, rgba(139,100,255,0.18) 0%, rgba(34,211,238,0.08) 45%, transparent 75%)",
+        }}
+      />
+      {/* Main readable overlay */}
+      <div className="pointer-events-none absolute inset-0 bg-ink/55" />
 
       {/* background layers */}
       <HeroCanvas />
