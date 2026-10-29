@@ -123,10 +123,8 @@ export function ProductDetailView({ product }: { product: ProductDetail }) {
                         lg
                         accent={product.accent}
                       >
-                        {product.id === "electron"
+                        {product.id === "electron" || product.id === "galaxy-vision"
                           ? "Download Standalone ZIP"
-                          : product.id === "galaxy-vision"
-                          ? "Download Portable ZIP"
                           : "Download for Windows"}
                         <DownloadIcon className="h-4 w-4" />
                       </MagneticButton>

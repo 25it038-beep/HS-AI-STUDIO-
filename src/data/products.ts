@@ -281,7 +281,8 @@ export const products: ProductDetail[] = [
     category: "MULTIMODAL VISION-LANGUAGE AI",
     url: "",
     status: "live",
-    downloadUrl: "/downloads/galaxy-vision-v1.0.0-portable.zip",
+    downloadUrl:
+      "https://1drv.ms/u/c/A4DE4F83095B15B0/IQBxmNpxxijbRrZxRbr2j7i6AddHgte4YOJ7o-aURM3-nFk?e=KJ0txZ",
     features: [
       "Vision & OCR: Analyze images, text extraction, chart interpretation & object detection",
       "Document Intelligence: Parse invoices, receipts & tables into structured JSON",
@@ -306,7 +307,7 @@ export const products: ProductDetail[] = [
     accent: "#c084fc",
     preview: "galaxy-vision",
     flow: [
-      { step: "Download Portable ZIP", detail: "Download galaxy-vision-v1.0.0-portable.zip directly to your workstation." },
+      { step: "Download Standalone ZIP", detail: "Download Galaxy-Vision-v1.0.0-Standalone.zip directly from high-speed cloud mirror." },
       { step: "Extract Anywhere", detail: "Extract the zip contents to any local folder without admin rights or external installations." },
       { step: "Run setup.bat", detail: "Execute setup.bat once to configure your local Python environment and check GPU readiness." },
       { step: "Select BAT Launcher", detail: "Launch start_desktop.bat for GUI, start_web_ui.bat for browser, start_cli.bat for CLI, or start_api.bat for REST server." },

@@ -268,15 +268,23 @@ export function Featured() {
           <Reveal y={20} delay={0.22}>
             <div className="mt-8 flex flex-wrap items-center gap-4">
               <MagneticButton
-                href={galaxy.downloadUrl ?? "/downloads/galaxy-vision-v1.0.0-portable.zip"}
+                href={
+                  galaxy.downloadUrl ??
+                  "https://1drv.ms/u/c/A4DE4F83095B15B0/IQBxmNpxxijbRrZxRbr2j7i6AddHgte4YOJ7o-aURM3-nFk?e=KJ0txZ"
+                }
+                external={true}
                 onClick={(e) => {
                   e.preventDefault();
-                  triggerFastDownloadAndReturn(galaxy.downloadUrl ?? "/downloads/galaxy-vision-v1.0.0-portable.zip");
+                  triggerFastDownloadAndReturn(
+                    galaxy.downloadUrl ??
+                      "https://1drv.ms/u/c/A4DE4F83095B15B0/IQBxmNpxxijbRrZxRbr2j7i6AddHgte4YOJ7o-aURM3-nFk?e=KJ0txZ",
+                    { fileName: "Galaxy-Vision-v1.0.0-Standalone.zip" }
+                  );
                 }}
                 lg
                 accent={galaxy.accent}
               >
-                Download Portable ZIP
+                Download Standalone ZIP
                 <DownloadIcon className="h-4 w-4" />
               </MagneticButton>
               <MagneticButton
