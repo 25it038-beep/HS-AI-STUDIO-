@@ -12,16 +12,29 @@ export function Hero() {
 
   return (
     <section id="home" className="relative min-h-dvh overflow-hidden bg-ink">
+      {/* Full-screen background video */}
+      <video
+        className="pointer-events-none absolute inset-0 h-full w-full object-cover"
+        src="/videos/hero-terrain.mp4"
+        autoPlay
+        muted
+        loop
+        playsInline
+        aria-hidden="true"
+      />
+      {/* Dark overlay so text stays readable over video */}
+      <div className="pointer-events-none absolute inset-0 bg-ink/70" />
+
       {/* background layers */}
       <HeroCanvas />
-      <div className="bg-grid-dark pointer-events-none absolute inset-0 opacity-40 [mask-image:radial-gradient(ellipse_70%_60%_at_50%_40%,black,transparent)]" />
+      <div className="bg-grid-dark pointer-events-none absolute inset-0 opacity-30 [mask-image:radial-gradient(ellipse_70%_60%_at_50%_40%,black,transparent)]" />
       <div
         className="pointer-events-none absolute left-1/2 top-0 h-[560px] w-[900px] -translate-x-1/2 rounded-full blur-[120px]"
-        style={{ background: "radial-gradient(closest-side, rgba(245,166,35,0.14), rgba(34,211,238,0.07), transparent)" }}
+        style={{ background: "radial-gradient(closest-side, rgba(245,166,35,0.10), rgba(34,211,238,0.05), transparent)" }}
       />
       <div
         className="pointer-events-none absolute bottom-0 left-0 h-80 w-80 rounded-full blur-[100px]"
-        style={{ background: "radial-gradient(closest-side, rgba(139,124,246,0.12), transparent)" }}
+        style={{ background: "radial-gradient(closest-side, rgba(139,124,246,0.10), transparent)" }}
       />
 
       <div className="container-x relative flex min-h-dvh flex-col justify-center pb-28 pt-32">
