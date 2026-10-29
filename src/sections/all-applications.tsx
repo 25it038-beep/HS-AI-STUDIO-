@@ -8,14 +8,17 @@ import { PreviewRenderer } from "@/components/previews/PreviewRenderer";
 import { Reveal } from "@/components/ui/Reveal";
 import { ArrowUpRight } from "@/components/ui/icons";
 import { CollaboratorModal } from "@/components/CollaboratorModal";
+import { DownloadCompanionModal } from "@/components/DownloadCompanionModal";
 import { triggerFullscreenExploreVideo } from "@/components/fullscreen-explore-video";
 
 function ProductCell({
   product,
   onOpenCollab,
+  onOpenDownloadCompanion,
 }: {
   product: ProductDetail;
   onOpenCollab: (p: ProductDetail) => void;
+  onOpenDownloadCompanion: (p: ProductDetail) => void;
 }) {
   return (
     <motion.article
@@ -92,6 +95,11 @@ function ProductCell({
                 download={!product.downloadUrl.startsWith("http") ? true : undefined}
                 target={product.downloadUrl.startsWith("http") ? "_blank" : undefined}
                 rel={product.downloadUrl.startsWith("http") ? "noopener noreferrer" : undefined}
+                onClick={
+                  product.downloadUrl.startsWith("http")
+                    ? () => onOpenDownloadCompanion(product)
+                    : undefined
+                }
                 className="inline-flex h-10 items-center gap-1.5 rounded-full border border-white/20 px-4 text-[13px] font-semibold text-white transition-colors duration-300 hover:border-white/60 hover:bg-white/5"
               >
                 Download <ArrowUpRight className="h-3.5 w-3.5 rotate-90" />
@@ -129,10 +137,15 @@ function ProductCell({
 export function AllApplications() {
   const [collabModalOpen, setCollabModalOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<ProductDetail | null>(null);
+  const [downloadCompanionProduct, setDownloadCompanionProduct] = useState<ProductDetail | null>(null);
 
   const handleOpenCollab = (p: ProductDetail) => {
     setSelectedProduct(p);
     setCollabModalOpen(true);
+  };
+
+  const handleOpenDownloadCompanion = (p: ProductDetail) => {
+    setDownloadCompanionProduct(p);
   };
 
   return (
@@ -158,7 +171,12 @@ export function AllApplications() {
         {/* products grid */}
         <div className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {products.map((p) => (
-            <ProductCell key={p.id} product={p} onOpenCollab={handleOpenCollab} />
+            <ProductCell
+              key={p.id}
+              product={p}
+              onOpenCollab={handleOpenCollab}
+              onOpenDownloadCompanion={handleOpenDownloadCompanion}
+            />
           ))}
         </div>
       </div>
@@ -169,6 +187,24 @@ export function AllApplications() {
         accent={selectedProduct?.accent || "#10b981"}
         downloadApiPath={selectedProduct?.downloadUrl || "/api/download/gravity"}
         fileName={selectedProduct?.id === "domcode-llm" ? "DomcodeLLM-Setup.exe" : "Gravity_LLM_Portable.zip"}
+      />
+
+      <DownloadCompanionModal
+        isOpen={Boolean(downloadCompanionProduct)}
+        onClose={() => setDownloadCompanionProduct(null)}
+        productName={downloadCompanionProduct?.name || "Galaxy Vision"}
+        downloadUrl={downloadCompanionProduct?.downloadUrl || ""}
+        localBackupUrl={
+          downloadCompanionProduct?.id === "galaxy-vision"
+            ? "/downloads/Galaxy-Vision-v1.0.0-Standalone.zip"
+            : undefined
+        }
+        accent={downloadCompanionProduct?.accent || "#c084fc"}
+        fileName={
+          downloadCompanionProduct?.id === "galaxy-vision"
+            ? "Galaxy-Vision-v1.0.0-Standalone.zip"
+            : `${downloadCompanionProduct?.id}-standalone.zip`
+        }
       />
     </section>
   );

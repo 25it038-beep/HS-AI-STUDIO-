@@ -11,9 +11,11 @@ import { Reveal } from "@/components/ui/Reveal";
 import { MagneticButton } from "@/components/ui/MagneticButton";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { CollaboratorModal } from "@/components/CollaboratorModal";
+import { DownloadCompanionModal } from "@/components/DownloadCompanionModal";
 
 export function ProductDetailView({ product }: { product: ProductDetail }) {
   const [collabModalOpen, setCollabModalOpen] = useState(false);
+  const [downloadCompanionOpen, setDownloadCompanionOpen] = useState(false);
   const others = products.filter((p) => p.id !== product.id);
 
   return (
@@ -116,6 +118,11 @@ export function ProductDetailView({ product }: { product: ProductDetail }) {
                         external={product.downloadUrl.startsWith("http")}
                         lg
                         accent={product.accent}
+                        onClick={
+                          product.downloadUrl.startsWith("http")
+                            ? () => setDownloadCompanionOpen(true)
+                            : undefined
+                        }
                       >
                         {product.id === "electron" || product.id === "galaxy-vision"
                           ? "Download Standalone ZIP"
@@ -537,6 +544,25 @@ export function ProductDetailView({ product }: { product: ProductDetail }) {
         accent={product.accent}
         downloadApiPath={product.downloadUrl || "/api/download/gravity"}
         fileName={product.id === "domcode-llm" ? "DomcodeLLM-Setup.exe" : "Gravity_LLM_Portable.zip"}
+      />
+
+      {/* Download Companion & OS Alert Modal */}
+      <DownloadCompanionModal
+        isOpen={downloadCompanionOpen}
+        onClose={() => setDownloadCompanionOpen(false)}
+        productName={product.name}
+        downloadUrl={product.downloadUrl || ""}
+        localBackupUrl={
+          product.id === "galaxy-vision"
+            ? "/downloads/Galaxy-Vision-v1.0.0-Standalone.zip"
+            : undefined
+        }
+        accent={product.accent}
+        fileName={
+          product.id === "galaxy-vision"
+            ? "Galaxy-Vision-v1.0.0-Standalone.zip"
+            : `${product.id}-standalone.zip`
+        }
       />
     </div>
   );

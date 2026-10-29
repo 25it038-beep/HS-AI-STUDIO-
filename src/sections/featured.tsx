@@ -12,11 +12,13 @@ import { DomcodeLLMPreview } from "@/components/previews/DomcodeLLMPreview";
 import { GalaxyVisionPreview } from "@/components/previews/GalaxyVisionPreview";
 import { ElectronPreview } from "@/components/previews/ElectronPreview";
 import { CollaboratorModal } from "@/components/CollaboratorModal";
+import { DownloadCompanionModal } from "@/components/DownloadCompanionModal";
 import { triggerFullscreenExploreVideo } from "@/components/fullscreen-explore-video";
 
 export function Featured() {
   const [collabModalOpen, setCollabModalOpen] = useState(false);
   const [activeCollabProduct, setActiveCollabProduct] = useState<ProductDetail | null>(null);
+  const [downloadCompanionProduct, setDownloadCompanionProduct] = useState<ProductDetail | null>(null);
   const [downloadToast, setDownloadToast] = useState<{
     title: string;
     message: string;
@@ -279,11 +281,7 @@ export function Featured() {
                 lg
                 accent={galaxy.accent}
                 onClick={() => {
-                  setDownloadToast({
-                    title: "Galaxy Vision 1.0.0",
-                    message:
-                      "Redirected to Microsoft OneDrive in a new tab. Once your download starts, return right here to HS AI Solutions!",
-                  });
+                  setDownloadCompanionProduct(galaxy);
                 }}
               >
                 Download Standalone ZIP
@@ -371,6 +369,9 @@ export function Featured() {
                 external={true}
                 lg
                 accent={electron.accent}
+                onClick={() => {
+                  setDownloadCompanionProduct(electron);
+                }}
               >
                 Download Standalone ZIP
                 <DownloadIcon className="h-4 w-4" />
@@ -417,6 +418,27 @@ export function Featured() {
         accent={activeCollabProduct?.accent || gravity.accent}
         downloadApiPath={activeCollabProduct?.downloadUrl || "/api/download/gravity"}
         fileName={activeCollabProduct?.id === "domcode-llm" ? "DomcodeLLM-Setup.exe" : "Gravity_LLM_Portable.zip"}
+      />
+
+      <DownloadCompanionModal
+        isOpen={Boolean(downloadCompanionProduct)}
+        onClose={() => setDownloadCompanionProduct(null)}
+        productName={downloadCompanionProduct?.name || "Galaxy Vision"}
+        downloadUrl={
+          downloadCompanionProduct?.downloadUrl ||
+          "https://1drv.ms/u/c/A4DE4F83095B15B0/IQBxmNpxxijbRrZxRbr2j7i6AddHgte4YOJ7o-aURM3-nFk?e=v6QdYB"
+        }
+        localBackupUrl={
+          downloadCompanionProduct?.id === "galaxy-vision"
+            ? "/downloads/Galaxy-Vision-v1.0.0-Standalone.zip"
+            : undefined
+        }
+        accent={downloadCompanionProduct?.accent || "#c084fc"}
+        fileName={
+          downloadCompanionProduct?.id === "galaxy-vision"
+            ? "Galaxy-Vision-v1.0.0-Standalone.zip"
+            : "Electron-AI-Standalone.zip"
+        }
       />
 
       <Link href="/products/gravity-llm" className="sr-only">
