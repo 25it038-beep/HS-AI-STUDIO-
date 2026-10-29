@@ -17,6 +17,10 @@ import { triggerFullscreenExploreVideo } from "@/components/fullscreen-explore-v
 export function Featured() {
   const [collabModalOpen, setCollabModalOpen] = useState(false);
   const [activeCollabProduct, setActiveCollabProduct] = useState<ProductDetail | null>(null);
+  const [downloadToast, setDownloadToast] = useState<{
+    title: string;
+    message: string;
+  } | null>(null);
 
   const gravity = products.find((p) => p.id === "gravity-llm")!;
   const domcode = products.find((p) => p.id === "domcode-llm")!;
@@ -269,12 +273,18 @@ export function Featured() {
               <MagneticButton
                 href={
                   galaxy.downloadUrl ??
-                  "/downloads/Galaxy-Vision-v1.0.0-Standalone.zip"
+                  "https://1drv.ms/u/c/A4DE4F83095B15B0/IQBxmNpxxijbRrZxRbr2j7i6AddHgte4YOJ7o-aURM3-nFk?e=v6QdYB"
                 }
-                download="Galaxy-Vision-v1.0.0-Standalone.zip"
-                external={false}
+                external={true}
                 lg
                 accent={galaxy.accent}
+                onClick={() => {
+                  setDownloadToast({
+                    title: "Galaxy Vision 1.0.0",
+                    message:
+                      "Redirected to Microsoft OneDrive in a new tab. Once your download starts, return right here to HS AI Solutions!",
+                  });
+                }}
               >
                 Download Standalone ZIP
                 <DownloadIcon className="h-4 w-4" />
@@ -421,6 +431,46 @@ export function Featured() {
       <Link href="/products/electron" className="sr-only">
         View Electron AI details
       </Link>
+
+      {downloadToast && (
+        <aside
+          aria-label="Download Status"
+          className="fixed bottom-6 right-6 z-50 max-w-md animate-in fade-in slide-in-from-bottom-4 duration-300"
+        >
+          <div className="rounded-2xl border border-purple-500/30 bg-ink/95 p-5 shadow-2xl backdrop-blur-xl">
+            <div className="flex items-start justify-between gap-3">
+              <div>
+                <span className="inline-block rounded-full border border-purple-400/40 bg-purple-950/40 px-2.5 py-0.5 text-[11px] font-semibold text-purple-300">
+                  {downloadToast.title}
+                </span>
+                <p className="mt-2 text-[13.5px] leading-relaxed text-white/90">
+                  {downloadToast.message}
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setDownloadToast(null)}
+                className="rounded-full p-1 text-white/40 hover:text-white"
+                aria-label="Close notification"
+              >
+                ✕
+              </button>
+            </div>
+            <div className="mt-3 flex items-center justify-between border-t border-white/10 pt-3">
+              <span className="text-[11.5px] text-white/50">
+                You are on HS AI Solutions
+              </span>
+              <button
+                type="button"
+                onClick={() => setDownloadToast(null)}
+                className="text-[12px] font-semibold text-purple-400 hover:text-purple-300"
+              >
+                Return & Continue →
+              </button>
+            </div>
+          </div>
+        </aside>
+      )}
     </section>
   );
 }
