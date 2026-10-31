@@ -48,17 +48,22 @@ export function Footer() {
               <p className="eyebrow text-muted-dark">Studio</p>
               <ul className="mt-4 space-y-2.5 text-sm text-white/70">
                 <li>
-                  <a className="transition-colors hover:text-white" href="#about">
+                  <Link className="transition-colors hover:text-emerald-300 font-medium text-emerald-400" href="/ascii">
+                    ASCII Arcade &amp; Shell
+                  </Link>
+                </li>
+                <li>
+                  <a className="transition-colors hover:text-white" href="/#about">
                     About
                   </a>
                 </li>
                 <li>
-                  <a className="transition-colors hover:text-white" href="#technology">
+                  <a className="transition-colors hover:text-white" href="/#technology">
                     Technology
                   </a>
                 </li>
                 <li>
-                  <a className="transition-colors hover:text-white" href="#building">
+                  <a className="transition-colors hover:text-white" href="/#building">
                     Building in public
                   </a>
                 </li>
