@@ -11,11 +11,10 @@ const PORTFOLIO_URL =
   "https://hs-prot-z1ti-qtj2izn1p-harshanseliyan28-1638s-projects.vercel.app/";
 
 const LINKS = [
-  { href: "/#home", label: "Home" },
-  { href: "/#products", label: "Products" },
-  { href: "/ascii", label: "ASCII Arcade" },
-  { href: "/#about", label: "About" },
-  { href: "/#projects", label: "Projects" },
+  { href: "#home", label: "Home" },
+  { href: "#products", label: "Products" },
+  { href: "#about", label: "About" },
+  { href: "#projects", label: "Projects" },
   { href: PORTFOLIO_URL, label: "Portfolio", external: true },
 ];
 
