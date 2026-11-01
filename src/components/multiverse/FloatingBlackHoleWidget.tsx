@@ -18,7 +18,7 @@ export function FloatingBlackHoleWidget() {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const size = 96;
+    const size = 100;
     const renderer = new THREE.WebGLRenderer({
       canvas,
       antialias: true,
@@ -44,8 +44,14 @@ export function FloatingBlackHoleWidget() {
       const time = clock.getElapsedTime();
 
       // Faster rotation when hovered
-      const speedMult = isHovered ? 1.5 : 0.6;
-      blackHole.update(time * speedMult, delta, isHovered ? 0.5 : 0.0, mouseRef.current.x, mouseRef.current.y);
+      const speedMult = isHovered ? 1.6 : 0.65;
+      blackHole.update(
+        time * speedMult,
+        delta,
+        isHovered ? 0.6 : 0.0,
+        mouseRef.current.x,
+        mouseRef.current.y
+      );
 
       renderer.render(scene, camera);
     };
@@ -63,7 +69,7 @@ export function FloatingBlackHoleWidget() {
     e.stopPropagation();
     if (phase !== "idle") return;
 
-    let origin = { x: window.innerWidth - 64, y: window.innerHeight - 120 };
+    let origin = { x: window.innerWidth - 64, y: window.innerHeight / 2 };
     if (widgetRef.current) {
       const rect = widgetRef.current.getBoundingClientRect();
       origin = {
@@ -75,7 +81,7 @@ export function FloatingBlackHoleWidget() {
   };
 
   // Only render if we are in idle or starting sequence
-  if (phase === "dimension" || phase === "wormhole" || phase === "warping") {
+  if (phase === "universe" || phase === "wormhole") {
     return null;
   }
 
@@ -86,30 +92,34 @@ export function FloatingBlackHoleWidget() {
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      {/* Expanded Floating Label / Action Pill */}
+      {/* Subtle Always-Visible / Expandable Label: EXPLORE THE COSMOS */}
       <AnimatePresence>
-        {isHovered && phase === "idle" && (
+        {phase === "idle" && (
           <motion.button
             type="button"
             onClick={handleTrigger}
-            initial={{ opacity: 0, x: 20, scale: 0.95 }}
-            animate={{ opacity: 1, x: 0, scale: 1 }}
-            exit={{ opacity: 0, x: 15, scale: 0.95 }}
-            transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
-            className="group hidden sm:flex items-center gap-3 rounded-full border border-amber-400/50 bg-[#09080e]/95 py-2.5 pl-4 pr-3.5 text-left shadow-2xl shadow-amber-950/40 backdrop-blur-xl transition-all hover:border-amber-400 hover:shadow-amber-500/25 active:scale-95"
+            initial={{ opacity: 0, x: 15 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: 15 }}
+            transition={{ duration: 0.3 }}
+            className={`group flex items-center gap-2.5 rounded-full border border-amber-400/40 bg-[#09080e]/90 py-2 pl-3.5 pr-3 shadow-xl shadow-amber-950/30 backdrop-blur-xl transition-all hover:border-amber-400 hover:shadow-amber-500/25 active:scale-95 ${
+              isHovered ? "border-amber-400/80 bg-[#12101e]" : "border-amber-400/30"
+            }`}
           >
-            <div className="flex flex-col">
-              <span className="flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-widest text-amber-300">
+            <div className="flex flex-col text-left">
+              <span className="flex items-center gap-1.5 font-mono text-[9px] uppercase tracking-widest text-amber-300/80">
                 <span className="h-1.5 w-1.5 rounded-full bg-amber-400 animate-ping" />
-                Gravitational Singularity
+                HS COSMIC PORTAL
               </span>
-              <span className="font-display text-xs font-bold tracking-wider text-white group-hover:text-amber-200">
-                Suck Studio into Multiverse <span className="text-amber-400 inline-block transition-transform group-hover:translate-x-1">✦</span>
+              <span className="font-display text-[11.5px] font-bold tracking-wider text-white group-hover:text-amber-200 uppercase">
+                Explore the Cosmos <span className="text-amber-400 inline-block transition-transform group-hover:translate-x-1">✦</span>
               </span>
             </div>
-            <span className="rounded bg-amber-400/20 px-2 py-1 text-[10px] font-mono font-bold text-amber-300">
-              CONSUME
-            </span>
+            {isHovered && (
+              <span className="hidden sm:inline-block rounded bg-amber-400/20 px-2 py-0.5 text-[9px] font-mono font-bold text-amber-300">
+                ENTER
+              </span>
+            )}
           </motion.button>
         )}
       </AnimatePresence>
@@ -120,7 +130,7 @@ export function FloatingBlackHoleWidget() {
         onClick={handleTrigger}
         initial={{ scale: 0, opacity: 0 }}
         animate={{
-          scale: phase === "awakening" ? 1.3 : (phase === "collapse" ? 2.2 : 1),
+          scale: phase === "awakening" ? 1.3 : (phase === "collapse" ? 2.4 : 1),
           opacity: 1,
         }}
         transition={{
@@ -128,15 +138,15 @@ export function FloatingBlackHoleWidget() {
           default: { type: "spring", stiffness: 260, damping: 20 },
         }}
         className="group relative flex h-16 w-16 sm:h-20 sm:w-20 items-center justify-center rounded-full p-[2px] transition-all duration-300 hover:scale-110 active:scale-95 cursor-pointer"
-        aria-label="Activate Black Hole Singularity to suck studio into multiverse"
-        title="Black Hole Singularity — Click to suck studio elements into multiverse"
+        aria-label="Explore the Cosmos — Activate Black Hole Singularity to consume website into multiverse"
+        title="HS Cosmic Portal — Click to consume website and explore the cosmos"
       >
         {/* Pulsing gravitational horizon aura */}
-        <span className="absolute -inset-2 rounded-full bg-amber-500/20 blur-md animate-pulse pointer-events-none" />
+        <span className="absolute -inset-2 rounded-full bg-amber-500/25 blur-md animate-pulse pointer-events-none" />
         <span className="absolute -inset-1 rounded-full bg-gradient-to-tr from-amber-500/40 via-purple-600/20 to-black blur-sm pointer-events-none" />
 
         {/* Outer glowing border ring */}
-        <div className="relative flex h-full w-full items-center justify-center rounded-full border border-amber-400/40 bg-black/90 shadow-2xl shadow-amber-500/30 overflow-hidden">
+        <div className="relative flex h-full w-full items-center justify-center rounded-full border border-amber-400/50 bg-black/95 shadow-2xl shadow-amber-500/35 overflow-hidden">
           {/* Miniature 3D Black Hole WebGL Canvas */}
           <canvas
             ref={canvasRef}
@@ -145,7 +155,7 @@ export function FloatingBlackHoleWidget() {
           />
 
           {/* Central event horizon shadow gradient */}
-          <div className="pointer-events-none absolute inset-0 rounded-full shadow-[inset_0_0_12px_rgba(0,0,0,0.95)]" />
+          <div className="pointer-events-none absolute inset-0 rounded-full shadow-[inset_0_0_14px_rgba(0,0,0,0.98)]" />
         </div>
 
         {/* Status Indicator Dot */}

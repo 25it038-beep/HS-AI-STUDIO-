@@ -5,16 +5,13 @@ import * as THREE from "three";
 import { useMultiverse } from "./MultiverseContext";
 import { BlackHoleEngine } from "./black-hole-engine";
 import { WormholeEngine } from "./wormhole-engine";
-import { DimensionSceneBuilder, DIMENSIONS } from "./world-generator";
+import { CosmicUniverseEngine, CelestialObjectData } from "./cosmic-universe-engine";
 
 export function MultiverseExperience() {
   const {
     phase,
-    currentDimensionIndex,
-    currentDimension,
     audioEnabled,
     exitUniverse,
-    warpToNextDimension,
     toggleAudio,
     toggleFullscreen,
   } = useMultiverse();
@@ -22,26 +19,30 @@ export function MultiverseExperience() {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
-  // HUD visibility state
+  // Selected celestial object state
+  const [selectedObject, setSelectedObject] = useState<CelestialObjectData | null>(null);
+  const [activeCategory, setActiveCategory] = useState<string>("Explore Universe");
   const [hudVisible, setHudVisible] = useState(true);
   const hudTimerRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Live speed counter state for display
-  const [speedMetric, setSpeedMetric] = useState("84.2 c");
+  // Camera target controls for smooth fly-to
+  const cameraTargetPos = useRef<THREE.Vector3 | null>(null);
+  const cameraLookTarget = useRef<THREE.Vector3 | null>(null);
 
-  // Mouse kinematics
-  const mouseRef = useRef({ x: 0, y: 0, targetX: 0, targetY: 0 });
+  // Mouse kinematics & orbit drag controls
+  const isDragging = useRef(false);
+  const prevPointer = useRef({ x: 0, y: 0 });
+  const orbitAngle = useRef({ theta: 0, phi: Math.PI * 0.45, radius: 55 });
+  const mouseInertia = useRef({ x: 0, y: 0 });
 
+  // Auto-hide HUD on cursor inactivity
   useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      mouseRef.current.targetX = (e.clientX / window.innerWidth) * 2 - 1;
-      mouseRef.current.targetY = -(e.clientY / window.innerHeight) * 2 + 1;
-
+    const handleMouseMove = () => {
       setHudVisible(true);
       if (hudTimerRef.current) clearTimeout(hudTimerRef.current);
       hudTimerRef.current = setTimeout(() => {
         setHudVisible(false);
-      }, 4500);
+      }, 5000);
     };
 
     window.addEventListener("mousemove", handleMouseMove);
@@ -50,17 +51,6 @@ export function MultiverseExperience() {
       if (hudTimerRef.current) clearTimeout(hudTimerRef.current);
     };
   }, []);
-
-  // Speedometer fluctuation
-  useEffect(() => {
-    if (phase !== "dimension" && phase !== "warping") return;
-    const interval = setInterval(() => {
-      const base = phase === "warping" ? 380 : 80;
-      const val = (base + Math.random() * 45).toFixed(1);
-      setSpeedMetric(`${val} c`);
-    }, 120);
-    return () => clearInterval(interval);
-  }, [phase]);
 
   // Three.js Lifecycle
   useEffect(() => {
@@ -81,39 +71,85 @@ export function MultiverseExperience() {
 
     // Scene & Camera
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(65, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 2000);
     camera.position.set(0, 0, 32);
 
-    // Background starfield
-    const starCount = 2400;
-    const starGeo = new THREE.BufferGeometry();
-    const starPos = new Float32Array(starCount * 3);
-    for (let i = 0; i < starCount; i++) {
-      starPos[i * 3] = (Math.random() - 0.5) * 600;
-      starPos[i * 3 + 1] = (Math.random() - 0.5) * 600;
-      starPos[i * 3 + 2] = (Math.random() - 0.5) * 600;
-    }
-    starGeo.setAttribute("position", new THREE.BufferAttribute(starPos, 3));
-    const starMat = new THREE.PointsMaterial({
-      size: 1.2,
-      color: 0xffffff,
-      transparent: true,
-      opacity: 0.75,
-    });
-    const starField = new THREE.Points(starGeo, starMat);
-    scene.add(starField);
-
-    // Engines
+    // 1. Black Hole Engine (Phase 1, 2, 3)
     const blackHole = new BlackHoleEngine();
-    const wormhole = new WormholeEngine();
     scene.add(blackHole.group);
+
+    // 2. 3D Cylindrical Wormhole Engine (Phase 4 & 6)
+    const wormhole = new WormholeEngine();
     scene.add(wormhole.group);
 
-    // Active Dimension objects
-    let activeDimScene: {
-      cleanup: () => void;
-      animate: (time: number, delta: number) => void;
-    } | null = null;
+    // 3. Massive Interactive Cosmic Universe (Phase 5)
+    const cosmicUniverse = new CosmicUniverseEngine();
+    scene.add(cosmicUniverse.group);
+
+    // Raycaster for celestial object picking
+    const raycaster = new THREE.Raycaster();
+    const mouseVector = new THREE.Vector2();
+
+    // Default selection
+    if (cosmicUniverse.celestialObjects.length > 0) {
+      setSelectedObject(cosmicUniverse.celestialObjects[0]);
+    }
+
+    // Pointer event listeners for orbit & selection
+    const handlePointerDown = (e: MouseEvent) => {
+      isDragging.current = true;
+      prevPointer.current = { x: e.clientX, y: e.clientY };
+
+      // Raycast check in Universe phase
+      if (phase === "universe") {
+        mouseVector.x = (e.clientX / window.innerWidth) * 2 - 1;
+        mouseVector.y = -(e.clientY / window.innerHeight) * 2 + 1;
+        raycaster.setFromCamera(mouseVector, camera);
+
+        const intersects = raycaster.intersectObjects(cosmicUniverse.interactiveMeshes, true);
+        if (intersects.length > 0) {
+          const hit = intersects[0].object;
+          const hitId = hit.userData?.id;
+          const found = cosmicUniverse.celestialObjects.find((o) => o.id === hitId);
+          if (found) {
+            setSelectedObject(found);
+            cameraTargetPos.current = found.targetCameraPos.clone();
+            cameraLookTarget.current = found.position.clone();
+          }
+        }
+      }
+    };
+
+    const handlePointerMove = (e: MouseEvent) => {
+      mouseInertia.current.x = (e.clientX / window.innerWidth) * 2 - 1;
+      mouseInertia.current.y = -(e.clientY / window.innerHeight) * 2 + 1;
+
+      if (!isDragging.current || phase !== "universe") return;
+      const dx = e.clientX - prevPointer.current.x;
+      const dy = e.clientY - prevPointer.current.y;
+      prevPointer.current = { x: e.clientX, y: e.clientY };
+
+      orbitAngle.current.theta -= dx * 0.005;
+      orbitAngle.current.phi = Math.max(0.1, Math.min(Math.PI - 0.1, orbitAngle.current.phi - dy * 0.005));
+
+      // Clear lock target on manual drag
+      cameraTargetPos.current = null;
+    };
+
+    const handlePointerUp = () => {
+      isDragging.current = false;
+    };
+
+    const handleWheel = (e: WheelEvent) => {
+      if (phase !== "universe") return;
+      orbitAngle.current.radius = Math.max(12, Math.min(180, orbitAngle.current.radius + e.deltaY * 0.05));
+      cameraTargetPos.current = null;
+    };
+
+    window.addEventListener("mousedown", handlePointerDown);
+    window.addEventListener("mousemove", handlePointerMove);
+    window.addEventListener("mouseup", handlePointerUp);
+    window.addEventListener("wheel", handleWheel, { passive: true });
 
     let animId: number;
     let clock = new THREE.Clock();
@@ -123,78 +159,73 @@ export function MultiverseExperience() {
       const delta = clock.getDelta();
       const time = clock.getElapsedTime();
 
-      // Smooth mouse inertia
-      mouseRef.current.x += (mouseRef.current.targetX - mouseRef.current.x) * 0.05;
-      mouseRef.current.y += (mouseRef.current.targetY - mouseRef.current.y) * 0.05;
-
-      const mx = mouseRef.current.x;
-      const my = mouseRef.current.y;
-
-      // Phase handling
+      // Render depending on phase
       if (phase === "awakening") {
         blackHole.group.visible = true;
         wormhole.group.visible = false;
-        blackHole.update(time, delta, 0.6, mx, my);
-        camera.position.z = 32 - time * 3.0;
+        cosmicUniverse.group.visible = false;
+
+        blackHole.update(time, delta, 0.5, mouseInertia.current.x, mouseInertia.current.y);
+        camera.position.z = 32 - time * 2.0;
         camera.lookAt(0, 0, 0);
       } else if (phase === "collapse") {
         blackHole.group.visible = true;
         wormhole.group.visible = false;
-        blackHole.update(time, delta, 1.4, mx, my);
-        // Approach event horizon rapidly
-        camera.position.z = Math.max(5.5, 30.0 - time * 11.0);
+        cosmicUniverse.group.visible = false;
+
+        blackHole.update(time, delta, 1.8, mouseInertia.current.x, mouseInertia.current.y);
+        // Camera plunges into event horizon
+        camera.position.z = Math.max(5.2, 30.0 - time * 12.0);
         camera.lookAt(0, 0, 0);
       } else if (phase === "horizon" || phase === "singularity") {
         blackHole.group.visible = true;
         wormhole.group.visible = false;
-        blackHole.update(time, delta, 2.5, mx, my);
-        camera.position.z = 5.0;
-      } else if (phase === "wormhole" || phase === "warping" || phase === "returning") {
+        cosmicUniverse.group.visible = false;
+
+        blackHole.update(time, delta, 3.0, mouseInertia.current.x, mouseInertia.current.y);
+        camera.position.z = 4.8;
+      } else if (phase === "wormhole" || phase === "returning") {
         blackHole.group.visible = false;
         wormhole.group.visible = true;
-        if (activeDimScene) {
-          activeDimScene.cleanup();
-          activeDimScene = null;
-        }
+        cosmicUniverse.group.visible = false;
 
-        const isWarping = phase === "warping";
         const isReturning = phase === "returning";
-        const speed = isWarping ? 4.2 : (isReturning ? -2.8 : 2.2);
+        const speed = isReturning ? -3.0 : 2.5;
 
         wormhole.update(time, delta, speed);
-
-        // High-speed camera shake & wider hyperspace FOV
-        if (isWarping) {
-          camera.fov = 88;
-          const shakeX = (Math.random() - 0.5) * 1.5;
-          const shakeY = (Math.random() - 0.5) * 1.5;
-          camera.position.set(mx * 2 + shakeX, my * 2 + shakeY, 0);
-        } else {
-          camera.fov = 70;
-          camera.position.set(mx * 1.5, my * 1.5, 0);
-        }
+        camera.fov = 75;
         camera.updateProjectionMatrix();
-        camera.lookAt(mx * 0.5, my * 0.5, -40);
-      } else if (phase === "dimension") {
+        camera.position.set(mouseInertia.current.x * 1.8, mouseInertia.current.y * 1.8, 0);
+        camera.lookAt(mouseInertia.current.x * 0.6, mouseInertia.current.y * 0.6, -45);
+      } else if (phase === "universe") {
         blackHole.group.visible = false;
         wormhole.group.visible = false;
+        cosmicUniverse.group.visible = true;
 
-        camera.fov = 65;
+        cosmicUniverse.update(time, delta);
+        camera.fov = 60;
         camera.updateProjectionMatrix();
 
-        if (!activeDimScene) {
-          activeDimScene = DimensionSceneBuilder.buildDimension(currentDimensionIndex, scene);
+        // Camera flight to selected celestial target OR free orbit
+        if (cameraTargetPos.current && cameraLookTarget.current) {
+          camera.position.lerp(cameraTargetPos.current, 0.04);
+          camera.lookAt(cameraLookTarget.current);
+        } else {
+          // Free spherical orbit camera
+          const r = orbitAngle.current.radius;
+          const th = orbitAngle.current.theta;
+          const ph = orbitAngle.current.phi;
+
+          const targetX = r * Math.sin(ph) * Math.sin(th);
+          const targetY = r * Math.cos(ph);
+          const targetZ = r * Math.sin(ph) * Math.cos(th);
+
+          camera.position.x += (targetX - camera.position.x) * 0.08;
+          camera.position.y += (targetY - camera.position.y) * 0.08;
+          camera.position.z += (targetZ - camera.position.z) * 0.08;
+
+          camera.lookAt(0, 0, -20);
         }
-
-        activeDimScene.animate(time, delta);
-
-        // Rapid 3D roller-coaster trajectory with dynamic banking & zoom!
-        const speedTime = time * 2.2;
-        camera.position.x = Math.sin(speedTime * 0.8) * 16 + mx * 8;
-        camera.position.y = Math.cos(speedTime * 0.6) * 10 + my * 6;
-        camera.position.z = 30 + Math.sin(speedTime * 0.4) * 16;
-        camera.rotation.z = Math.sin(speedTime * 0.7) * 0.28; // Dynamic roll angle!
-        camera.lookAt(mx * 2, my * 2, -10);
       }
 
       renderer.render(scene, camera);
@@ -212,15 +243,40 @@ export function MultiverseExperience() {
 
     return () => {
       cancelAnimationFrame(animId);
+      window.removeEventListener("mousedown", handlePointerDown);
+      window.removeEventListener("mousemove", handlePointerMove);
+      window.removeEventListener("mouseup", handlePointerUp);
+      window.removeEventListener("wheel", handleWheel);
       window.removeEventListener("resize", handleResize);
-      if (activeDimScene) activeDimScene.cleanup();
+
       blackHole.dispose();
       wormhole.dispose();
-      starGeo.dispose();
-      starMat.dispose();
+      cosmicUniverse.dispose();
       renderer.dispose();
     };
-  }, [phase, currentDimensionIndex]);
+  }, [phase]);
+
+  // Handler for category filtering in Cosmic Explorer
+  const handleSelectCategory = (cat: string) => {
+    setActiveCategory(cat);
+    if (!canvasRef.current) return;
+
+    // Filter to an object in that category
+    const found =
+      cat === "Explore Universe"
+        ? (window as unknown as { _cosmicEngine?: CosmicUniverseEngine })._cosmicEngine?.celestialObjects[0]
+        : (window as unknown as { _cosmicEngine?: CosmicUniverseEngine })._cosmicEngine?.celestialObjects.find(
+            (o) => o.category === cat || o.name.toLowerCase().includes(cat.toLowerCase())
+          );
+
+    if (found) {
+      setSelectedObject(found);
+      cameraTargetPos.current = found.targetCameraPos.clone();
+      cameraLookTarget.current = found.position.clone();
+    } else {
+      cameraTargetPos.current = null;
+    }
+  };
 
   if (phase === "idle") return null;
 
@@ -230,7 +286,7 @@ export function MultiverseExperience() {
       className="fixed inset-0 z-[99999] overflow-hidden bg-black select-none"
     >
       {/* 3D WebGL Canvas */}
-      <canvas ref={canvasRef} className="absolute inset-0 h-full w-full block" />
+      <canvas ref={canvasRef} className="absolute inset-0 h-full w-full block cursor-grab active:cursor-grabbing" />
 
       {/* Relativistic Flash Overlay for Event Horizon Phase */}
       <div
@@ -239,60 +295,60 @@ export function MultiverseExperience() {
         }`}
       />
 
-      {/* Lightning Warp Burst Flash during high-speed transitions */}
-      <div
-        className={`pointer-events-none absolute inset-0 bg-gradient-to-r from-amber-400/25 via-white/40 to-cyan-400/25 transition-opacity duration-300 ${
-          phase === "warping" ? "opacity-75" : "opacity-0"
-        }`}
-      />
-
-      {/* Momentary Total Void Singularity */}
+      {/* Singularity Void Darkness */}
       <div
         className={`pointer-events-none absolute inset-0 bg-black transition-opacity duration-300 ${
           phase === "singularity" ? "opacity-100" : "opacity-0"
         }`}
       />
 
-      {/* Multiverse Autonomous HUD (reveals in Dimension and Warping phase) */}
-      {(phase === "dimension" || phase === "warping") && (
+      {/* Phase 5: Massive Interactive Cosmic Universe HUD */}
+      {phase === "universe" && (
         <div
           className={`pointer-events-none absolute inset-0 flex flex-col justify-between p-5 sm:p-8 transition-opacity duration-500 ${
-            hudVisible ? "opacity-100" : "opacity-30 hover:opacity-100"
+            hudVisible ? "opacity-100" : "opacity-25 hover:opacity-100"
           }`}
         >
-          {/* Top Bar: Automated Tour Tracker & Speedometer */}
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-            {/* Brand + Tour Indicator */}
+          {/* Top Bar: Brand, Category Navigation & Return Button */}
+          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+            {/* Brand + Cosmic Explorer Title */}
             <div className="pointer-events-auto flex items-center gap-3">
-              <span className="flex h-8 w-8 items-center justify-center rounded-lg border border-amber-400/40 bg-zinc-950/80 font-mono text-xs font-bold text-amber-300 shadow-lg shadow-amber-500/10 backdrop-blur-md">
+              <span className="flex h-8 w-8 items-center justify-center rounded-lg border border-amber-400/40 bg-zinc-950/90 font-mono text-xs font-bold text-amber-300 shadow-lg shadow-amber-500/10 backdrop-blur-md">
                 HS
               </span>
               <div>
-                <div className="flex items-center gap-2">
-                  <span className="font-display text-sm font-semibold tracking-[0.2em] text-white">
-                    HS INFINITE
-                  </span>
-                  <span className="rounded bg-amber-400/20 px-2 py-0.5 text-[9px] font-mono font-bold text-amber-300 animate-pulse">
-                    AUTOMATIC HYPERSPEED TOUR
-                  </span>
+                <div className="font-display text-sm font-semibold tracking-[0.2em] text-white">
+                  HS COSMIC PORTAL
                 </div>
                 <div className="font-mono text-[10px] tracking-widest text-amber-300/80 uppercase">
-                  WORLD {currentDimensionIndex + 1} OF {DIMENSIONS.length} · {currentDimension.title}
+                  Interactive Deep-Space Exploration
                 </div>
               </div>
             </div>
 
-            {/* Live Speedometer & Controls */}
-            <div className="pointer-events-auto flex items-center gap-2.5">
-              {/* Relativistic Velocity Metric */}
-              <div className="hidden md:flex items-center gap-2 rounded-full border border-amber-400/30 bg-black/70 px-4 py-1.5 font-mono text-xs text-amber-300 backdrop-blur-md">
-                <span className="h-1.5 w-1.5 rounded-full bg-amber-400 animate-ping" />
-                <span className="text-white/50">SPEED:</span>
-                <span className="font-bold">{speedMetric}</span>
-                <span className="text-white/40">·</span>
-                <span className="text-amber-400 font-semibold">WARP 9.92</span>
-              </div>
+            {/* Navigation Categories: COSMIC EXPLORER */}
+            <div className="pointer-events-auto flex flex-wrap items-center rounded-full border border-white/12 bg-black/75 p-1 backdrop-blur-xl shadow-2xl">
+              <span className="px-3 font-mono text-[10px] font-bold uppercase tracking-wider text-amber-400">
+                COSMIC EXPLORER:
+              </span>
+              {["Explore Universe", "Galaxies", "Nebulae", "Black Holes", "Pulsars", "Star Systems"].map((cat) => (
+                <button
+                  key={cat}
+                  type="button"
+                  onClick={() => handleSelectCategory(cat)}
+                  className={`rounded-full px-3 py-1 font-mono text-xs transition-all ${
+                    activeCategory === cat
+                      ? "bg-amber-500/25 text-amber-300 font-semibold shadow"
+                      : "text-white/60 hover:text-white"
+                  }`}
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
 
+            {/* Right Controls: Audio, Fullscreen & Return to HS AI Solutions */}
+            <div className="pointer-events-auto flex items-center gap-2.5">
               <button
                 type="button"
                 onClick={toggleAudio}
@@ -311,121 +367,103 @@ export function MultiverseExperience() {
                 <span>⛶</span>
               </button>
 
+              {/* Phase 6 Return Button */}
               <button
                 type="button"
                 onClick={exitUniverse}
-                className="inline-flex h-9 items-center gap-2 rounded-full border border-red-500/40 bg-red-950/30 px-4 text-xs font-mono font-bold uppercase tracking-wider text-red-300 backdrop-blur-md transition-all hover:border-red-400 hover:bg-red-900/50 hover:text-white shadow-lg shadow-red-950/30"
+                className="group relative inline-flex h-9 items-center gap-2 rounded-full border border-amber-400/60 bg-gradient-to-r from-amber-500/20 via-zinc-900 to-amber-950/40 px-4 font-mono text-xs font-bold uppercase tracking-wider text-amber-200 shadow-xl shadow-amber-500/20 backdrop-blur-md transition-all hover:scale-105 hover:border-amber-300 hover:shadow-amber-500/40"
               >
-                <span>✕ RETURN TO STUDIO</span>
+                <span className="h-1.5 w-1.5 rounded-full bg-amber-400 animate-ping" />
+                <span>Return to HS AI Solutions</span>
+                <span className="text-amber-400 transition-transform group-hover:translate-x-0.5">
+                  ↩
+                </span>
               </button>
             </div>
           </div>
 
-          {/* Segmented Multiverse Progress Bar across the top center */}
-          <div className="pointer-events-auto w-full max-w-2xl mx-auto my-2">
-            <div className="grid grid-cols-8 gap-1.5 sm:gap-2">
-              {DIMENSIONS.map((dim, idx) => {
-                const isPassed = idx < currentDimensionIndex;
-                const isActive = idx === currentDimensionIndex;
-                return (
-                  <div key={dim.id} className="flex flex-col gap-1">
-                    <div
-                      className={`h-1.5 rounded-full transition-all duration-500 ${
-                        isActive
-                          ? "bg-amber-400 shadow-md shadow-amber-400/80 animate-pulse"
-                          : isPassed
-                          ? "bg-cyan-400/90 shadow-sm shadow-cyan-400/40"
-                          : "bg-white/15"
-                      }`}
-                    />
-                    <span className="hidden sm:inline text-center font-mono text-[9px] text-white/40">
-                      W0{idx + 1}
+          {/* Bottom Bar: Selected Celestial Object Details & Exploration Controls */}
+          <div className="flex flex-col sm:flex-row items-end justify-between gap-6">
+            {/* Celestial Object Dossier Card */}
+            {selectedObject ? (
+              <div className="pointer-events-auto max-w-lg rounded-2xl border border-white/12 bg-black/85 p-5 shadow-2xl backdrop-blur-xl">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="h-2 w-2 rounded-full bg-amber-400 animate-ping" />
+                    <span className="font-mono text-[10px] uppercase tracking-widest text-amber-300">
+                      {selectedObject.category} · {selectedObject.spectralClass}
                     </span>
                   </div>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Bottom Bar: World Information & Manual Warp Override */}
-          <div className="flex flex-col md:flex-row items-end justify-between gap-4 sm:gap-6">
-            {/* World Specs Panel */}
-            <div className="pointer-events-auto max-w-lg rounded-2xl border border-white/10 bg-black/80 p-4 sm:p-5 shadow-2xl backdrop-blur-xl">
-              <div className="flex items-center gap-2">
-                <span className="h-2 w-2 rounded-full bg-amber-400 animate-ping" />
-                <span className="font-mono text-[10px] uppercase tracking-widest text-amber-300">
-                  {currentDimension.subtitle}
-                </span>
-              </div>
-
-              <h2 className="mt-1 font-display text-2xl sm:text-3xl font-bold tracking-tight text-white">
-                {currentDimension.title}
-              </h2>
-
-              <p className="mt-1.5 text-xs text-white/70 leading-relaxed line-clamp-2 sm:line-clamp-none">
-                {currentDimension.description}
-              </p>
-
-              {/* Physical Metrics Grid */}
-              <div className="mt-3 grid grid-cols-2 gap-2 border-t border-white/10 pt-2 text-[10px] sm:text-[11px] font-mono text-white/60">
-                <div>
-                  <span className="text-white/40">GRAVITY:</span> {currentDimension.metrics.gravitationalConstant}
+                  <span className="rounded bg-white/10 px-2 py-0.5 font-mono text-[9px] text-white/50">
+                    CLICK TO FOCUS
+                  </span>
                 </div>
-                <div>
-                  <span className="text-white/40">VELOCITY:</span> {currentDimension.metrics.relativisticBeta}
-                </div>
-                <div>
-                  <span className="text-white/40">CURVATURE:</span> {currentDimension.metrics.curvatureTensor}
-                </div>
-                <div>
-                  <span className="text-white/40">ENTROPY:</span> {currentDimension.metrics.entropyIndex}
+
+                <h2 className="mt-2 font-display text-2xl font-bold tracking-tight text-white">
+                  {selectedObject.name}
+                </h2>
+
+                <p className="mt-2 text-xs text-white/70 leading-relaxed">
+                  {selectedObject.description}
+                </p>
+
+                {/* Physical Astrophysics Metrics */}
+                <div className="mt-3 grid grid-cols-2 gap-2 border-t border-white/10 pt-2.5 text-[10.5px] font-mono text-white/60">
+                  <div>
+                    <span className="text-white/40">DISTANCE:</span> {selectedObject.distance}
+                  </div>
+                  <div>
+                    <span className="text-white/40">MASS:</span> {selectedObject.mass}
+                  </div>
+                  <div>
+                    <span className="text-white/40">TEMP:</span> {selectedObject.temperature}
+                  </div>
+                  <div>
+                    <span className="text-white/40">COORDS:</span> {selectedObject.coordinates}
+                  </div>
                 </div>
               </div>
-            </div>
+            ) : (
+              <div className="pointer-events-auto rounded-2xl border border-white/10 bg-black/75 p-4 text-xs font-mono text-white/60 backdrop-blur-md">
+                Click any celestial object (galaxy, nebula, pulsar, black hole) in 3D to inspect.
+              </div>
+            )}
 
-            {/* Quick Skip Button */}
-            <div className="pointer-events-auto flex items-center gap-3">
-              <button
-                type="button"
-                onClick={warpToNextDimension}
-                className="group inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-5 py-2.5 font-mono text-xs font-semibold text-white/90 backdrop-blur-md transition-all hover:border-amber-400/60 hover:bg-amber-500/10 hover:text-white active:scale-95"
-              >
-                <span>SKIP TO NEXT WORLD</span>
-                <span className="text-amber-400 transition-transform group-hover:translate-x-1">
-                  ❯
-                </span>
-              </button>
+            {/* Quick Navigation Help Overlay */}
+            <div className="pointer-events-auto flex flex-col items-end gap-1.5 text-right font-mono text-[10px] text-white/50">
+              <div>DRAG TO ORBIT CAMERA · SCROLL TO ZOOM IN/OUT</div>
+              <div className="text-amber-400/80">CLICK CELESTIAL MESH TO FLY-TO TARGET</div>
             </div>
           </div>
         </div>
       )}
 
-      {/* Wormhole Hyperspace Travel Indicator */}
-      {(phase === "wormhole" || phase === "warping") && (
+      {/* Wormhole Transit Indicator */}
+      {phase === "wormhole" && (
         <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center text-center p-4">
           <div className="font-mono text-xs tracking-[0.3em] uppercase text-amber-300/90 animate-pulse">
-            HYPERSPEED WARP ENGAGED
+            TRANSCENDING REALITY
           </div>
           <div className="mt-2 font-display text-3xl sm:text-5xl font-bold tracking-widest text-white">
-            {phase === "warping" ? "WARPING TO NEXT UNIVERSE" : "ENTERING MULTIVERSE"}
+            COSMIC WORMHOLE
           </div>
           <div className="mt-4 font-mono text-[11px] text-white/50 tracking-wider">
-            TRANSIT VELOCITY: {speedMetric} · RELATIVISTIC DILATION ACTIVE
+            CROSSING EVENT HORIZON · TRAVELING THROUGH SPACETIME TUNNEL
           </div>
         </div>
       )}
 
-      {/* Automated Return Sequence Indicator */}
+      {/* Phase 6: Returning Indicator */}
       {phase === "returning" && (
         <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center text-center p-4">
           <div className="font-mono text-xs tracking-[0.3em] uppercase text-cyan-300/90 animate-pulse">
-            ✦ TOUR COMPLETE · REVERSING SINGULARITY ✦
+            REVERSING SINGULARITY
           </div>
           <div className="mt-2 font-display text-3xl sm:text-5xl font-bold tracking-widest text-white">
-            RETURNING TO HS AI STUDIO
+            RETURNING TO HS AI SOLUTIONS
           </div>
           <div className="mt-4 font-mono text-xs text-amber-300 font-semibold tracking-wider">
-            RECONSTRUCTING WEBSITE ELEMENTS FROM THE EVENT HORIZON...
+            RECONSTRUCTING WEBSITE DOM ELEMENTS &amp; RESTORING SCROLL POSITION...
           </div>
         </div>
       )}
