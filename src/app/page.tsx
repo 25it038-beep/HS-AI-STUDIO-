@@ -7,6 +7,7 @@ import { Security } from "@/sections/security";
 import { AllApplications } from "@/sections/all-applications";
 import { WhatIBuild } from "@/sections/what-i-build";
 import { Technology } from "@/sections/technology";
+import { CinematicJourney } from "@/sections/cinematic-journey";
 import { Ecosystem } from "@/sections/ecosystem";
 import { BuildingInPublic } from "@/sections/building-in-public";
 import { FinalCta } from "@/sections/final-cta";
@@ -23,6 +24,7 @@ export default function Home() {
       <AllApplications />
       <WhatIBuild />
       <Technology />
+      <CinematicJourney />
       <Ecosystem />
       <BuildingInPublic />
       <FinalCta />

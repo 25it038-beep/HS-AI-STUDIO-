@@ -15,6 +15,7 @@ const LINKS = [
   { href: "#products", label: "Products" },
   { href: "#about", label: "About" },
   { href: "#projects", label: "Projects" },
+  { href: "#journey", label: "Endless Journey" },
   { href: PORTFOLIO_URL, label: "Portfolio", external: true },
 ];
 
