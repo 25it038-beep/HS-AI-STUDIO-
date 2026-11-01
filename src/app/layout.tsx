@@ -8,6 +8,8 @@ import { IntroVideo } from "@/components/intro-video";
 import { FullscreenExploreVideo } from "@/components/fullscreen-explore-video";
 import { ContributorFloatingBadge } from "@/components/contributor-floating-badge";
 import { WebsiteAssistantWidget } from "@/components/website-assistant-widget";
+import { MultiverseProvider } from "@/components/multiverse/MultiverseContext";
+import { MultiverseExperience } from "@/components/multiverse/MultiverseExperience";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -96,14 +98,19 @@ export default function RootLayout({
       <body
         className={`${inter.variable} ${spaceGrotesk.variable} ${geistMono.variable} min-h-screen bg-ink text-paper antialiased selection:bg-lumina selection:text-ink font-sans`}
       >
-        <Nav />
-        <main>{children}</main>
-        <Footer />
-        <AudioIntro />
-        <IntroVideo />
-        <FullscreenExploreVideo />
-        <ContributorFloatingBadge />
-        <WebsiteAssistantWidget />
+        <MultiverseProvider>
+          <div id="website-root" className="min-h-screen w-full transition-transform will-change-transform">
+            <Nav />
+            <main>{children}</main>
+            <Footer />
+            <AudioIntro />
+            <IntroVideo />
+            <FullscreenExploreVideo />
+            <ContributorFloatingBadge />
+            <WebsiteAssistantWidget />
+          </div>
+          <MultiverseExperience />
+        </MultiverseProvider>
       </body>
     </html>
   );
