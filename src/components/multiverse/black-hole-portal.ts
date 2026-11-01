@@ -1,27 +1,25 @@
 /**
- * HS AI SOLUTIONS — BLACK HOLE PORTAL & MULTIVERSE EXPERIENCE
+ * HS AI SOLUTIONS — BLACK HOLE PORTAL & MULTIVERSE JUMP → THE REAL UNIVERSE
  * 
- * 1. Black Hole Widget with real-time relativistic canvas rendering
- * 2. Word-by-word text fragmentation (.bh-w)
- * 3. Physical gravitational suction of all images, videos, buttons, SVGs, and text
- * 4. Progressive container circular clipPath collapse
- * 5. Event horizon expansion to swallow viewport
- * 6. High-fidelity Multiverse Journey:
- *    - Event Horizon entry with relativistic light rings & star streaks
- *    - 13 distinct procedural celestial realities:
- *      * Emission nebula with dark dust lanes
- *      * Spiral galaxy with core & star-forming knots
- *      * Ringed gas giant with orbiting moon & shadow terminator
- *      * Blue giant star with coronal flares & rays
- *      * 3D tumbling asteroid belt with lighting
- *      * Relativistic pulsar with dual sweeping polar radiation beams
- *      * Supernova explosion shockwave shell
- *      * Supermassive black hole
- *      * Comet with plasma and dust tails
- *      * Globular star cluster (900 stars)
- *      * Planetary nebula
- *    - Real-time telemetry: REALITIES SCANNED counter, Universe ID & Name
- * 7. AUTOMATIC RETURN to HS AI Studio with 100% lossless DOM reconstruction.
+ * Flow:
+ * 1. Idle Black Hole Widget in corner with relativistic canvas rendering.
+ * 2. On click:
+ *    - Hole smoothly migrates to the center.
+ *    - Splits visible text into words (.bh-w).
+ *    - Gravitational suction pulls every word, button, image, video, and SVG into the singularity.
+ *    - Containers collapse via dynamic circular clip-paths.
+ *    - Black hole event horizon expands to swallow the entire viewport.
+ * 3. MULTIVERSE JUMP:
+ *    - 8 Multiverse Jumps (Universe 001, 014, 233, 1087, 9402, 77310, 640019, 2400000)
+ *    - Relativistic warp streaks with dimensional space twists (tw)
+ *    - Warp core glows, flash waves, and pop titles
+ * 4. THE REAL UNIVERSE:
+ *    - Relativistic deceleration to gentle drift
+ *    - Procedural Milky Way galactic band (16,000 stars & dark dust rifts)
+ *    - 24 deep field spiral galaxies + massive Home Galaxy
+ *    - Pinprick stars with stellar cross diffraction spikes
+ *    - "YOU ARE HERE" & "Home: the Milky Way · 100–400 billion stars"
+ * 5. Automatic (or tap / Space / Escape) return to HS AI Studio with 100% lossless DOM reconstruction.
  */
 
 import { cosmicAudio } from "./audio-engine";
@@ -29,6 +27,7 @@ import { cosmicAudio } from "./audio-engine";
 export class BlackHolePortalEngine {
   private static instance: BlackHolePortalEngine | null = null;
 
+  // Widget & Suction Configuration
   private C = {
     size: 86,
     right: 20,
@@ -43,17 +42,23 @@ export class BlackHolePortalEngine {
     k: Math.random(),
   }));
 
+  // DOM Elements
   private widgetEl: HTMLDivElement | null = null;
   private overlayCanvas: HTMLCanvasElement | null = null;
   private overlayCtx: CanvasRenderingContext2D | null = null;
-  private labelEl: HTMLDivElement | null = null;
   private hudEl: HTMLDivElement | null = null;
-  private returnBtnEl: HTMLButtonElement | null = null;
+  private titleEl: HTMLDivElement | null = null;
+  private subEl: HTMLDivElement | null = null;
+  private counterEl: HTMLDivElement | null = null;
+  private returnPromptEl: HTMLDivElement | null = null;
 
+  // State
   private idle = true;
   private animId: number | null = null;
   private idleAnimId: number | null = null;
   private isDestroyed = false;
+  private mvActive = false;
+  private autoReturnTimer: NodeJS.Timeout | null = null;
 
   // Lossless restoration tracking
   private savedScroll = { x: 0, y: 0 };
@@ -61,34 +66,55 @@ export class BlackHolePortalEngine {
   private clippedContainers: HTMLElement[] = [];
   private textSplits: { parent: Node; originalNode: Text; words: HTMLElement[] }[] = [];
 
-  // Multiverse Lexicon & Astrophysics Data
-  private NA = [
-    "Crimson", "Azure", "Verdant", "Obsidian", "Golden", "Violet",
-    "Neon", "Hollow", "Mirror", "Glass", "Ember", "Frozen", "Quantum", "Singular"
+  // ── MULTIVERSE JUMP → THE REAL UNIVERSE STATE ──────────────────────────────
+  private U_LIST = [
+    { n: "UNIVERSE 001", s: "Gravity ×3 · light bends into spirals", h: 8, tw: 4, v: 1 },
+    { n: "UNIVERSE 014", s: "Eleven dimensions · space crystallises", h: 185, tw: 0, v: 1.3 },
+    { n: "UNIVERSE 233", s: "Time runs backward · dim violet suns", h: 275, tw: -3, v: 0.9 },
+    { n: "UNIVERSE 1,087", s: "No dark matter · galaxies never form", h: 50, tw: 0, v: 0.7 },
+    { n: "UNIVERSE 9,402", s: "Closed topology · you see your own back", h: 150, tw: 2, v: 1.2 },
+    { n: "UNIVERSE 77,310", s: "Unstable constants · stars flicker out", h: 325, tw: 0, v: 1.6, fl: 1 },
+    { n: "UNIVERSE 640,019", s: "Photon-only cosmos · no matter exists", h: 205, tw: -5, v: 1.1 },
+    { n: "UNIVERSE 2,400,000", s: "Last echo · searching for ours…", h: 35, tw: 1, v: 1.8 },
   ];
-  private NB = [
-    "Nebula", "Pulsar", "Garden", "Abyss", "Cascade", "Spiral",
-    "Dominion", "Echo", "Reef", "Lattice", "Horizon", "Vortex"
-  ];
-  private KN = [
-    "Emission nebula", "Spiral galaxy", "Ringed gas giant", "Rocky world",
-    "Ocean world", "Blue giant star", "Asteroid belt", "Pulsar",
-    "Supernova remnant", "Black hole", "Comet", "Globular cluster", "Planetary nebula"
-  ];
-  private TEMP = ["#9bb0ff", "#cad7ff", "#f8f7ff", "#fff4ea", "#ffd2a1", "#ffb56b"];
 
-  // Multiverse state
-  private deck: number[] = [];
-  private di = 0;
-  private U: any = null;
-  private PV: any = null;
-  private nu = 0;
-  private fl = 0;
-  private cnt = 1337;
-  private mvOn = 0;
-  private tr = 1;
-  private last = 0;
-  private autoReturnTimer: NodeJS.Timeout | null = null;
+  private D = 1.1; // seconds per multiverse jump
+  private T_MULTIVERSE = 8 * 1.1; // 8.8 seconds total multiverse jumps
+  private TC = ["170,200,255", "235,240,255", "255,240,205", "255,200,150"];
+
+  // Stars & Galaxies
+  private S: Array<{
+    x: number;
+    y: number;
+    z: number;
+    pz: number;
+    r: number;
+    tc: string;
+    b: number;
+  }> = [];
+
+  private G: Array<{
+    x: number;
+    y: number;
+    z: number;
+    sz: number;
+    tilt: number;
+    rot: number;
+    w: number;
+  }> = [];
+
+  private galSprite: HTMLCanvasElement | null = null;
+  private bandSprite: HTMLCanvasElement | null = null;
+  private Bw = 0;
+  private Bh = 0;
+  private PX = 0;
+  private PY = 0;
+
+  // Jump tracking
+  private jumpTime = 0;
+  private lastJumpNow = 0;
+  private curJumpIdx = -1;
+  private cap2Triggered = false;
 
   public static getInstance(): BlackHolePortalEngine {
     if (!BlackHolePortalEngine.instance) {
@@ -97,8 +123,12 @@ export class BlackHolePortalEngine {
     return BlackHolePortalEngine.instance;
   }
 
-  private rnd(a: number, b: number): number {
-    return a + Math.random() * (b - a);
+  private rnd(): number {
+    return Math.random();
+  }
+
+  private gs(): number {
+    return (this.rnd() + this.rnd() + this.rnd() + this.rnd() - 2) / 2;
   }
 
   private cl(v: number, a = 0, b = 1): number {
@@ -109,159 +139,159 @@ export class BlackHolePortalEngine {
     return p * p * (3 - 2 * p);
   }
 
-  private pick<T>(a: T[]): T {
-    return a[Math.floor(Math.random() * a.length)];
-  }
-
-  private H(i: number, s: number): number {
-    return Math.abs(Math.sin(i * 12.9898 + s * 78.233) * 43758.5453) % 1;
-  }
-
-  private cvs(n: number): HTMLCanvasElement {
-    const o = document.createElement("canvas");
-    o.width = o.height = n;
-    return o;
+  private mkCanvas(w: number, h: number): HTMLCanvasElement {
+    const e = document.createElement("canvas");
+    e.width = w;
+    e.height = h;
+    return e;
   }
 
   /**
-   * Generates a soft gas cloud with dark dust lanes, painted once per universe
+   * Procedural Spiral Galaxy Sprite (24,000 stars, core, star-forming knots, and dust lanes)
    */
-  private nebula(h: number, h2: number): HTMLCanvasElement {
-    const o = this.cvs(512);
-    const x = o.getContext("2d");
-    if (!x) return o;
-    x.globalCompositeOperation = "lighter";
-    let px = 256;
-    let py = 256;
-    for (let i = 0; i < 170; i++) {
-      px = this.cl(px + this.rnd(-50, 50), 40, 472);
-      py = this.cl(py + this.rnd(-50, 50), 40, 472);
-      const r = this.rnd(40, 120);
-      const hh = [h, h2, h + this.rnd(-20, 20), 25][i % 4];
-      const g = x.createRadialGradient(px, py, 0, px, py, r);
-      g.addColorStop(0, `hsla(${hh},80%,55%,.07)`);
-      g.addColorStop(1, "hsla(0,0%,0%,0)");
-      x.fillStyle = g;
-      x.fillRect(px - r, py - r, r * 2, r * 2);
+  private mkGal(): HTMLCanvasElement {
+    const g = this.mkCanvas(512, 512);
+    const q = g.getContext("2d");
+    if (!q) return g;
+
+    q.translate(256, 256);
+    q.globalCompositeOperation = "lighter";
+
+    const r = q.createRadialGradient(0, 0, 0, 0, 0, 250);
+    r.addColorStop(0, "rgba(255,225,180,.6)");
+    r.addColorStop(0.1, "rgba(255,200,150,.25)");
+    r.addColorStop(0.5, "rgba(110,140,255,.05)");
+    r.addColorStop(1, "rgba(0,0,0,0)");
+    q.fillStyle = r;
+    q.fillRect(-256, -256, 512, 512);
+
+    for (let i = 0; i < 24000; i++) {
+      const d = Math.pow(this.rnd(), 0.7) * 235 + 5;
+      const th = d * 0.034 + (i & 1 ? Math.PI : 0) + this.gs() * (0.45 + d / 380) * 0.9;
+      const core = Math.max(0, 1 - d / 90);
+      q.fillStyle =
+        this.rnd() < 0.025 && d > 60
+          ? "rgba(255,120,170,.6)"
+          : `rgba(${(200 + core * 55) | 0},${(205 + core * 20) | 0},${(255 - core * 100) | 0},${0.08 + this.rnd() * 0.25})`;
+      q.fillRect(Math.cos(th) * d, Math.sin(th) * d, 1.2, 1.2);
     }
-    x.globalCompositeOperation = "source-over";
-    for (let i = 0; i < 60; i++) {
-      const qx = this.rnd(60, 450);
-      const qy = this.rnd(60, 450);
-      const r = this.rnd(20, 70);
-      const g = x.createRadialGradient(qx, qy, 0, qx, qy, r);
-      g.addColorStop(0, "rgba(0,0,8,.35)");
-      g.addColorStop(1, "rgba(0,0,8,0)");
-      x.fillStyle = g;
-      x.fillRect(qx - r, qy - r, r * 2, r * 2);
+
+    for (let i = 0; i < 7000; i++) {
+      const a = this.rnd() * 6.283;
+      const d = Math.abs(this.gs()) * 45;
+      q.fillStyle = "rgba(255,215,160,.22)";
+      q.fillRect(Math.cos(a) * d, Math.sin(a) * d * 0.85, 1.5, 1.5);
     }
-    return o;
+
+    q.globalCompositeOperation = "source-over";
+    for (let i = 0; i < 3500; i++) {
+      const d = Math.pow(this.rnd(), 0.7) * 220 + 30;
+      const th = d * 0.034 + (i & 1 ? Math.PI : 0) - 0.28 + this.gs() * 0.12;
+      q.fillStyle = "rgba(0,0,6,.1)";
+      q.fillRect(Math.cos(th) * d, Math.sin(th) * d, 2.5, 2.5);
+    }
+
+    return g;
   }
 
   /**
-   * Generates a spiral galaxy sprite with warm core, blue arms, pink star knots, and dust lanes
+   * Procedural Milky Way Galactic Band Sprite (16,000 stars & dark dust rifts)
    */
-  private galaxy(): HTMLCanvasElement {
-    const o = this.cvs(600);
-    const x = o.getContext("2d");
-    if (!x) return o;
-    x.translate(300, 300);
-    x.globalCompositeOperation = "lighter";
+  private mkBand(W: number, H: number): void {
+    this.Bw = (W * 1.5) | 0;
+    this.Bh = (H * 1.5) | 0;
+    this.bandSprite = this.mkCanvas(this.Bw, this.Bh);
+    const q = this.bandSprite.getContext("2d");
+    if (!q) return;
 
-    const b = x.createRadialGradient(0, 0, 0, 0, 0, 150);
-    b.addColorStop(0, "rgba(255,240,200,.95)");
-    b.addColorStop(0.25, "rgba(255,200,130,.45)");
-    b.addColorStop(1, "rgba(255,170,100,0)");
-    x.fillStyle = b;
-    x.fillRect(-300, -300, 600, 600);
+    q.translate(this.Bw / 2, this.Bh / 2);
+    q.rotate(-0.5);
+    q.globalCompositeOperation = "lighter";
 
-    const pt = (i: number, off: number): [number, number, number] => {
-      const t = Math.pow(Math.random(), 0.7) * 5.2;
-      const r = 18 + t * 52;
-      const a = t * 1.15 + (i % 2) * Math.PI + off + this.rnd(-0.28, 0.28) * (1 + t * 0.2);
-      const d = this.rnd(-1, 1) * (6 + t * 5);
-      return [
-        Math.cos(a) * r + Math.cos(a + 1.57) * d,
-        Math.sin(a) * r + Math.sin(a + 1.57) * d,
-        t / 5.2,
-      ];
-    };
+    const L = Math.max(this.Bw, this.Bh);
+    for (let i = 0; i < 9; i++) {
+      const t = ((i / 8 - 0.5) * L * 0.9);
+      const r = q.createRadialGradient(t, 0, 0, t, 0, L * 0.2);
+      const w = 1 - Math.abs(i / 8 - 0.5) * 1.4;
+      r.addColorStop(0, `rgba(255,205,150,${0.12 * w})`);
+      r.addColorStop(0.5, `rgba(150,160,230,${0.05 * w})`);
+      r.addColorStop(1, "rgba(0,0,0,0)");
+      q.fillStyle = r;
+      q.fillRect(-L, -L, 2 * L, 2 * L);
+    }
 
-    for (let i = 0; i < 5200; i++) {
-      const [X, Y, k] = pt(i, 0);
-      x.fillStyle = `hsla(${45 + k * 170},${40 + k * 50}%,${70 + (1 - k) * 10}%,${0.25 + Math.random() * 0.4})`;
-      const z = 1 + Math.random() * 1.4;
-      x.fillRect(X, Y, z, z);
+    for (let i = 0; i < 16000; i++) {
+      const t = (this.rnd() - 0.5) * L * 1.1;
+      const o = this.gs() * L * 0.07 * (1 - (Math.abs(t) / L) * 0.9);
+      q.fillStyle = `rgba(${(220 + this.rnd() * 35) | 0},${(215 + this.rnd() * 30) | 0},255,${0.1 + this.rnd() * 0.3})`;
+      q.fillRect(t, o, 1.3, 1.3);
     }
-    for (let i = 0; i < 70; i++) {
-      const [X, Y] = pt(i, 0);
-      const g = x.createRadialGradient(X, Y, 0, X, Y, 9);
-      g.addColorStop(0, "rgba(255,120,190,.35)");
-      g.addColorStop(1, "rgba(255,120,190,0)");
-      x.fillStyle = g;
-      x.fillRect(X - 9, Y - 9, 18, 18);
+
+    q.globalCompositeOperation = "source-over";
+    for (let i = 0; i < 140; i++) {
+      const t = (this.rnd() - 0.5) * L * 0.9;
+      const o = this.gs() * L * 0.03;
+      const r = q.createRadialGradient(t, o, 0, t, o, L * 0.05 * (0.4 + this.rnd()));
+      r.addColorStop(0, "rgba(0,0,4,.16)");
+      r.addColorStop(1, "rgba(0,0,4,0)");
+      q.fillStyle = r;
+      q.fillRect(t - L * 0.1, o - L * 0.1, L * 0.2, L * 0.2);
     }
-    x.globalCompositeOperation = "source-over";
-    for (let i = 0; i < 1300; i++) {
-      const [X, Y] = pt(i, -0.2);
-      x.fillStyle = "rgba(12,6,2,.16)";
-      x.beginPath();
-      x.arc(X, Y, this.rnd(3, 8), 0, this.TAU);
-      x.fill();
+  }
+
+  private initStar(s: any): void {
+    s.x = (this.rnd() * 2 - 1) * 2.2;
+    s.y = (this.rnd() * 2 - 1) * 2.2;
+    s.z = this.rnd() + 0.03;
+    s.pz = s.z;
+    s.r = this.rnd();
+    const u = this.rnd();
+    s.tc = this.TC[u < 0.1 ? 0 : u < 0.5 ? 1 : u < 0.8 ? 2 : 3];
+    s.b = Math.pow(this.rnd(), 4);
+  }
+
+  private initStarsAndGalaxies(): void {
+    this.S = [];
+    for (let i = 0; i < 800; i++) {
+      const s = {} as any;
+      this.initStar(s);
+      this.S.push(s);
     }
-    return o;
+
+    this.G = [];
+    for (let i = 0; i < 24; i++) {
+      this.G.push({
+        x: (this.rnd() * 2 - 1) * 1.7,
+        y: (this.rnd() * 2 - 1) * 1.2,
+        z: 0.5 + this.rnd() * 0.9,
+        sz: 0.5 + this.rnd(),
+        tilt: 0.25 + this.rnd() * 0.7,
+        rot: this.rnd() * 6.28,
+        w: 0.3 + this.rnd() * 0.5,
+      });
+    }
+
+    this.galSprite = this.mkGal();
+  }
+
+  private projectStar(s: any, z: number, tw: number, cx: number, cy: number, M: number): void {
+    let X = s.x;
+    let Y = s.y;
+    if (tw) {
+      const a = (1 - z) * tw;
+      const co = Math.cos(a);
+      const si = Math.sin(a);
+      const n = X * co - Y * si;
+      Y = X * si + Y * co;
+      X = n;
+    }
+    const k = M / z;
+    this.PX = cx + X * k;
+    this.PY = cy + Y * k;
   }
 
   /**
-   * Instantiates a procedural cosmic universe
-   */
-  private mk(kk: number): any {
-    this.cnt += Math.floor(this.rnd(311, 8999));
-    const pal = this.pick([[210, 330], [10, 40], [170, 260], [280, 20]]);
-    const k = [0, 1, 2, 2, 2, 3, 4, 5, 6, 7, 8, 9, 10][kk];
-    const pt = [0, 0, 0, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0][kk];
-
-    return {
-      k,
-      h: pal[0],
-      h2: pal[1],
-      sd: this.rnd(0, 50),
-      la: this.rnd(0, this.TAU),
-      px: this.rnd(-1, 1),
-      py: this.rnd(-1, 1),
-      t0: 0,
-      name: `${this.KN[kk]} · ${this.pick(this.NA)}-${Math.floor(this.rnd(100, 999))}`,
-      nb: k === 1 ? null : this.nebula(pal[0], pal[1]),
-      gx: k === 1 ? this.galaxy() : null,
-      ti: this.rnd(0.35, 0.7),
-      pt,
-      ph: [this.rnd(20, 45), this.rnd(5, 25), this.rnd(195, 215)][pt],
-      ps: [55, 45, 60][pt],
-      pl: [55, 38, 45][pt],
-      rg: kk === 2,
-      rt: this.rnd(-0.5, 0.5),
-      sh: this.pick([215, 210, 30, 45, 10]),
-      st: Array.from({ length: 230 }, () => ({
-        x: this.rnd(-1, 1),
-        y: this.rnd(-1, 1),
-        z: this.rnd(0.05, 1),
-        o: this.rnd(0, 6.28),
-        c: this.pick(this.TEMP),
-      })),
-      ro: Array.from({ length: 36 }, () => ({
-        x: this.rnd(-1, 1),
-        y: this.rnd(-1, 1),
-        z: this.rnd(0.1, 1),
-        r: this.rnd(0.02, 0.07),
-        a: this.rnd(0, this.TAU),
-        w: this.rnd(-1, 1),
-        v: Array.from({ length: 8 }, () => this.rnd(0.7, 1.15)),
-      })),
-    };
-  }
-
-  /**
-   * Renders the black hole with glowing accretion disk & orbiting particle ring
+   * Renders the relativistic black hole with accretion disk, photon ring, and orbiting particles
    */
   private renderHole(
     ctx: CanvasRenderingContext2D,
@@ -317,625 +347,23 @@ export class BlackHolePortalEngine {
   }
 
   /**
-   * Inside the event horizon: light rings & stretched stars rush outward, white singularity center grows
+   * Injects keyframe pop animation and styles for HUD
    */
-  private renderEntry(ctx: CanvasRenderingContext2D, t: number, vw: number, vh: number, D: number): void {
-    const cx = vw / 2;
-    const cy = vh / 2;
-    const Dh = D / 2;
-    const k = this.cl(t / 2800);
-
-    ctx.fillStyle = "#050004";
-    ctx.fillRect(0, 0, vw, vh);
-
-    const g = ctx.createRadialGradient(cx, cy, 0, cx, cy, Dh);
-    g.addColorStop(0, `rgba(255,${120 + k * 100},60,${0.15 + k * 0.7})`);
-    g.addColorStop(0.25, "rgba(120,20,40,.25)");
-    g.addColorStop(1, "rgba(0,0,0,0)");
-    ctx.fillStyle = g;
-    ctx.fillRect(0, 0, vw, vh);
-
-    for (let i = 0; i < 9; i++) {
-      const p = (t * 0.00055 * (1 + k * 2) + i / 9) % 1;
-      const r = Dh * 0.02 * Math.pow(60, p);
-      ctx.strokeStyle = `hsla(${20 + p * 200},100%,${60 + p * 30}%,${Math.sin(p * Math.PI) * 0.8})`;
-      ctx.lineWidth = 1 + p * 8;
-      ctx.beginPath();
-      ctx.ellipse(cx, cy, r, r * (0.85 + 0.15 * Math.sin(t * 0.002 + i)), 0, 0, this.TAU);
-      ctx.stroke();
-    }
-
-    for (let i = 0; i < 220; i++) {
-      const a = i * 2.399 + Math.sin(i) * 2;
-      const ph = (t * 0.0007 * (1 + k * 2.5) + i * 0.137) % 1;
-      const r0 = Dh * 0.03 * Math.pow(40, ph);
-      const len = r0 * (0.05 + k * 0.5);
-      ctx.strokeStyle = `hsla(${210 - ph * 190},100%,70%,${ph})`;
-      ctx.lineWidth = 0.5 + ph * 2.5;
-      ctx.beginPath();
-      ctx.moveTo(cx + Math.cos(a) * r0, cy + Math.sin(a) * r0);
-      ctx.lineTo(cx + Math.cos(a) * (r0 + len), cy + Math.sin(a) * (r0 + len));
-      ctx.stroke();
-    }
-
-    const w = ctx.createRadialGradient(cx, cy, 0, cx, cy, 20 + k * k * Dh * 0.6);
-    w.addColorStop(0, `rgba(255,255,255,${0.4 + k * 0.6})`);
-    w.addColorStop(1, "rgba(255,255,255,0)");
-    ctx.fillStyle = w;
-    ctx.fillRect(0, 0, vw, vh);
+  private injectHudStyles(): void {
+    if (document.getElementById("hs-multiverse-styles")) return;
+    const style = document.createElement("style");
+    style.id = "hs-multiverse-styles";
+    style.textContent = `
+      @keyframes hs-pop {
+        0% { transform: scale(1.35); opacity: 0; filter: blur(8px); }
+        100% { transform: none; opacity: 1; filter: none; }
+      }
+    `;
+    document.head.appendChild(style);
   }
 
   /**
-   * Renders one universe with real astrophysical features
-   */
-  private renderScene(
-    ctx: CanvasRenderingContext2D,
-    u: any,
-    t: number,
-    dt: number,
-    sp: number,
-    vw: number,
-    vh: number,
-    D: number
-  ): void {
-    if (u.en) {
-      this.renderEntry(ctx, t, vw, vh, D);
-      return;
-    }
-
-    if (u.fin) {
-      const lt = t - u.t0;
-      const cx = vw / 2;
-      const cy = vh / 2;
-      const r = 30 + Math.sin(lt * 0.002) * 8 + this.cl(lt / 4000) * 60;
-      const g = ctx.createRadialGradient(cx, cy, 0, cx, cy, r * 4);
-      ctx.fillStyle = "#000";
-      ctx.fillRect(0, 0, vw, vh);
-      g.addColorStop(0, "rgba(255,255,255,.95)");
-      g.addColorStop(0.12, "rgba(160,190,255,.45)");
-      g.addColorStop(1, "rgba(0,0,0,0)");
-      ctx.fillStyle = g;
-      ctx.fillRect(0, 0, vw, vh);
-      return;
-    }
-
-    const cx = vw / 2;
-    const cy = vh / 2;
-    const Dh = D / 2;
-    const lt = t - u.t0;
-    const Lx = Math.cos(u.la);
-    const Ly = Math.sin(u.la);
-
-    ctx.fillStyle = "#01020a";
-    ctx.fillRect(0, 0, vw, vh);
-
-    ctx.save();
-    ctx.translate(cx, cy);
-    ctx.rotate(Math.sin(t * 0.0003 + u.sd) * 0.04);
-    if (u.nb) {
-      const z = (Math.max(vw, vh) / 512) * (1.4 + this.cl(lt / 12000) * 0.9);
-      ctx.globalAlpha = u.k === 0 ? 1 : 0.6;
-      ctx.drawImage(u.nb, -256 * z + u.px * 30, -256 * z + u.py * 30, 512 * z, 512 * z);
-      ctx.globalAlpha = 1;
-    }
-    ctx.translate(-cx, -cy);
-
-    for (const s of u.st) {
-      const pz = s.z;
-      s.z -= dt * 0.00022 * sp;
-      if (s.z <= 0.03) {
-        s.x = this.rnd(-1, 1);
-        s.y = this.rnd(-1, 1);
-        s.z = 1;
-        continue;
-      }
-      ctx.globalAlpha = (0.45 + 0.55 * Math.pow(Math.sin(t * 0.003 + s.o), 2)) * (1 - s.z * 0.5);
-      ctx.strokeStyle = s.c;
-      ctx.lineWidth = 0.5 + (1 - s.z) * 1.5;
-      ctx.beginPath();
-      ctx.moveTo(cx + (s.x / pz) * Dh * 0.3, cy + (s.y / pz) * Dh * 0.3);
-      ctx.lineTo(cx + (s.x / s.z) * Dh * 0.3, cy + (s.y / s.z) * Dh * 0.3);
-      ctx.stroke();
-    }
-    ctx.globalAlpha = 1;
-
-    const sun = () => {
-      const sx = cx + Lx * Dh * 0.95;
-      const sy = cy + Ly * Dh * 0.95;
-      const g = ctx.createRadialGradient(sx, sy, 0, sx, sy, Dh * 0.9);
-      g.addColorStop(0, "rgba(255,248,230,.95)");
-      g.addColorStop(0.12, "rgba(255,215,150,.45)");
-      g.addColorStop(1, "rgba(255,170,90,0)");
-      ctx.globalCompositeOperation = "lighter";
-      ctx.fillStyle = g;
-      ctx.fillRect(0, 0, vw, vh);
-      ctx.globalCompositeOperation = "source-over";
-    };
-
-    const ball = (x: number, y: number, r: number) => {
-      const lx = x + Lx * r * 0.55;
-      const ly = y + Ly * r * 0.55;
-      const g = ctx.createRadialGradient(lx, ly, r * 0.15, lx, ly, r * 1.9);
-      g.addColorStop(0, "rgba(0,0,6,0)");
-      g.addColorStop(0.5, "rgba(0,0,6,.35)");
-      g.addColorStop(0.75, "rgba(0,0,6,.9)");
-      g.addColorStop(1, "rgba(0,0,6,.97)");
-      ctx.fillStyle = g;
-      ctx.fillRect(x - r, y - r, r * 2, r * 2);
-    };
-
-    // Spectacle 1: Spiral Galaxy
-    if (u.k === 1) {
-      const z = (Dh / 300) * (0.7 + this.cl(lt / 9000) * 1.2);
-      ctx.save();
-      ctx.translate(cx + u.px * Dh * 0.15, cy + u.py * Dh * 0.1);
-      ctx.rotate(u.la + lt * 0.00004);
-      ctx.scale(z, z * u.ti * 1.4);
-      ctx.globalCompositeOperation = "lighter";
-      ctx.drawImage(u.gx, -300, -300);
-      ctx.restore();
-    }
-    // Spectacle 2: Lit Planet with Rings and Moon
-    else if (u.k === 2) {
-      sun();
-      const q = this.cl(lt / 6000);
-      const R = Dh * (0.12 + 0.62 * q * q);
-      const x = cx + u.px * Dh * 0.55 * q;
-      const y = cy + u.py * Dh * 0.35 * q;
-      const ph = u.ph;
-
-      const ring = (front: boolean) => {
-        ctx.save();
-        ctx.translate(x, y);
-        ctx.rotate(u.rt);
-        for (let i = 0; i < 5; i++) {
-          const rr = 1.45 + i * 0.22;
-          ctx.strokeStyle = `hsla(${ph + i * 3},30%,${60 + i * 5}%,${0.5 - i * 0.06})`;
-          ctx.lineWidth = R * 0.12;
-          ctx.beginPath();
-          ctx.ellipse(0, 0, R * rr, R * rr * 0.28, 0, front ? 0 : Math.PI, front ? Math.PI : this.TAU);
-          ctx.stroke();
-        }
-        ctx.restore();
-      };
-
-      if (u.rg) ring(false);
-      ctx.save();
-      ctx.beginPath();
-      ctx.arc(x, y, R, 0, this.TAU);
-      ctx.clip();
-      ctx.fillStyle = `hsl(${ph},${u.ps}%,${u.pl}%)`;
-      ctx.fillRect(x - R, y - R, R * 2, R * 2);
-
-      if (u.pt === 0) {
-        for (let i = 0; i < 18; i++) {
-          ctx.fillStyle = `hsla(${ph + this.H(i, u.sd) * 30 - 15},${u.ps}%,${u.pl + (this.H(i, u.sd + 1) - 0.5) * 34}%,.6)`;
-          ctx.fillRect(
-            x - R,
-            y - R + (i / 18) * R * 2 + Math.sin(lt * 0.0003 + i) * R * 0.01,
-            R * 2,
-            (R * 2 / 18) * (0.5 + this.H(i, u.sd + 2))
-          );
-        }
-      } else {
-        for (let i = 0; i < 34; i++) {
-          const a = this.H(i, u.sd) * this.TAU;
-          const d = this.H(i, u.sd + 1) * R * 0.95;
-          const r = R * (0.04 + this.H(i, u.sd + 2) * 0.18);
-          ctx.fillStyle = `hsla(${ph},${u.ps}%,${u.pl + (this.H(i, u.sd + 3) - 0.5) * 30}%,.3)`;
-          ctx.beginPath();
-          ctx.arc(x + Math.cos(a) * d, y + Math.sin(a) * d, r, 0, this.TAU);
-          ctx.fill();
-        }
-        if (u.pt === 2) {
-          ctx.fillStyle = "rgba(255,255,255,.55)";
-          ctx.beginPath();
-          ctx.ellipse(x, y - R, R * 0.7, R * 0.22, 0, 0, this.TAU);
-          ctx.fill();
-        }
-      }
-
-      const rm = ctx.createRadialGradient(x, y, R * 0.82, x, y, R * 1.02);
-      rm.addColorStop(0, "rgba(120,170,255,0)");
-      rm.addColorStop(1, "rgba(120,170,255,.55)");
-      ctx.fillStyle = rm;
-      ctx.fillRect(x - R, y - R, R * 2, R * 2);
-      ball(x, y, R);
-      ctx.restore();
-
-      if (u.rg) ring(true);
-
-      const ma = lt * 0.0004;
-      const mr = R * 0.16;
-      const mx = x + Math.cos(ma) * R * 2.1;
-      const my = y + Math.sin(ma) * R * 0.5;
-      const mg = ctx.createRadialGradient(mx + Lx * mr * 0.4, my + Ly * mr * 0.4, mr * 0.1, mx, my, mr * 1.1);
-      mg.addColorStop(0, "#d8d4cc");
-      mg.addColorStop(0.5, "#6b6862");
-      mg.addColorStop(1, "#05050a");
-      ctx.fillStyle = mg;
-      ctx.beginPath();
-      ctx.arc(mx, my, mr, 0, this.TAU);
-      ctx.fill();
-    }
-    // Spectacle 3: Blue Giant Star
-    else if (u.k === 3) {
-      const q = this.cl(lt / 7000);
-      const R = Dh * (0.06 + 0.28 * q * q);
-      const x = cx + u.px * Dh * 0.3 * q;
-      const y = cy + u.py * Dh * 0.2 * q;
-      const sh = u.sh;
-
-      ctx.globalCompositeOperation = "lighter";
-      let g = ctx.createRadialGradient(x, y, R * 0.8, x, y, R * 6);
-      g.addColorStop(0, `hsla(${sh},100%,80%,.8)`);
-      g.addColorStop(0.2, `hsla(${sh},100%,60%,.2)`);
-      g.addColorStop(1, "rgba(0,0,0,0)");
-      ctx.fillStyle = g;
-      ctx.fillRect(0, 0, vw, vh);
-
-      for (let i = 0; i < 90; i++) {
-        const a = (i * this.TAU) / 90 + this.H(i, u.sd);
-        const l = R * (1.3 + this.H(i, u.sd + 1) * 2.4);
-        ctx.strokeStyle = `hsla(${sh},100%,85%,${0.05 + this.H(i, u.sd + 2) * 0.12})`;
-        ctx.lineWidth = 1;
-        ctx.beginPath();
-        ctx.moveTo(x + Math.cos(a) * R, y + Math.sin(a) * R);
-        ctx.lineTo(x + Math.cos(a) * l, y + Math.sin(a) * l);
-        ctx.stroke();
-      }
-
-      ctx.save();
-      ctx.translate(x, y);
-      ctx.scale(1, 0.03);
-      g = ctx.createRadialGradient(0, 0, 0, 0, 0, Dh * 1.3);
-      g.addColorStop(0, `hsla(${sh},100%,90%,.6)`);
-      g.addColorStop(1, "rgba(0,0,0,0)");
-      ctx.fillStyle = g;
-      ctx.beginPath();
-      ctx.arc(0, 0, Dh * 1.3, 0, this.TAU);
-      ctx.fill();
-      ctx.restore();
-
-      for (let j = 1; j < 5; j++) {
-        const gx = cx + (cx - x) * j * 0.45;
-        const gy = cy + (cy - y) * j * 0.45;
-        const gr = 10 + j * 9;
-        ctx.fillStyle = `hsla(${sh + j * 30},90%,70%,.07)`;
-        ctx.beginPath();
-        ctx.arc(gx, gy, gr, 0, this.TAU);
-        ctx.fill();
-      }
-
-      ctx.globalCompositeOperation = "source-over";
-      g = ctx.createRadialGradient(x, y, 0, x, y, R);
-      g.addColorStop(0, "#fff");
-      g.addColorStop(0.6, `hsl(${sh},100%,88%)`);
-      g.addColorStop(1, `hsl(${sh - 12},100%,62%)`);
-      ctx.fillStyle = g;
-      ctx.beginPath();
-      ctx.arc(x, y, R, 0, this.TAU);
-      ctx.fill();
-    }
-    // Spectacle 4: Asteroid Belt
-    else if (u.k === 4) {
-      sun();
-      for (const o of u.ro) {
-        o.z -= dt * 0.00035 * sp;
-        if (o.z < 0.06) {
-          o.z = 1;
-          o.x = this.rnd(-1, 1);
-          o.y = this.rnd(-1, 1);
-        }
-        const x = cx + (o.x / o.z) * Dh * 0.5;
-        const y = cy + (o.y / o.z) * Dh * 0.5;
-        const r = (o.r / o.z) * Dh * 0.5;
-        if (r > Dh * 2 || Math.abs(x - cx) > vw || Math.abs(y - cy) > vh) continue;
-
-        ctx.globalAlpha = this.cl((1 - o.z) * 6);
-        ctx.beginPath();
-        o.v.forEach((v: number, i: number) => {
-          const a = o.a + t * o.w * 0.001 + (i / 8) * this.TAU;
-          i ? ctx.lineTo(x + Math.cos(a) * r * v, y + Math.sin(a) * r * v) : ctx.moveTo(x + Math.cos(a) * r * v, y + Math.sin(a) * r * v);
-        });
-        ctx.closePath();
-        const g = ctx.createLinearGradient(x + Lx * r, y + Ly * r, x - Lx * r, y - Ly * r);
-        g.addColorStop(0, "#b0a69a");
-        g.addColorStop(0.55, "#3a352f");
-        g.addColorStop(1, "#08070a");
-        ctx.fillStyle = g;
-        ctx.fill();
-      }
-      ctx.globalAlpha = 1;
-    }
-    // Spectacle 5: Pulsar with Sweeping Polar Radiation Beams
-    else if (u.k === 5) {
-      const q = this.cl(lt / 6000);
-      const R = Dh * (0.03 + 0.02 * q);
-      const x = cx + u.px * Dh * 0.15;
-      const y = cy + u.py * Dh * 0.1;
-      const a = lt * 0.006 * (1 + q) + u.la;
-
-      ctx.globalCompositeOperation = "lighter";
-      for (let b = 0; b < 2; b++) {
-        ctx.save();
-        ctx.translate(x, y);
-        ctx.rotate(a + b * Math.PI);
-        const g = ctx.createLinearGradient(0, 0, Dh * 1.6, 0);
-        g.addColorStop(0, "rgba(170,200,255,.85)");
-        g.addColorStop(1, "rgba(170,200,255,0)");
-        ctx.fillStyle = g;
-        ctx.beginPath();
-        ctx.moveTo(0, -R * 0.6);
-        ctx.lineTo(Dh * 1.6, -Dh * 0.12);
-        ctx.lineTo(Dh * 1.6, Dh * 0.12);
-        ctx.lineTo(0, R * 0.6);
-        ctx.fill();
-        ctx.restore();
-      }
-
-      const g2 = ctx.createRadialGradient(x, y, 0, x, y, R * 10);
-      g2.addColorStop(0, "rgba(190,215,255,.8)");
-      g2.addColorStop(1, "rgba(90,130,255,0)");
-      ctx.fillStyle = g2;
-      ctx.fillRect(0, 0, vw, vh);
-
-      ctx.fillStyle = "#fff";
-      ctx.beginPath();
-      ctx.arc(x, y, R * 0.5, 0, this.TAU);
-      ctx.fill();
-    }
-    // Spectacle 6: Supernova Shockwave Shell
-    else if (u.k === 6) {
-      const q = this.cl(lt / 5000);
-      const r = Dh * (0.15 + 0.85 * q);
-      const x = cx + u.px * Dh * 0.1;
-      const y = cy + u.py * Dh * 0.1;
-
-      ctx.globalCompositeOperation = "lighter";
-      let g = ctx.createRadialGradient(x, y, r * 0.6, x, y, r * 1.08);
-      g.addColorStop(0, "rgba(255,90,60,0)");
-      g.addColorStop(0.7, "rgba(255,140,80,.22)");
-      g.addColorStop(0.92, "rgba(120,200,255,.55)");
-      g.addColorStop(1, "rgba(120,200,255,0)");
-      ctx.fillStyle = g;
-      ctx.fillRect(0, 0, vw, vh);
-
-      for (let i = 0; i < 140; i++) {
-        const a = this.H(i, u.sd) * this.TAU;
-        const rr = r * (0.55 + this.H(i, u.sd + 1) * 0.5);
-        const l = r * 0.12 * (0.3 + this.H(i, u.sd + 2));
-        ctx.strokeStyle = `hsla(${[10, 200, 40][i % 3]},90%,65%,.25)`;
-        ctx.lineWidth = 1 + this.H(i, u.sd + 3) * 2;
-        ctx.beginPath();
-        ctx.moveTo(x + Math.cos(a) * rr, y + Math.sin(a) * rr);
-        ctx.quadraticCurveTo(
-          x + Math.cos(a + 0.15) * (rr + l * 0.5),
-          y + Math.sin(a + 0.15) * (rr + l * 0.5),
-          x + Math.cos(a + 0.1) * (rr + l),
-          y + Math.sin(a + 0.1) * (rr + l)
-        );
-        ctx.stroke();
-      }
-
-      g = ctx.createRadialGradient(x, y, 0, x, y, Dh * 0.5);
-      g.addColorStop(0, `rgba(255,255,255,${0.9 * (1 - q)})`);
-      g.addColorStop(1, "rgba(255,200,150,0)");
-      ctx.fillStyle = g;
-      ctx.fillRect(0, 0, vw, vh);
-    }
-    // Spectacle 7: Supermassive Black Hole
-    else if (u.k === 7) {
-      ctx.globalCompositeOperation = "source-over";
-      this.renderHole(ctx, cx + u.px * Dh * 0.15, cy + u.py * Dh * 0.1, Dh * (0.1 + 0.2 * this.cl(lt / 6000)), t);
-    }
-    // Spectacle 8: Comet with Twin Plasma and Dust Tails
-    else if (u.k === 8) {
-      const d = (this.cl(lt / 6500) - 0.5) * Dh * 2.2;
-      const hx0 = cx + Math.cos(u.la) * d;
-      const hy0 = cy + Math.sin(u.la) * d * 0.6;
-      const ta = u.la + Math.PI;
-      const L = Dh * 1.1;
-
-      ctx.globalCompositeOperation = "lighter";
-      ctx.save();
-      ctx.translate(hx0, hy0);
-      for (const [ang, hue, w, al] of [
-        [ta, 205, 0.05, 0.55],
-        [ta + 0.25, 45, 0.14, 0.4],
-      ]) {
-        ctx.save();
-        ctx.rotate(ang);
-        const g = ctx.createLinearGradient(0, 0, L, 0);
-        g.addColorStop(0, `hsla(${hue},90%,80%,${al})`);
-        g.addColorStop(1, `hsla(${hue},90%,70%,0)`);
-        ctx.fillStyle = g;
-        ctx.beginPath();
-        ctx.moveTo(0, -9);
-        ctx.lineTo(L, -L * w);
-        ctx.lineTo(L, L * w);
-        ctx.lineTo(0, 9);
-        ctx.fill();
-        ctx.restore();
-      }
-
-      const g = ctx.createRadialGradient(0, 0, 0, 0, 0, 48);
-      g.addColorStop(0, "rgba(220,245,255,.9)");
-      g.addColorStop(1, "rgba(120,200,255,0)");
-      ctx.fillStyle = g;
-      ctx.fillRect(-48, -48, 96, 96);
-      ctx.fillStyle = "#fff";
-      ctx.beginPath();
-      ctx.arc(0, 0, 4, 0, this.TAU);
-      ctx.fill();
-      ctx.restore();
-    }
-    // Spectacle 9: Globular Star Cluster
-    else if (u.k === 9) {
-      const z = 1 + this.cl(lt / 7000) * 1.2;
-      const x = cx + u.px * Dh * 0.1;
-      const y = cy + u.py * Dh * 0.1;
-
-      ctx.globalCompositeOperation = "lighter";
-      const g = ctx.createRadialGradient(x, y, 0, x, y, Dh * 0.6 * z);
-      g.addColorStop(0, "rgba(255,225,160,.55)");
-      g.addColorStop(1, "rgba(255,200,120,0)");
-      ctx.fillStyle = g;
-      ctx.fillRect(0, 0, vw, vh);
-
-      for (let i = 0; i < 900; i++) {
-        const a = this.H(i, u.sd) * this.TAU;
-        const r = Math.pow(this.H(i, u.sd + 1), 2.2) * Dh * 0.55 * z;
-        const sz = 1 + this.H(i, u.sd + 2) * 1.4;
-        ctx.fillStyle = i % 7 ? "rgba(255,236,190,.8)" : "rgba(255,170,120,.9)";
-        ctx.fillRect(x + Math.cos(a) * r, y + Math.sin(a) * r, sz, sz);
-      }
-    }
-    // Spectacle 10: Planetary Nebula
-    else if (u.k === 10) {
-      const r = Dh * (0.18 + 0.2 * this.cl(lt / 7000));
-      const x = cx + u.px * Dh * 0.1;
-      const y = cy + u.py * Dh * 0.1;
-
-      ctx.globalCompositeOperation = "lighter";
-      ctx.save();
-      ctx.translate(x, y);
-      ctx.rotate(u.la);
-      ctx.scale(1, 0.8);
-
-      for (let i = 0; i < 4; i++) {
-        const rr = r * (1 + i * 0.12);
-        const g = ctx.createRadialGradient(0, 0, rr * 0.7, 0, 0, rr * 1.15);
-        g.addColorStop(0, "rgba(0,0,0,0)");
-        g.addColorStop(0.55, `hsla(${[190, 150, 20, 340][i]},90%,55%,.3)`);
-        g.addColorStop(1, "rgba(0,0,0,0)");
-        ctx.fillStyle = g;
-        ctx.beginPath();
-        ctx.arc(0, 0, rr * 1.15, 0, this.TAU);
-        ctx.fill();
-      }
-      ctx.restore();
-
-      const g = ctx.createRadialGradient(x, y, 0, x, y, 34);
-      g.addColorStop(0, "rgba(255,255,255,.95)");
-      g.addColorStop(1, "rgba(200,225,255,0)");
-      ctx.fillStyle = g;
-      ctx.fillRect(x - 34, y - 34, 68, 68);
-    }
-
-    ctx.globalCompositeOperation = "source-over";
-    ctx.restore();
-  }
-
-  /**
-   * Multiverse master director loop
-   */
-  private renderMultiverseLoop(
-    ctx: CanvasRenderingContext2D,
-    t: number,
-    dt: number,
-    vw: number,
-    vh: number,
-    D: number
-  ): void {
-    const sp = 1 + this.cl(t / 9000) * 3;
-    const cx = vw / 2;
-    const cy = vh / 2;
-    const Dh = D / 2;
-
-    if (!this.U) {
-      this.U = { en: 1 };
-      this.nu = 2800;
-      if (this.labelEl) {
-        this.labelEl.innerHTML =
-          'CROSSING THE EVENT HORIZON<br><small style="opacity:.8;font-size:0.65em;letter-spacing:0.18em;color:#fde68a;">time slows to a crawl…</small>';
-      }
-    }
-
-    if (t >= this.nu) {
-      this.PV = this.U;
-      if (this.di >= this.deck.length) {
-        this.U = { fin: 1, t0: t };
-        this.tr = 0;
-        this.fl = 1;
-        this.nu = 1e12;
-        if (this.labelEl) {
-          this.labelEl.innerHTML =
-            'THE JOURNEY ENDS<br><small style="opacity:.8;font-size:0.65em;letter-spacing:0.18em;color:#38bdf8;">RETURNING TO HS AI STUDIO…</small>';
-        }
-
-        // Automatic return to HS AI Studio after all realities have been visited!
-        if (!this.autoReturnTimer) {
-          this.autoReturnTimer = setTimeout(() => {
-            this.restoreWebsite();
-          }, 4500);
-        }
-      } else {
-        this.U = this.mk(this.deck[this.di++]);
-        this.U.t0 = t;
-        this.tr = 0;
-        this.fl = 1;
-        this.nu = t + this.cl(2200 - t / 6, 1400, 2200);
-        if (this.labelEl) {
-          this.labelEl.innerHTML = `UNIVERSE #${this.cnt.toLocaleString()}<br><small style="opacity:.8;font-size:0.65em;letter-spacing:0.18em;color:#fde68a;">${this.U.name}</small>`;
-        }
-      }
-    }
-
-    if (this.hudEl) {
-      this.hudEl.textContent = "REALITIES SCANNED  " + (this.cnt * 37 + Math.floor(t * 1.3)).toLocaleString();
-    }
-
-    if (this.tr < 1) this.tr = Math.min(1, this.tr + dt / 750);
-
-    if (this.tr >= 1 || !this.PV) {
-      this.PV = null;
-      this.renderScene(ctx, this.U, t, dt, sp, vw, vh, D);
-    } else {
-      const e = this.ez(this.tr);
-      ctx.save();
-      ctx.translate(cx, cy);
-      ctx.scale(1 + e * 0.6, 1 + e * 0.6);
-      ctx.translate(-cx, -cy);
-      this.renderScene(ctx, this.PV, t, dt, sp, vw, vh, D);
-      ctx.restore();
-
-      ctx.save();
-      ctx.beginPath();
-      ctx.arc(cx, cy, e * Dh * 1.25 + 1, 0, this.TAU);
-      ctx.clip();
-      ctx.translate(cx, cy);
-      ctx.scale(0.55 + 0.45 * e, 0.55 + 0.45 * e);
-      ctx.translate(-cx, -cy);
-      this.renderScene(ctx, this.U, t, dt, sp, vw, vh, D);
-      ctx.restore();
-
-      ctx.save();
-      ctx.strokeStyle = `rgba(200,225,255,${1 - this.tr})`;
-      ctx.lineWidth = 3 + 10 * (1 - this.tr);
-      ctx.shadowColor = "#8fb4ff";
-      ctx.shadowBlur = 40;
-      ctx.beginPath();
-      ctx.arc(cx, cy, e * Dh * 1.25, 0, this.TAU);
-      ctx.stroke();
-      ctx.restore();
-    }
-
-    const vg = ctx.createRadialGradient(cx, cy, Dh * 0.45, cx, cy, Dh * 1.05);
-    vg.addColorStop(0, "rgba(0,0,0,0)");
-    vg.addColorStop(1, "rgba(0,0,0,.6)");
-    ctx.fillStyle = vg;
-    ctx.fillRect(0, 0, vw, vh);
-
-    if (this.fl > 0) {
-      ctx.fillStyle = `rgba(255,255,255,${this.fl * 0.4})`;
-      ctx.fillRect(0, 0, vw, vh);
-      this.fl -= dt * 0.004;
-    }
-  }
-
-  /**
-   * Initializes the floating black hole widget in the HS AI Studio interface
+   * Mounts the idle black hole widget on the page
    */
   public mountWidget(): void {
     if (typeof window === "undefined" || typeof document === "undefined") return;
@@ -943,11 +371,11 @@ export class BlackHolePortalEngine {
 
     this.isDestroyed = false;
     this.idle = true;
+    this.injectHudStyles();
 
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
     const size = this.C.size;
 
-    // Main Floating Widget
     const widget = document.createElement("div");
     widget.id = "hs-black-hole-widget";
     widget.setAttribute("role", "button");
@@ -970,7 +398,6 @@ export class BlackHolePortalEngine {
       transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     `;
 
-    // Interactive Label on hover
     const label = document.createElement("div");
     label.style.cssText = `
       position: absolute;
@@ -1040,7 +467,7 @@ export class BlackHolePortalEngine {
   }
 
   /**
-   * Triggers the website physical element-by-element gravitational suction
+   * Triggers the website physical element-by-element gravitational consumption
    */
   public triggerConsumption(): void {
     if (!this.idle || !this.widgetEl) return;
@@ -1169,8 +596,8 @@ export class BlackHolePortalEngine {
         ey,
         r0: Math.hypot(dx, dy),
         th: Math.atan2(dy, dx),
-        spin: this.rnd(1.2, 2.6) * Math.PI,
-        rot: this.rnd(-4, 4),
+        spin: this.rnd() * 1.4 * Math.PI + 1.2 * Math.PI,
+        rot: this.rnd() * 8 - 4,
         st: 0,
         en: 0,
         done: 0,
@@ -1179,7 +606,7 @@ export class BlackHolePortalEngine {
 
     const maxR = Math.max(1, ...items.map((i) => i.r0));
     for (const i of items) {
-      i.st = T_ARR + (i.r0 / maxR) * this.C.spread + this.rnd(0, 500);
+      i.st = T_ARR + (i.r0 / maxR) * this.C.spread + this.rnd() * 500;
       i.en = i.st + this.C.eat;
     }
 
@@ -1255,34 +682,20 @@ export class BlackHolePortalEngine {
     const tExp = 1600;
     const tMv = tAll + tExp;
 
-    // Initialize Multiverse deck
-    this.deck = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].sort(() => Math.random() - 0.5);
-    this.di = 0;
-    this.U = null;
-    this.PV = null;
-    this.nu = 0;
-    this.fl = 0;
-    this.mvOn = 0;
-    this.tr = 1;
-    this.last = 0;
-
     // ── 3. MASTER RENDER & PHYSICS LOOP ──────────────────────────────────────
     let T0 = 0;
 
     const step = (now: number) => {
       if (this.isDestroyed) return;
-      if (!T0) {
-        T0 = now;
-        this.last = now;
-      }
+      if (!T0) T0 = now;
       const t = now - T0;
-      const dt = Math.min(50, now - this.last);
-      this.last = now;
 
-      // MULTIVERSE JOURNEY
+      // ── MULTIVERSE JUMP → THE REAL UNIVERSE TRANSITION ────────────────────
       if (t >= tMv) {
-        if (!this.mvOn) this.startMv(vw, vh);
-        this.renderMultiverseLoop(c, t - tMv, dt, vw, vh, D);
+        if (!this.mvActive) {
+          this.startMultiverseJump(vw, vh);
+        }
+        this.renderMultiverseJumpLoop(c, now, vw, vh);
         this.animId = requestAnimationFrame(step);
         return;
       }
@@ -1347,94 +760,356 @@ export class BlackHolePortalEngine {
   }
 
   /**
-   * Initializes the Multiverse canvas state
+   * Initializes the Multiverse Jump → The Real Universe DOM & Graphics
    */
-  private startMv(vw: number, vh: number): void {
-    this.mvOn = 1;
+  private startMultiverseJump(vw: number, vh: number): void {
+    this.mvActive = true;
     document.body.style.visibility = "hidden";
-    document.documentElement.style.background = "#000";
+    document.documentElement.style.background = "#000000";
 
-    if (this.overlayCtx) {
-      this.overlayCtx.fillStyle = "#000";
-      this.overlayCtx.fillRect(0, 0, vw, vh);
-    }
+    this.initStarsAndGalaxies();
+    this.mkBand(vw, vh);
 
-    cosmicAudio.playDimensionTransition();
+    this.jumpTime = 0;
+    this.lastJumpNow = performance.now();
+    this.curJumpIdx = -1;
+    this.cap2Triggered = false;
 
-    // Multiverse Universe Title Overlay
-    const lab = document.createElement("div");
-    lab.id = "hs-multiverse-label";
-    lab.style.cssText = `
+    // HUD Container
+    const hud = document.createElement("div");
+    hud.id = "hud";
+    hud.style.cssText = `
       position: fixed;
       left: 0;
       right: 0;
-      bottom: calc(36px + env(safe-area-inset-bottom, 0px));
+      bottom: 0;
+      padding: 0 18px calc(7vh + env(safe-area-inset-bottom, 0px));
       text-align: center;
-      color: #fff;
-      font: 600 clamp(14px, 3.5vw, 22px)/1.4 system-ui, sans-serif;
-      letter-spacing: 0.2em;
-      text-shadow: 0 0 14px #fff, 0 0 28px rgba(245, 158, 11, 0.7);
-      z-index: 2147483002;
       pointer-events: none;
+      z-index: 2147483002;
+    `;
+
+    const n = document.createElement("div");
+    n.id = "n";
+    n.style.cssText = `
+      font-size: clamp(1.2rem, 5vw, 2.6rem);
+      letter-spacing: .32em;
+      font-weight: 300;
+      text-shadow: 0 0 30px currentColor;
       text-transform: uppercase;
     `;
-    document.documentElement.appendChild(lab);
-    this.labelEl = lab;
+    hud.appendChild(n);
+    this.titleEl = n;
 
-    // Realities Scanned HUD
-    const hud = document.createElement("div");
-    hud.id = "hs-multiverse-hud";
-    hud.style.cssText = `
-      position: fixed;
-      left: 18px;
-      top: calc(18px + env(safe-area-inset-top, 0px));
-      color: rgba(255, 255, 255, 0.85);
-      font: 600 12px ui-monospace, monospace;
-      letter-spacing: 0.15em;
-      z-index: 2147483002;
-      pointer-events: none;
-      text-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
+    const s = document.createElement("div");
+    s.id = "s";
+    s.style.cssText = `
+      margin-top: 12px;
+      font-size: clamp(.7rem, 2.1vw, .95rem);
+      letter-spacing: .16em;
+      color: #8394b4;
+      transition: opacity .6s;
     `;
+    hud.appendChild(s);
+    this.subEl = s;
+
     document.documentElement.appendChild(hud);
     this.hudEl = hud;
 
-    // Return Button
-    setTimeout(() => {
-      if (!this.mvOn) return;
-      const b = document.createElement("button");
-      b.id = "hs-return-btn";
-      b.textContent = "Return to HS AI Studio ↩";
-      b.style.cssText = `
-        position: fixed;
-        top: calc(16px + env(safe-area-inset-top, 0px));
-        right: 16px;
-        z-index: 2147483003;
-        padding: 10px 18px;
-        border-radius: 9999px;
-        border: 1px solid rgba(255, 255, 255, 0.4);
-        background: rgba(0, 0, 0, 0.75);
-        color: #fff;
-        font: 600 13px system-ui, sans-serif;
-        letter-spacing: 0.05em;
-        cursor: pointer;
-        backdrop-filter: blur(12px);
-        box-shadow: 0 0 20px rgba(245, 158, 11, 0.3);
-        transition: transform 0.2s, background 0.2s;
-      `;
-      b.onmouseenter = () => (b.style.transform = "scale(1.05)");
-      b.onmouseleave = () => (b.style.transform = "scale(1)");
-      b.onclick = () => this.restoreWebsite();
-      document.documentElement.appendChild(b);
-      this.returnBtnEl = b;
-    }, 2000);
+    // Counter Top Left
+    const c2 = document.createElement("div");
+    c2.id = "c2";
+    c2.style.cssText = `
+      position: fixed;
+      left: 18px;
+      top: calc(16px + env(safe-area-inset-top, 0px));
+      font-size: .7rem;
+      letter-spacing: .22em;
+      color: #8394b4;
+      z-index: 2147483002;
+      pointer-events: none;
+      font-family: ui-monospace, monospace;
+    `;
+    document.documentElement.appendChild(c2);
+    this.counterEl = c2;
 
-    const escListener = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        window.removeEventListener("keydown", escListener);
+    // Return to HS AI Studio Prompt / Button Top Right
+    const r = document.createElement("div");
+    r.id = "r";
+    r.style.cssText = `
+      position: fixed;
+      right: 18px;
+      top: calc(16px + env(safe-area-inset-top, 0px));
+      font-size: .72rem;
+      letter-spacing: .22em;
+      color: #d6e6ff;
+      opacity: 0;
+      transition: opacity 1s;
+      z-index: 2147483003;
+      cursor: pointer;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 9999px;
+      padding: 8px 16px;
+      backdrop-filter: blur(12px);
+      text-transform: uppercase;
+    `;
+    r.textContent = "RETURN TO HS AI STUDIO ↩";
+    r.onclick = () => this.restoreWebsite();
+    document.documentElement.appendChild(r);
+    this.returnPromptEl = r;
+
+    // Pointer down / Space listener to return or replay
+    const pointerListener = () => {
+      if (this.jumpTime > this.T_MULTIVERSE + 3) {
         this.restoreWebsite();
       }
     };
-    window.addEventListener("keydown", escListener);
+    window.addEventListener("pointerdown", pointerListener, { once: true });
+
+    const keyListener = (e: KeyboardEvent) => {
+      if (e.code === "Space" || e.key === "Escape") {
+        e.preventDefault();
+        window.removeEventListener("keydown", keyListener);
+        this.restoreWebsite();
+      }
+    };
+    window.addEventListener("keydown", keyListener);
+
+    // Automatic return to HS AI Studio after fully experiencing The Real Universe (~18s total)
+    this.autoReturnTimer = setTimeout(() => {
+      if (this.mvActive) {
+        this.restoreWebsite();
+      }
+    }, (this.T_MULTIVERSE + 14) * 1000);
+  }
+
+  private updateLabel(title: string, sub: string, col: string): void {
+    if (this.titleEl) {
+      this.titleEl.textContent = title;
+      this.titleEl.style.color = col;
+      this.titleEl.style.animation = "none";
+      // Trigger reflow for pop animation
+      void this.titleEl.offsetWidth;
+      this.titleEl.style.animation = "hs-pop .4s ease-out";
+    }
+    if (this.subEl) {
+      this.subEl.textContent = sub;
+    }
+  }
+
+  /**
+   * Multiverse Jump → The Real Universe Master Graphics Render Loop
+   */
+  private renderMultiverseJumpLoop(
+    x: CanvasRenderingContext2D,
+    now: number,
+    W: number,
+    H: number
+  ): void {
+    const dt = Math.max(0, Math.min(0.05, (now - this.lastJumpNow) / 1000));
+    this.lastJumpNow = now;
+    this.jumpTime += dt;
+
+    const t = this.jumpTime;
+    const real = t >= this.T_MULTIVERSE;
+    const i = Math.max(0, Math.min(this.U_LIST.length - 1, Math.floor(t / this.D)));
+    const lf = real ? 0 : t - i * this.D;
+    const rt = t - this.T_MULTIVERSE;
+    const u = this.U_LIST[i];
+    const idx = real ? 99 : i;
+
+    const cx = W / 2;
+    const cy = H / 2;
+    const M = Math.min(W, H) * 0.5;
+
+    if (idx !== this.curJumpIdx) {
+      this.curJumpIdx = idx;
+      this.cap2Triggered = false;
+      if (real) {
+        this.updateLabel(
+          "THE REAL UNIVERSE",
+          "13.8 billion years old · ~2 trillion galaxies · this one is ours",
+          "#d6e6ff"
+        );
+        if (this.counterEl) this.counterEl.textContent = "YOU ARE HERE";
+      } else {
+        this.updateLabel(u.n, u.s, `hsl(${u.h},90%,72%)`);
+        if (this.counterEl) this.counterEl.textContent = "UNIVERSES VISITED: " + (i + 1);
+      }
+    }
+
+    if (real && rt > 9 && !this.cap2Triggered) {
+      this.cap2Triggered = true;
+      if (this.subEl) {
+        this.subEl.textContent = "Home: the Milky Way · 100–400 billion stars · 100,000 light-years wide";
+      }
+    }
+
+    if (real && rt > 3 && this.returnPromptEl) {
+      this.returnPromptEl.style.opacity = "1";
+    }
+
+    // Deceleration speed curve into The Real Universe
+    const sp = real
+      ? Math.max(0.004, 6 * Math.exp(-rt * 1.7))
+      : (2.4 + 7 * Math.exp(-lf * 5)) * u.v;
+
+    x.globalCompositeOperation = "source-over";
+    x.fillStyle = real
+      ? `rgba(1,2,7,${Math.min(1, 0.3 + rt * 0.5)})`
+      : `hsla(${u.h},50%,2%,.3)`;
+    x.fillRect(0, 0, W, H);
+
+    const fa = real ? Math.min(1, Math.max(0, (rt - 0.6) / 2.5)) : 0;
+
+    x.save();
+    x.translate(cx, cy);
+    if (!real) {
+      x.rotate((i % 2 ? 1 : -1) * lf * 0.45 * Math.exp(-lf * 1.4));
+    }
+    x.translate(-cx, -cy);
+
+    // Fade in Milky Way Band in The Real Universe
+    if (real && fa > 0 && this.bandSprite) {
+      x.globalCompositeOperation = "lighter";
+      x.globalAlpha = fa * 0.9;
+      x.drawImage(this.bandSprite, -(this.Bw - W) / 2 - rt * 1.2, -(this.Bh - H) / 2 + rt * 0.5);
+      x.globalAlpha = 1;
+    } else if (!real) {
+      // Warp Core Glow
+      const gl = x.createRadialGradient(cx, cy, 0, cx, cy, M * 0.9);
+      const a = Math.min(0.3, sp / 30);
+      gl.addColorStop(0, `hsla(${u.h},100%,75%,${a})`);
+      gl.addColorStop(1, "rgba(0,0,0,0)");
+      x.globalCompositeOperation = "lighter";
+      x.fillStyle = gl;
+      x.fillRect(0, 0, W, H);
+    }
+
+    // Fade in Galaxies in The Real Universe
+    if (real && fa > 0 && this.galSprite) {
+      x.globalCompositeOperation = "lighter";
+      for (const g of this.G) {
+        const k = M / g.z;
+        const px = cx + g.x * k - rt * 3 * g.w;
+        const py = cy + g.y * k;
+        const s = g.sz * k * 0.22;
+        if (px < -s || px > W + s || py < -s || py > H + s) continue;
+        x.save();
+        x.translate(px, py);
+        x.rotate(g.rot + rt * 0.01);
+        x.scale(1, g.tilt);
+        x.globalAlpha = fa * 0.75;
+        x.drawImage(this.galSprite, -s / 2, -s / 2, s, s);
+        x.restore();
+      }
+
+      // Massive Home Galaxy
+      const hs = M * (1.1 + 0.05 * Math.max(0, rt - 1));
+      const hx = cx + M * 0.45;
+      const hy = cy - M * 0.12;
+      x.save();
+      x.translate(hx, hy);
+      x.rotate(-0.6 + rt * 0.012);
+      x.scale(1, 0.52);
+      x.globalAlpha = fa;
+      x.drawImage(this.galSprite, -hs / 2, -hs / 2, hs, hs);
+      x.restore();
+      x.globalAlpha = 1;
+    }
+
+    // 3D Relativistic Starfield with Dimensional Twists
+    x.globalCompositeOperation = "lighter";
+    x.lineCap = "round";
+
+    for (const s of this.S) {
+      s.pz = s.z;
+      s.z -= sp * dt;
+      if (s.z <= 0.02) {
+        this.initStar(s);
+        s.z = 1;
+        s.pz = 1;
+      }
+
+      if (!real && (u as any).fl && this.rnd() < 0.3) continue;
+
+      const tw = real ? 0 : u.tw;
+      this.projectStar(s, s.z, tw, cx, cy, M);
+      const px = this.PX;
+      const py = this.PY;
+
+      this.projectStar(s, s.pz, tw, cx, cy, M);
+      const qx = this.PX;
+      const qy = this.PY;
+
+      if (px < -40 || px > W + 40 || py < -40 || py > H + 40) continue;
+
+      const f = 1 - s.z;
+      const len = Math.hypot(px - qx, py - qy);
+
+      if (real) {
+        const al = (0.25 + s.b * 0.75) * (0.4 + 0.6 * f + 0.3);
+        x.strokeStyle = `rgba(${s.tc},${Math.min(1, al)})`;
+        x.fillStyle = x.strokeStyle;
+
+        if (len > 1.5) {
+          x.lineWidth = 0.6 + s.b * 1.4;
+          x.beginPath();
+          x.moveTo(qx, qy);
+          x.lineTo(px, py);
+          x.stroke();
+        } else {
+          const r = 0.5 + s.b * 1.5 + f * 0.4;
+          x.beginPath();
+          x.arc(px, py, r, 0, 6.283);
+          x.fill();
+
+          // Stellar cross diffraction spikes
+          if (s.b > 0.35 && rt > 1) {
+            x.lineWidth = 0.6;
+            x.globalAlpha = Math.min(1, fa);
+            const L = 6 + s.b * 22;
+            x.beginPath();
+            x.moveTo(px - L, py);
+            x.lineTo(px + L, py);
+            x.moveTo(px, py - L);
+            x.lineTo(px, py + L);
+            x.stroke();
+            x.globalAlpha = 1;
+          }
+        }
+      } else {
+        const d = Math.hypot(px - cx, py - cy) / (Math.hypot(W, H) * 0.5);
+        x.strokeStyle = `hsla(${u.h + (1 - d) * 25 - d * 20},${70 + s.r * 30}%,${58 + f * 32}%,${0.3 + f * 0.7})`;
+        x.lineWidth = 0.5 + f * 2.3 * (0.5 + s.r);
+        x.beginPath();
+        x.moveTo(qx, qy);
+        x.lineTo(px, py);
+        x.stroke();
+      }
+    }
+
+    x.restore();
+    x.globalCompositeOperation = "source-over";
+
+    // Dimensional Jump Entry Flash
+    if (!real) {
+      if (lf < 0.18) {
+        x.fillStyle = `hsla(${u.h},100%,88%,${(1 - lf / 0.18) * 0.8})`;
+        x.fillRect(0, 0, W, H);
+      }
+    } else if (rt < 0.4) {
+      x.fillStyle = `rgba(255,255,255,${(1 - rt / 0.4) * 0.9})`;
+      x.fillRect(0, 0, W, H);
+    }
+
+    // Outer Vignette
+    const vg = x.createRadialGradient(cx, cy, M * 0.7, cx, cy, Math.hypot(W, H) * 0.55);
+    vg.addColorStop(0, "rgba(0,0,0,0)");
+    vg.addColorStop(1, "rgba(0,0,0,.7)");
+    x.fillStyle = vg;
+    x.fillRect(0, 0, W, H);
   }
 
   /**
@@ -1453,17 +1128,19 @@ export class BlackHolePortalEngine {
     cosmicAudio.playReturnSwell();
 
     // 1. Remove HUD overlays
-    if (this.labelEl && this.labelEl.parentNode) {
-      this.labelEl.parentNode.removeChild(this.labelEl);
-      this.labelEl = null;
-    }
     if (this.hudEl && this.hudEl.parentNode) {
       this.hudEl.parentNode.removeChild(this.hudEl);
       this.hudEl = null;
+      this.titleEl = null;
+      this.subEl = null;
     }
-    if (this.returnBtnEl && this.returnBtnEl.parentNode) {
-      this.returnBtnEl.parentNode.removeChild(this.returnBtnEl);
-      this.returnBtnEl = null;
+    if (this.counterEl && this.counterEl.parentNode) {
+      this.counterEl.parentNode.removeChild(this.counterEl);
+      this.counterEl = null;
+    }
+    if (this.returnPromptEl && this.returnPromptEl.parentNode) {
+      this.returnPromptEl.parentNode.removeChild(this.returnPromptEl);
+      this.returnPromptEl = null;
     }
 
     // 2. Remove full-screen overlay canvas
@@ -1529,7 +1206,7 @@ export class BlackHolePortalEngine {
     });
 
     // 8. Re-enable widget
-    this.mvOn = 0;
+    this.mvActive = false;
     this.idle = true;
     if (this.widgetEl) {
       this.widgetEl.style.visibility = "";
@@ -1537,7 +1214,7 @@ export class BlackHolePortalEngine {
     }
 
     console.log(
-      `%c[HS COSMIC PORTAL] 100% Losslessly Restored HS AI Studio`,
+      `%c[HS COSMIC PORTAL] Reconstructed & Restored 100% of HS AI Studio DOM without reload`,
       "background:#000;color:#10b981;font-weight:bold;padding:4px;"
     );
   }
