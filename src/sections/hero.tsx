@@ -4,13 +4,11 @@ import { motion, useReducedMotion } from "framer-motion";
 import { HeroCanvas } from "@/components/visuals/hero-canvas";
 import { MagneticButton } from "@/components/ui/MagneticButton";
 import { triggerFullscreenExploreVideo } from "@/components/fullscreen-explore-video";
-import { useMultiverse } from "@/components/multiverse/MultiverseContext";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
 export function Hero() {
   const reduce = useReducedMotion();
-  const { openPortal } = useMultiverse();
 
   return (
     <section id="home" className="relative min-h-dvh overflow-hidden bg-ink">
@@ -139,26 +137,6 @@ export function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.9, delay: 0.85, ease }}
         >
-          <button
-            type="button"
-            onClick={(e) => {
-              const rect = e.currentTarget.getBoundingClientRect();
-              openPortal({
-                x: rect.left + rect.width / 2,
-                y: rect.top + rect.height / 2,
-              });
-            }}
-            className="group relative inline-flex items-center gap-2.5 rounded-full border border-amber-400/50 bg-gradient-to-r from-amber-500/20 via-black to-amber-950/40 px-6 py-3.5 font-mono text-xs font-bold uppercase tracking-wider text-amber-200 shadow-xl shadow-amber-500/15 backdrop-blur-md transition-all hover:scale-105 hover:border-amber-300 hover:shadow-amber-500/35"
-          >
-            <span className="relative flex h-2 w-2">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-amber-400 opacity-75" />
-              <span className="relative inline-flex h-2 w-2 rounded-full bg-amber-500" />
-            </span>
-            <span>✦ Enter the Infinite</span>
-            <span className="rounded bg-amber-400/20 px-1.5 py-0.5 text-[9px] text-amber-300 font-mono">
-              MULTIVERSE
-            </span>
-          </button>
           <MagneticButton href="#products" lg>
             Explore My AI Products
           </MagneticButton>
