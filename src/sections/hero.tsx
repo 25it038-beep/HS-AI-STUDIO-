@@ -4,6 +4,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import { HeroCanvas } from "@/components/visuals/hero-canvas";
 import { MagneticButton } from "@/components/ui/MagneticButton";
 import { triggerFullscreenExploreVideo } from "@/components/fullscreen-explore-video";
+import { triggerIntroVideo } from "@/components/intro-video";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
@@ -139,6 +140,17 @@ export function Hero() {
         >
           <MagneticButton href="#products" lg>
             Explore My AI Products
+          </MagneticButton>
+          <MagneticButton
+            href="#intro"
+            onClick={(e) => {
+              e.preventDefault();
+              triggerIntroVideo();
+            }}
+            variant="ghost"
+            lg
+          >
+            Watch Intro ▷
           </MagneticButton>
           <MagneticButton
             href="https://hs-prot-z1ti-qtj2izn1p-harshanseliyan28-1638s-projects.vercel.app/"

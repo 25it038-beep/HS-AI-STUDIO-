@@ -27,11 +27,11 @@ import { cosmicAudio } from "./audio-engine";
 export class BlackHolePortalEngine {
   private static instance: BlackHolePortalEngine | null = null;
 
-  // Widget & Suction Configuration
+  // Widget & Suction Configuration (positioned directly above Contributor Widget)
   private C = {
     size: 86,
-    right: 20,
-    bottom: 20,
+    right: 24,
+    bottom: 96,
     eat: 2300,
     spread: 4200,
   };
