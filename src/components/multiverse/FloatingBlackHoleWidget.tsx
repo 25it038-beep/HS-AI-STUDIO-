@@ -80,8 +80,8 @@ export function FloatingBlackHoleWidget() {
     openPortal(origin);
   };
 
-  // Only render if we are in idle or starting sequence
-  if (phase === "universe" || phase === "wormhole") {
+  // Only render if we are in idle state
+  if (phase !== "idle") {
     return null;
   }
 
@@ -132,12 +132,13 @@ export function FloatingBlackHoleWidget() {
         onClick={handleTrigger}
         initial={{ scale: 0, opacity: 0 }}
         animate={{
-          scale: phase === "awakening" ? 1.35 : phase === "collapse" ? 2.6 : 1,
+          scale: isHovered ? 1.08 : 1,
           opacity: 1,
         }}
         transition={{
-          scale: { duration: phase === "collapse" ? 1.8 : 0.4 },
-          default: { type: "spring", stiffness: 260, damping: 20 },
+          type: "spring",
+          stiffness: 260,
+          damping: 20,
         }}
         className="group relative flex h-16 w-16 sm:h-20 sm:w-20 items-center justify-center rounded-full p-[2px] transition-all duration-300 hover:scale-110 active:scale-95 cursor-pointer"
         aria-label="ENTER COSMOS — Gravitational Singularity Activation"

@@ -3,17 +3,23 @@
 import React, { createContext, useContext, useState, useCallback, useEffect, useRef } from "react";
 import { DIMENSIONS, DimensionConfig } from "./world-generator";
 import { cosmicAudio } from "./audio-engine";
-import { DomSuctionEngine } from "./dom-suction-engine";
+import { DomSuctionEngine, DiagnosticStats } from "./dom-suction-engine";
 
 export type MultiversePhase =
   | "idle"
-  | "awakening"
-  | "collapse"
-  | "horizon"
-  | "singularity"
+  | "black_hole_activation"
+  | "element_attraction"
+  | "element_detachment"
+  | "spiral_absorption"
+  | "website_collapse"
+  | "final_element_absorption"
+  | "event_horizon_expansion"
+  | "camera_entry"
   | "wormhole"
-  | "universe"
-  | "returning";
+  | "cosmic_sequence"
+  | "automatic_return"
+  | "website_reconstruction"
+  | "complete";
 
 interface MultiverseContextValue {
   phase: MultiversePhase;
@@ -21,6 +27,7 @@ interface MultiverseContextValue {
   currentDimension: DimensionConfig;
   audioEnabled: boolean;
   singularityOrigin: { x: number; y: number } | null;
+  diagnosticStats: DiagnosticStats;
   openPortal: (origin?: { x: number; y: number }) => void;
   exitUniverse: () => void;
   toggleAudio: () => void;
@@ -34,6 +41,7 @@ export function MultiverseProvider({ children }: { children: React.ReactNode }) 
   const [currentDimensionIndex, setCurrentDimensionIndex] = useState(0);
   const [audioEnabled, setAudioEnabled] = useState(true);
   const [singularityOrigin, setSingularityOrigin] = useState<{ x: number; y: number } | null>(null);
+  const [diagnosticStats, setDiagnosticStats] = useState<DiagnosticStats>(DomSuctionEngine.getStats());
 
   const actionTimersRef = useRef<Array<ReturnType<typeof setTimeout>>>([]);
   const currentDimension = DIMENSIONS[currentDimensionIndex % DIMENSIONS.length];
@@ -46,26 +54,34 @@ export function MultiverseProvider({ children }: { children: React.ReactNode }) 
   // --- Reversible Return: Reverse Wormhole & Reconstruct DOM Elements ---
   const exitUniverse = useCallback(() => {
     clearAllTimers();
-    setPhase("returning");
+    setPhase("automatic_return");
     cosmicAudio.playReturnSwell();
 
     // Reconstruct original website from singularity particles & restore scroll
-    DomSuctionEngine.restoreWebsite();
+    const tReconstruct = setTimeout(() => {
+      setPhase("website_reconstruction");
+      DomSuctionEngine.restoreWebsite();
+    }, 1200);
+    actionTimersRef.current.push(tReconstruct);
 
     // Complete return transition and reset to idle after reverse wormhole flight
-    const t = setTimeout(() => {
-      setPhase("idle");
-      setSingularityOrigin(null);
-      cosmicAudio.stop();
+    const tComplete = setTimeout(() => {
+      setPhase("complete");
+      const tIdle = setTimeout(() => {
+        setPhase("idle");
+        setSingularityOrigin(null);
+        cosmicAudio.stop();
+      }, 500);
+      actionTimersRef.current.push(tIdle);
     }, 3800);
-    actionTimersRef.current.push(t);
+    actionTimersRef.current.push(tComplete);
   }, [clearAllTimers]);
 
-  // --- Complete Automated Cinematic Journey: 35-50s Total ---
+  // --- Strict Sequential Physical Absorption State Machine ---
   const openPortal = useCallback((origin?: { x: number; y: number }) => {
     clearAllTimers();
 
-    const cx = origin ? origin.x : window.innerWidth - 64;
+    const cx = origin ? origin.x : window.innerWidth - 70;
     const cy = origin ? origin.y : window.innerHeight / 2;
     const singularityPos = { x: cx, y: cy };
     setSingularityOrigin(singularityPos);
@@ -74,56 +90,72 @@ export function MultiverseProvider({ children }: { children: React.ReactNode }) 
     cosmicAudio.start();
     cosmicAudio.playAwakeningPulse();
 
-    // PHASE 1: Awakening (0.0s - 0.5s)
-    setPhase("awakening");
+    // 1. BLACK_HOLE_ACTIVATION
+    setPhase("black_hole_activation");
 
-    // PHASE 2: Element-by-Element Gravitational Suction (0.5s - 4.2s)
-    actionTimersRef.current.push(
-      setTimeout(() => {
-        setPhase("collapse");
-        DomSuctionEngine.initiateSuction(singularityPos);
-      }, 500)
-    );
+    // After 600ms of activation, start physical element suction
+    const tSuction = setTimeout(() => {
+      setPhase("element_attraction");
 
-    // PHASE 3: Event Horizon Plunge & Relativistic Flash (4.2s - 6.0s)
-    actionTimersRef.current.push(
-      setTimeout(() => {
-        setPhase("horizon");
-        cosmicAudio.playSingularityImpact();
-      }, 4200)
-    );
+      DomSuctionEngine.initiateSuction(
+        singularityPos,
+        // Live progress telemetry callback
+        (stats) => {
+          setDiagnosticStats(stats);
+          if (stats.absorptionPercentage >= 95) {
+            setPhase("final_element_absorption");
+          } else if (stats.absorptionPercentage >= 65) {
+            setPhase("website_collapse");
+          } else if (stats.absorptionPercentage >= 25) {
+            setPhase("spiral_absorption");
+          } else if (stats.absorbedCount > 0) {
+            setPhase("element_detachment");
+          }
+        },
+        // STRICT COMPLETION CALLBACK:
+        // The wormhole MUST NOT start while even one website element remains unconsumed!
+        (stats) => {
+          setDiagnosticStats(stats);
+          setPhase("final_element_absorption");
 
-    // PHASE 4: Singularity Void (6.0s - 6.8s)
-    actionTimersRef.current.push(
-      setTimeout(() => {
-        setPhase("singularity");
-      }, 6000)
-    );
+          // Event Horizon Expansion: black hole engulfs the entire screen
+          const tExpand = setTimeout(() => {
+            setPhase("event_horizon_expansion");
+            cosmicAudio.playSingularityImpact();
 
-    // PHASE 5: 3D Cosmic Spacetime Wormhole (6.8s - 13.0s)
-    actionTimersRef.current.push(
-      setTimeout(() => {
-        setPhase("wormhole");
-        cosmicAudio.setWormholeIntensity(1.0);
-      }, 6800)
-    );
+            // Camera Entry into singularity
+            const tCamera = setTimeout(() => {
+              setPhase("camera_entry");
 
-    // PHASE 6: Infinite Multiverse Cosmic Journey (13.0s - 37.0s)
-    // Automated flight across Galaxies, Pulsars, Supernovae, and Deep Universe
-    actionTimersRef.current.push(
-      setTimeout(() => {
-        setPhase("universe");
-        cosmicAudio.playDimensionTransition();
-        cosmicAudio.setWormholeIntensity(0.25);
-      }, 13000)
-    );
+              // ONLY NOW: Enter 3D Spacetime Wormhole!
+              const tWormhole = setTimeout(() => {
+                setPhase("wormhole");
+                cosmicAudio.setWormholeIntensity(1.0);
 
-    // PHASE 7: AUTOMATIC RETURN TO HS AI STUDIO (at 37.0s, total duration ~43s)
-    actionTimersRef.current.push(
-      setTimeout(() => {
-        exitUniverse();
-      }, 37000)
-    );
+                // Cosmic Journey: Galaxies -> Pulsars -> Supernova -> Deep Cosmos
+                const tUniverse = setTimeout(() => {
+                  setPhase("cosmic_sequence");
+                  cosmicAudio.playDimensionTransition();
+                  cosmicAudio.setWormholeIntensity(0.25);
+
+                  // Automatic return after ~28 seconds of cosmic sequence
+                  const tAutoReturn = setTimeout(() => {
+                    exitUniverse();
+                  }, 28000);
+                  actionTimersRef.current.push(tAutoReturn);
+                }, 6000);
+                actionTimersRef.current.push(tUniverse);
+              }, 900);
+              actionTimersRef.current.push(tWormhole);
+            }, 1200);
+            actionTimersRef.current.push(tCamera);
+          }, 400);
+          actionTimersRef.current.push(tExpand);
+        }
+      );
+    }, 600);
+
+    actionTimersRef.current.push(tSuction);
   }, [clearAllTimers, exitUniverse]);
 
   const toggleAudio = useCallback(() => {
@@ -143,6 +175,7 @@ export function MultiverseProvider({ children }: { children: React.ReactNode }) 
   useEffect(() => {
     return () => {
       clearAllTimers();
+      DomSuctionEngine.cleanup();
     };
   }, [clearAllTimers]);
 
@@ -154,6 +187,7 @@ export function MultiverseProvider({ children }: { children: React.ReactNode }) 
         currentDimension,
         audioEnabled,
         singularityOrigin,
+        diagnosticStats,
         openPortal,
         exitUniverse,
         toggleAudio,
