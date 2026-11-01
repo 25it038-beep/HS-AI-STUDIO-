@@ -43,25 +43,25 @@ export function MultiverseProvider({ children }: { children: React.ReactNode }) 
     actionTimersRef.current = [];
   }, []);
 
-  // --- Phase 6: Return Through The Wormhole & Reconstruct Website ---
+  // --- Reversible Return: Reverse Wormhole & Reconstruct DOM Elements ---
   const exitUniverse = useCallback(() => {
     clearAllTimers();
     setPhase("returning");
     cosmicAudio.playReturnSwell();
 
-    // Reconstruct original website from accretion particles
+    // Reconstruct original website from singularity particles & restore scroll
     DomSuctionEngine.restoreWebsite();
 
-    // After reverse wormhole travel and reconstruction (2.8s), return to normal idle website
+    // Complete return transition and reset to idle after reverse wormhole flight
     const t = setTimeout(() => {
       setPhase("idle");
       setSingularityOrigin(null);
       cosmicAudio.stop();
-    }, 2800);
+    }, 3800);
     actionTimersRef.current.push(t);
   }, [clearAllTimers]);
 
-  // --- Phase 1 to Phase 5: Black Hole Widget Click -> Website Consumption -> Wormhole -> Universe ---
+  // --- Complete Automated Cinematic Journey: 35-50s Total ---
   const openPortal = useCallback((origin?: { x: number; y: number }) => {
     clearAllTimers();
 
@@ -74,10 +74,10 @@ export function MultiverseProvider({ children }: { children: React.ReactNode }) 
     cosmicAudio.start();
     cosmicAudio.playAwakeningPulse();
 
-    // PHASE 1: Awakening (0.5s)
+    // PHASE 1: Awakening (0.0s - 0.5s)
     setPhase("awakening");
 
-    // PHASE 2: Progressive Gravitational Consumption of Website Elements (after 500ms)
+    // PHASE 2: Element-by-Element Gravitational Suction (0.5s - 4.2s)
     actionTimersRef.current.push(
       setTimeout(() => {
         setPhase("collapse");
@@ -85,38 +85,46 @@ export function MultiverseProvider({ children }: { children: React.ReactNode }) 
       }, 500)
     );
 
-    // PHASE 3: Event Horizon Absorption & Relativistic Flash (after 2200ms)
+    // PHASE 3: Event Horizon Plunge & Relativistic Flash (4.2s - 6.0s)
     actionTimersRef.current.push(
       setTimeout(() => {
         setPhase("horizon");
         cosmicAudio.playSingularityImpact();
-      }, 2200)
+      }, 4200)
     );
 
-    // PHASE 4: Singularity Void (after 3000ms)
+    // PHASE 4: Singularity Void (6.0s - 6.8s)
     actionTimersRef.current.push(
       setTimeout(() => {
         setPhase("singularity");
-      }, 3000)
+      }, 6000)
     );
 
-    // Enter 3D Cosmic Wormhole (after 3500ms)
+    // PHASE 5: 3D Cosmic Spacetime Wormhole (6.8s - 13.0s)
     actionTimersRef.current.push(
       setTimeout(() => {
         setPhase("wormhole");
         cosmicAudio.setWormholeIntensity(1.0);
-      }, 3500)
+      }, 6800)
     );
 
-    // PHASE 5: Arrive and Explore the Infinite Cosmic Universe (after 5800ms)
+    // PHASE 6: Infinite Multiverse Cosmic Journey (13.0s - 37.0s)
+    // Automated flight across Galaxies, Pulsars, Supernovae, and Deep Universe
     actionTimersRef.current.push(
       setTimeout(() => {
         setPhase("universe");
         cosmicAudio.playDimensionTransition();
-        cosmicAudio.setWormholeIntensity(0.2);
-      }, 5800)
+        cosmicAudio.setWormholeIntensity(0.25);
+      }, 13000)
     );
-  }, [clearAllTimers]);
+
+    // PHASE 7: AUTOMATIC RETURN TO HS AI STUDIO (at 37.0s, total duration ~43s)
+    actionTimersRef.current.push(
+      setTimeout(() => {
+        exitUniverse();
+      }, 37000)
+    );
+  }, [clearAllTimers, exitUniverse]);
 
   const toggleAudio = useCallback(() => {
     const isMuted = cosmicAudio.toggleMute();
