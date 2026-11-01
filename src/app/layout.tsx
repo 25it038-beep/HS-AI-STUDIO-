@@ -107,9 +107,9 @@ export default function RootLayout({
             <AudioIntro />
             <IntroVideo />
             <FullscreenExploreVideo />
-            <ContributorFloatingBadge />
-            <WebsiteAssistantWidget />
           </div>
+          <ContributorFloatingBadge />
+          <WebsiteAssistantWidget />
           <MultiverseExperience />
           <FloatingBlackHoleWidget />
         </MultiverseProvider>

@@ -82,7 +82,7 @@ export function FloatingBlackHoleWidget() {
   return (
     <div
       ref={widgetRef}
-      className="fixed bottom-24 right-4 sm:bottom-28 sm:right-8 z-40 flex items-center gap-3 select-none"
+      className="fixed top-1/2 -translate-y-1/2 right-4 sm:right-6 z-40 flex items-center gap-3 select-none"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >

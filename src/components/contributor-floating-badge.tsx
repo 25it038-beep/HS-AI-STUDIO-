@@ -2,8 +2,10 @@
 
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useMultiverse } from "@/components/multiverse/MultiverseContext";
 
 export function ContributorFloatingBadge() {
+  const { phase } = useMultiverse();
   const [isOpen, setIsOpen] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [formData, setFormData] = useState({
@@ -70,6 +72,8 @@ export function ContributorFloatingBadge() {
     });
   };
 
+  if (phase !== "idle") return null;
+
   return (
     <>
       {/* Floating Trigger in Bottom-Right Corner */}
@@ -81,7 +85,7 @@ export function ContributorFloatingBadge() {
           className="group hidden sm:flex items-center gap-2.5 rounded-full border border-cyan-400/30 bg-[#0e0d16]/90 py-2 pl-4 pr-3.5 text-left shadow-2xl backdrop-blur-md transition-all duration-300 hover:border-cyan-400/70 hover:bg-[#131120]"
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 1, duration: 0.6 }}
+          transition={{ delay: 0.1, duration: 0.4 }}
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
         >
@@ -102,7 +106,7 @@ export function ContributorFloatingBadge() {
           className="relative flex h-14 w-14 sm:h-14 sm:w-14 items-center justify-center rounded-full bg-gradient-to-tr from-cyan-500 via-indigo-600 to-fuchsia-500 p-[1.5px] shadow-[0_0_25px_rgba(34,211,238,0.35)] transition-transform duration-300 hover:scale-105 active:scale-95"
           initial={{ scale: 0, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
-          transition={{ delay: 0.8, type: "spring", stiffness: 260, damping: 20 }}
+          transition={{ delay: 0.1, type: "spring", stiffness: 260, damping: 20 }}
           aria-label="Open Contributor Registration Form"
         >
           {/* Pulsing ring */}

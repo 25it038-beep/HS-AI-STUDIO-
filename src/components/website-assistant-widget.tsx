@@ -5,6 +5,7 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowUpRight } from "@/components/ui/icons";
 import { products } from "@/data/products";
+import { useMultiverse } from "@/components/multiverse/MultiverseContext";
 
 interface SiteTelemetry {
   pathname: string;
@@ -107,6 +108,7 @@ const SUGGESTED_QUERIES = [
 ];
 
 export function WebsiteAssistantWidget() {
+  const { phase } = useMultiverse();
   const [isOpen, setIsOpen] = useState(false);
   const [webSearchEnabled, setWebSearchEnabled] = useState(true);
   const [clientLLMActive, setClientLLMActive] = useState(false);
@@ -398,6 +400,8 @@ CONVERSATION RULES:
       setIsLoading(false);
     }
   };
+
+  if (phase !== "idle") return null;
 
   return (
     <>
