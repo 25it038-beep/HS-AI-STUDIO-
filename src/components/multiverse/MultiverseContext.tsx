@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useState, useCallback, useEffect } from "react";
+import React, { createContext, useContext, useState, useCallback, useEffect, useRef } from "react";
 import { DIMENSIONS, DimensionConfig } from "./world-generator";
 import { cosmicAudio } from "./audio-engine";
 
@@ -36,53 +36,119 @@ export function MultiverseProvider({ children }: { children: React.ReactNode }) 
   const [audioEnabled, setAudioEnabled] = useState(true);
   const [singularityOrigin, setSingularityOrigin] = useState<{ x: number; y: number } | null>(null);
 
+  const autoTourTimersRef = useRef<Array<ReturnType<typeof setTimeout>>>([]);
+
   const currentDimension = DIMENSIONS[currentDimensionIndex % DIMENSIONS.length];
 
-  // --- Gravitational Consumption Sequence ---
+  const clearAllTimers = useCallback(() => {
+    autoTourTimersRef.current.forEach((t: ReturnType<typeof setTimeout>) => clearTimeout(t));
+    autoTourTimersRef.current = [];
+  }, []);
+
+  // --- Return Through The Wormhole (Manual or Automatic) ---
+  const exitUniverse = useCallback(() => {
+    clearAllTimers();
+    setPhase("returning");
+    cosmicAudio.playReturnSwell();
+
+    // After reverse wormhole travel and reconstruction (2.6s), return to normal idle website
+    const t = setTimeout(() => {
+      setPhase("idle");
+      setSingularityOrigin(null);
+      setCurrentDimensionIndex(0);
+      cosmicAudio.stop();
+    }, 2600);
+    autoTourTimersRef.current.push(t);
+  }, [clearAllTimers]);
+
+  // --- Gravitational Consumption & Automated Rapid Multiverse Tour ---
   const openPortal = useCallback((origin?: { x: number; y: number }) => {
+    clearAllTimers();
+
     // Record singularity center (defaults to center of viewport)
     const cx = origin ? origin.x : window.innerWidth / 2;
     const cy = origin ? origin.y : window.innerHeight / 2;
     setSingularityOrigin({ x: cx, y: cy });
+    setCurrentDimensionIndex(0);
 
     // Audio init
     cosmicAudio.start();
     cosmicAudio.playAwakeningPulse();
 
-    // PHASE 1: Awakening (0.8s)
+    // PHASE 1: Awakening (0.6s)
     setPhase("awakening");
 
-    // PHASE 2: Gravitational Collapse (after 800ms)
-    setTimeout(() => {
-      setPhase("collapse");
-    }, 800);
+    // PHASE 2: Gravitational Collapse (after 600ms)
+    autoTourTimersRef.current.push(
+      setTimeout(() => {
+        setPhase("collapse");
+      }, 600)
+    );
 
-    // PHASE 3: Event Horizon & Flash (after 2600ms)
-    setTimeout(() => {
-      setPhase("horizon");
-      cosmicAudio.playSingularityImpact();
-    }, 2600);
+    // PHASE 3: Event Horizon & Flash (after 2100ms)
+    autoTourTimersRef.current.push(
+      setTimeout(() => {
+        setPhase("horizon");
+        cosmicAudio.playSingularityImpact();
+      }, 2100)
+    );
 
-    // PHASE 4: Singularity & Darkness (after 3600ms)
-    setTimeout(() => {
-      setPhase("singularity");
-    }, 3600);
+    // PHASE 4: Singularity & Darkness (after 2800ms)
+    autoTourTimersRef.current.push(
+      setTimeout(() => {
+        setPhase("singularity");
+      }, 2800)
+    );
 
-    // Enter Wormhole (after 4200ms)
-    setTimeout(() => {
-      setPhase("wormhole");
-      cosmicAudio.setWormholeIntensity(1.0);
-    }, 4200);
+    // Initial Hyperspace Wormhole Transit (after 3300ms)
+    autoTourTimersRef.current.push(
+      setTimeout(() => {
+        setPhase("wormhole");
+        cosmicAudio.setWormholeIntensity(1.0);
+      }, 3300)
+    );
 
-    // Transition into First Dimension (after 7000ms)
-    setTimeout(() => {
-      setPhase("dimension");
-      cosmicAudio.playDimensionTransition();
-      cosmicAudio.setWormholeIntensity(0.2);
-    }, 7000);
-  }, []);
+    // --- Automated Rapid Multiverse Traversal ---
+    // Traverses all 8 procedural dimensions automatically at high speed
+    let cumulativeDelay = 4800;
+    const WORLD_DURATION = 2400; // 2.4s in each dimension
+    const WARP_DURATION = 700;   // 0.7s lightning warp burst
 
-  // --- Dimension Warp Jump ---
+    for (let i = 0; i < DIMENSIONS.length; i++) {
+      const dimIndex = i;
+
+      // Enter Dimension i
+      autoTourTimersRef.current.push(
+        setTimeout(() => {
+          setCurrentDimensionIndex(dimIndex);
+          setPhase("dimension");
+          cosmicAudio.playDimensionTransition();
+          cosmicAudio.setWormholeIntensity(0.3);
+        }, cumulativeDelay)
+      );
+      cumulativeDelay += WORLD_DURATION;
+
+      // If not the final dimension, fire a hyper-speed warp burst
+      if (i < DIMENSIONS.length - 1) {
+        autoTourTimersRef.current.push(
+          setTimeout(() => {
+            setPhase("warping");
+            cosmicAudio.setWormholeIntensity(0.9);
+          }, cumulativeDelay)
+        );
+        cumulativeDelay += WARP_DURATION;
+      }
+    }
+
+    // Automatically return to HS AI Solutions after all 8 worlds!
+    autoTourTimersRef.current.push(
+      setTimeout(() => {
+        exitUniverse();
+      }, cumulativeDelay + 600)
+    );
+  }, [clearAllTimers, exitUniverse]);
+
+  // --- Manual Warp Jump Override ---
   const warpToNextDimension = useCallback(() => {
     if (phase !== "dimension") return;
     setPhase("warping");
@@ -93,21 +159,15 @@ export function MultiverseProvider({ children }: { children: React.ReactNode }) 
       setPhase("dimension");
       cosmicAudio.playDimensionTransition();
       cosmicAudio.setWormholeIntensity(0.2);
-    }, 2200);
+    }, 700);
   }, [phase]);
 
-  // --- Return Through The Wormhole ---
-  const exitUniverse = useCallback(() => {
-    setPhase("returning");
-    cosmicAudio.playReturnSwell();
-
-    // After reverse wormhole travel and reconstruction (3.2s), return to normal idle website
-    setTimeout(() => {
-      setPhase("idle");
-      setSingularityOrigin(null);
-      cosmicAudio.stop();
-    }, 3200);
-  }, []);
+  // Clean up timers on unmount
+  useEffect(() => {
+    return () => {
+      clearAllTimers();
+    };
+  }, [clearAllTimers]);
 
   const toggleAudio = useCallback(() => {
     const isMuted = cosmicAudio.toggleMute();
