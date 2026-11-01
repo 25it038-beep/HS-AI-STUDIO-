@@ -105,9 +105,9 @@ export default function RootLayout({
             <main>{children}</main>
             <Footer />
             <AudioIntro />
-            <IntroVideo />
-            <FullscreenExploreVideo />
           </div>
+          <IntroVideo />
+          <FullscreenExploreVideo />
           <ContributorFloatingBadge />
           <WebsiteAssistantWidget />
           <MultiverseExperience />

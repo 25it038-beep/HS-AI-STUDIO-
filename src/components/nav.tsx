@@ -5,7 +5,6 @@ import Link from "next/link";
 import { AnimatePresence, motion, useScroll } from "framer-motion";
 import { ArrowUpRight } from "@/components/ui/icons";
 import { triggerFullscreenExploreVideo } from "@/components/fullscreen-explore-video";
-import { triggerIntroVideo } from "@/components/intro-video";
 import { NotificationBell } from "@/components/notification-bell";
 
 const PORTFOLIO_URL =
@@ -104,13 +103,6 @@ export function Nav() {
             </a>
             <button
               type="button"
-              onClick={() => triggerIntroVideo()}
-              className="hidden items-center gap-1.5 rounded-full border border-amber-400/35 bg-amber-950/20 px-3.5 py-1.5 text-[12.5px] font-semibold text-amber-300 transition-all hover:border-amber-400 hover:bg-amber-900/30 md:inline-flex cursor-pointer"
-            >
-              <span>Watch Intro ▷</span>
-            </button>
-            <button
-              type="button"
               onClick={() => triggerFullscreenExploreVideo()}
               className="hidden items-center gap-1.5 rounded-full border border-white/15 px-4 py-2 text-[12.5px] font-medium text-white/85 transition-all hover:border-white/40 hover:bg-white/5 md:inline-flex"
             >
@@ -179,28 +171,16 @@ export function Nav() {
               animate={{ opacity: 1 }}
               transition={{ delay: 0.4 }}
             >
-              <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setOpen(false);
-                    triggerIntroVideo();
-                  }}
-                  className="inline-flex items-center justify-center gap-2 rounded-full border border-amber-400/50 bg-amber-500/20 px-6 py-3 text-sm font-semibold text-amber-200"
-                >
-                  Watch Intro Video ▷
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setOpen(false);
-                    triggerFullscreenExploreVideo();
-                  }}
-                  className="inline-flex items-center justify-center gap-2 rounded-full bg-paper px-6 py-3 text-sm font-semibold text-ink"
-                >
-                  Explore the ecosystem <ArrowUpRight className="h-4 w-4" />
-                </button>
-              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  setOpen(false);
+                  triggerFullscreenExploreVideo();
+                }}
+                className="inline-flex items-center gap-2 rounded-full bg-paper px-6 py-3 text-sm font-semibold text-ink"
+              >
+                Explore the ecosystem <ArrowUpRight className="h-4 w-4" />
+              </button>
               <p className="text-xs font-mono text-white/45">
                 Engineered by Harshan Seliyan B S
               </p>
