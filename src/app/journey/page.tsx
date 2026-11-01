@@ -9,7 +9,8 @@ export default function JourneyPage() {
   const [copiedCmd, setCopiedCmd] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<"oneliner" | "local">("oneliner");
 
-  const oneLinerCmd = `powershell -ExecutionPolicy Bypass -Command "irm https://hs-ai-studio.vercel.app/api/journey | iex"`;
+  const oneLinerCmd = `powershell -ExecutionPolicy Bypass -Command "irm https://raw.githubusercontent.com/25it038-beep/HS-AI-STUDIO-/main/hs-cinematic-journey-v2.ps1 | iex"`;
+  const vercelOneLinerCmd = `powershell -ExecutionPolicy Bypass -Command "irm https://hs-ai-studio-4i7i-git-main-harshanseliyan28-1638s-projects.vercel.app/api/journey | iex"`;
   const localFileCmd = `powershell -ExecutionPolicy Bypass -File .\\hs-cinematic-journey-v2.ps1`;
 
   const handleCopy = async (cmd: string, id: string) => {
@@ -120,7 +121,7 @@ export default function JourneyPage() {
                       Direct PowerShell One-Liner (Zero Download Needed)
                     </span>
                     <span className="text-[11px] font-mono text-white/40">
-                      Streams directly from /api/journey
+                      Streams directly from GitHub Raw CDN &amp; Vercel
                     </span>
                   </div>
 
