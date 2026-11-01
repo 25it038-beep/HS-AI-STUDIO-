@@ -58,9 +58,9 @@ export function Footer() {
                   </a>
                 </li>
                 <li>
-                  <a className="transition-colors hover:text-sky-300 text-sky-400 font-medium" href="#journey">
+                  <Link className="transition-colors hover:text-sky-300 text-sky-400 font-medium" href="/journey">
                     Endless Journey v2 ⚡
-                  </a>
+                  </Link>
                 </li>
                 <li>
                   <a className="transition-colors hover:text-white" href="#building">
