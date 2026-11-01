@@ -3,7 +3,6 @@ import { Inter, Space_Grotesk, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Nav } from "@/components/nav";
 import { Footer } from "@/components/footer";
-import { AudioIntro } from "@/components/audio-intro";
 import { IntroVideo } from "@/components/intro-video";
 import { FullscreenExploreVideo } from "@/components/fullscreen-explore-video";
 import { ContributorFloatingBadge } from "@/components/contributor-floating-badge";
@@ -104,7 +103,6 @@ export default function RootLayout({
             <Nav />
             <main>{children}</main>
             <Footer />
-            <AudioIntro />
           </div>
           <IntroVideo />
           <FullscreenExploreVideo />

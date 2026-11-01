@@ -8,27 +8,33 @@ const INTRO_VIDEO = "/videos/intro-hs.mp4";
 export function IntroVideo() {
   const [visible, setVisible] = useState(true);
   const [isMuted, setIsMuted] = useState(true);
-  const [isPlaying, setIsPlaying] = useState(false);
   const [needsGesture, setNeedsGesture] = useState(false);
 
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const finishedRef = useRef(false);
 
-  const finish = useCallback((soundPlayed: boolean) => {
+  const finish = useCallback(() => {
     if (finishedRef.current) return;
     finishedRef.current = true;
-    window.dispatchEvent(
-      new CustomEvent("hs-intro-finished", { detail: { sound: soundPlayed } }),
-    );
+
+    // Immediately stop and release the video to prevent any further audio playback
+    if (videoRef.current) {
+      videoRef.current.pause();
+      try {
+        videoRef.current.removeAttribute("src");
+        videoRef.current.load();
+      } catch {
+        // no-op
+      }
+    }
     setVisible(false);
   }, []);
 
-  // Initialize and attempt muted autoplay immediately on mount
+  // Autoplay on mount (muted so browsers permit it)
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
 
-    // Guaranteed autoplay compliance across all browsers
     video.muted = true;
     video.defaultMuted = true;
     video.playsInline = true;
@@ -37,102 +43,95 @@ export function IntroVideo() {
     if (playPromise !== undefined) {
       playPromise
         .then(() => {
-          setIsPlaying(true);
           setNeedsGesture(false);
         })
-        .catch((err) => {
-          console.warn("[IntroVideo] Autoplay blocked, awaiting tap:", err);
+        .catch(() => {
           setNeedsGesture(true);
         });
     }
 
     const onEnded = () => {
-      finish(!video.muted);
+      finish();
     };
 
-    const onError = (e: Event) => {
-      console.warn("[IntroVideo] Error event:", e);
-      setNeedsGesture(true);
-    };
-
-    // Unmute on first user touch / key / click anywhere
-    const onUserInteraction = () => {
-      if (video) {
-        if (video.paused) {
-          video.play().catch(() => {});
-          setIsPlaying(true);
-          setNeedsGesture(false);
-        }
-        if (video.muted) {
-          video.muted = false;
-          setIsMuted(false);
-        }
-      }
+    const onError = () => {
+      finish();
     };
 
     video.addEventListener("ended", onEnded);
     video.addEventListener("error", onError);
-    window.addEventListener("pointerdown", onUserInteraction);
-    window.addEventListener("keydown", onUserInteraction);
 
     return () => {
       video.removeEventListener("ended", onEnded);
       video.removeEventListener("error", onError);
-      window.removeEventListener("pointerdown", onUserInteraction);
-      window.removeEventListener("keydown", onUserInteraction);
     };
   }, [finish]);
+
+  // Click on the intro video overlay to unmute or play (scoped strictly to this overlay)
+  const handleOverlayClick = () => {
+    const video = videoRef.current;
+    if (!video || finishedRef.current) return;
+
+    if (video.paused) {
+      video.play().catch(() => {});
+      setNeedsGesture(false);
+    }
+    if (video.muted) {
+      video.muted = false;
+      setIsMuted(false);
+    }
+  };
 
   const toggleSound = (e: React.MouseEvent) => {
     e.stopPropagation();
     const video = videoRef.current;
-    if (!video) return;
+    if (!video || finishedRef.current) return;
+
     const nextMuted = !video.muted;
     video.muted = nextMuted;
     setIsMuted(nextMuted);
+
     if (video.paused) {
-      video.play().then(() => setIsPlaying(true)).catch(() => {});
+      video.play().catch(() => {});
+      setNeedsGesture(false);
     }
   };
 
   const handleSkip = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (videoRef.current) {
-      videoRef.current.pause();
-    }
-    finish(!isMuted);
+    finish();
   };
 
-  const handleTapToPlay = (e: React.MouseEvent) => {
+  const handleManualPlay = (e: React.MouseEvent) => {
     e.stopPropagation();
     const video = videoRef.current;
-    if (!video) return;
+    if (!video || finishedRef.current) return;
+
     video.muted = false;
     setIsMuted(false);
     video
       .play()
       .then(() => {
-        setIsPlaying(true);
         setNeedsGesture(false);
       })
       .catch(() => {
         video.muted = true;
         setIsMuted(true);
-        video.play().then(() => {
-          setIsPlaying(true);
-          setNeedsGesture(false);
-        });
+        video.play().then(() => setNeedsGesture(false));
       });
   };
+
+  if (!visible) return null;
 
   return (
     <AnimatePresence>
       {visible && (
         <motion.div
           key="hs-intro-video-overlay"
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-black overflow-hidden select-none"
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-black overflow-hidden select-none cursor-pointer"
           initial={{ opacity: 1 }}
-          exit={{ opacity: 0, transition: { duration: 0.6, ease: "easeOut" } }}
+          exit={{ opacity: 0, transition: { duration: 0.5, ease: "easeOut" } }}
+          onClick={handleOverlayClick}
         >
           {/* Main Video Element */}
           <video
@@ -142,19 +141,15 @@ export function IntroVideo() {
             muted
             playsInline
             preload="auto"
-            className="h-full w-full max-h-screen object-contain"
-            onPlay={() => {
-              setIsPlaying(true);
-              setNeedsGesture(false);
-            }}
+            className="h-full w-full max-h-screen object-contain pointer-events-none"
           />
 
-          {/* Fallback button if browser blocked autoplay */}
+          {/* Manual Play Button if Browser Blocks Autoplay */}
           {needsGesture && (
             <div className="absolute inset-0 z-30 flex flex-col items-center justify-center bg-black/80 backdrop-blur-sm p-4">
               <button
                 type="button"
-                onClick={handleTapToPlay}
+                onClick={handleManualPlay}
                 className="group flex h-20 w-20 items-center justify-center rounded-full border border-amber-400/60 bg-amber-500/20 text-white shadow-2xl transition hover:scale-110 hover:bg-amber-500/30 cursor-pointer"
               >
                 <svg className="h-8 w-8 translate-x-0.5 fill-white text-amber-300" viewBox="0 0 24 24">
@@ -189,7 +184,7 @@ export function IntroVideo() {
               onClick={toggleSound}
               className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-black/60 px-4 py-2 font-mono text-xs text-white backdrop-blur transition hover:border-white/50 hover:bg-white/10 cursor-pointer"
             >
-              <span>{isMuted ? "🔇 SOUND MUTED (TAP FOR SOUND)" : "🔊 SOUND ON"}</span>
+              <span>{isMuted ? "🔇 SOUND MUTED (TAP TO UNMUTE)" : "🔊 SOUND ON"}</span>
             </button>
 
             <button
