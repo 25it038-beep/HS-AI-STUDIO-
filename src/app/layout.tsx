@@ -10,6 +10,7 @@ import { ContributorFloatingBadge } from "@/components/contributor-floating-badg
 import { WebsiteAssistantWidget } from "@/components/website-assistant-widget";
 import { MultiverseProvider } from "@/components/multiverse/MultiverseContext";
 import { MultiverseExperience } from "@/components/multiverse/MultiverseExperience";
+import { FloatingBlackHoleWidget } from "@/components/multiverse/FloatingBlackHoleWidget";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -110,6 +111,7 @@ export default function RootLayout({
             <WebsiteAssistantWidget />
           </div>
           <MultiverseExperience />
+          <FloatingBlackHoleWidget />
         </MultiverseProvider>
       </body>
     </html>

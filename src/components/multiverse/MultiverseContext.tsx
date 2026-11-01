@@ -122,7 +122,7 @@ export function MultiverseProvider({ children }: { children: React.ReactNode }) 
     }
   }, []);
 
-  // Update website container CSS transform during collapse / reconstruction
+  // Update website container CSS transform during collapse / reconstruction & suck all elements
   useEffect(() => {
     const rootEl = document.getElementById("website-root");
     if (!rootEl) return;
@@ -133,19 +133,71 @@ export function MultiverseProvider({ children }: { children: React.ReactNode }) 
       rootEl.style.filter = "none";
       rootEl.style.pointerEvents = "auto";
       rootEl.style.transition = "transform 1.2s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.8s ease, filter 1.0s ease";
+
+      // Clean up and restore any previously sucked elements
+      const suckedElements = document.querySelectorAll<HTMLElement>("[data-gravitational-sucked='true']");
+      suckedElements.forEach((el) => {
+        el.style.transition = "transform 1.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 1.2s ease-out, filter 1.2s ease-out";
+        el.style.transform = "";
+        el.style.opacity = "";
+        el.style.filter = "";
+        el.removeAttribute("data-gravitational-sucked");
+      });
     } else if (phase === "awakening") {
       rootEl.style.transition = "transform 0.8s ease-in, opacity 0.8s ease-in, filter 0.8s ease-in";
-      rootEl.style.filter = "contrast(1.2) brightness(0.95)";
-      rootEl.style.transform = "scale(0.98)";
+      rootEl.style.filter = "contrast(1.25) brightness(0.95)";
+      rootEl.style.transform = "scale(0.985)";
+
+      // Subtle gravitational pre-pull on nearby elements
+      const targetElements = rootEl.querySelectorAll<HTMLElement>(
+        "h1, h2, h3, p, button, a, img, svg, article, .card, [class*='rounded-2xl'], [class*='rounded-xl'], [class*='border-']"
+      );
+      targetElements.forEach((el, i) => {
+        if (i > 80) return;
+        el.style.transition = "transform 0.4s ease-in-out";
+        const jitterX = (Math.random() - 0.5) * 6;
+        const jitterY = (Math.random() - 0.5) * 6;
+        el.style.transform = `translate(${jitterX}px, ${jitterY}px)`;
+      });
     } else if (phase === "collapse") {
       const ox = singularityOrigin ? singularityOrigin.x : window.innerWidth / 2;
       const oy = singularityOrigin ? singularityOrigin.y : window.innerHeight / 2;
+
+      // 1. Overall coordinate distortion on #website-root
       rootEl.style.transformOrigin = `${ox}px ${oy}px`;
-      rootEl.style.transition = "transform 1.8s cubic-bezier(0.55, 0, 1, 0.45), opacity 1.8s ease-in, filter 1.8s ease-in";
-      rootEl.style.transform = "scale(0.005) rotate(45deg)";
+      rootEl.style.transition = "transform 1.9s cubic-bezier(0.55, 0, 1, 0.45), opacity 1.8s ease-in, filter 1.8s ease-in";
+      rootEl.style.transform = "scale(0.005) rotate(70deg)";
       rootEl.style.opacity = "0";
-      rootEl.style.filter = "blur(18px) brightness(0.2)";
+      rootEl.style.filter = "blur(14px) brightness(0.2)";
       rootEl.style.pointerEvents = "none";
+
+      // 2. Individual physics-based element suction directly into the black hole!
+      const targetElements = rootEl.querySelectorAll<HTMLElement>(
+        "h1, h2, h3, p, button, a, img, svg, article, .card, [class*='rounded-2xl'], [class*='rounded-xl'], [class*='border-']"
+      );
+
+      targetElements.forEach((el, index) => {
+        if (index > 120) return; // performance guard for 60fps
+        const rect = el.getBoundingClientRect();
+        if (rect.bottom < -200 || rect.top > window.innerHeight + 200) return;
+
+        const elCenterX = rect.left + rect.width / 2;
+        const elCenterY = rect.top + rect.height / 2;
+
+        const dx = ox - elCenterX;
+        const dy = oy - elCenterY;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+
+        // Elements closer to the black hole get sucked first!
+        const delay = Math.min(dist / 1400, 0.65);
+        const swirlAngle = (index % 2 === 0 ? 1 : -1) * (180 + dist / 8);
+
+        el.setAttribute("data-gravitational-sucked", "true");
+        el.style.transition = `transform 1.6s cubic-bezier(0.55, 0, 1, 0.45) ${delay}s, opacity 1.3s ease-in ${delay}s, filter 1.3s ease-in ${delay}s`;
+        el.style.transform = `translate(${dx}px, ${dy}px) rotate(${swirlAngle}deg) scale(0.01)`;
+        el.style.opacity = "0";
+        el.style.filter = "blur(10px) brightness(2.5)";
+      });
     } else if (phase === "returning") {
       const ox = singularityOrigin ? singularityOrigin.x : window.innerWidth / 2;
       const oy = singularityOrigin ? singularityOrigin.y : window.innerHeight / 2;
@@ -155,8 +207,18 @@ export function MultiverseProvider({ children }: { children: React.ReactNode }) 
       rootEl.style.opacity = "1";
       rootEl.style.filter = "none";
       rootEl.style.pointerEvents = "auto";
+
+      // Restore sucked elements in reverse outward swirl
+      const suckedElements = document.querySelectorAll<HTMLElement>("[data-gravitational-sucked='true']");
+      suckedElements.forEach((el, index) => {
+        const delay = (index % 10) * 0.04;
+        el.style.transition = `transform 2.0s cubic-bezier(0.16, 1, 0.3, 1) ${delay}s, opacity 1.6s ease-out ${delay}s, filter 1.6s ease-out ${delay}s`;
+        el.style.transform = "translate(0px, 0px) rotate(0deg) scale(1)";
+        el.style.opacity = "1";
+        el.style.filter = "none";
+      });
     } else {
-      // While in multiverse (horizon, singularity, wormhole, dimension, warping)
+      // While in multiverse
       rootEl.style.opacity = "0";
       rootEl.style.pointerEvents = "none";
     }
