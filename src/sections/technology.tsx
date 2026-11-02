@@ -5,19 +5,19 @@ import { Reveal } from "@/components/ui/Reveal";
 
 const GROUPS = [
   {
-    label: "AI Layer",
+    label: "AI & Inference Layer",
     accent: "#f5a623",
-    items: ["AI / LLM APIs", "RAG", "Vector Search", "AI Agents"],
+    items: ["GGUF Tensor Runtime", "ARM64 NEON Core Pinning", "RAG & Vector Search", "Autonomous Agents"],
   },
   {
-    label: "Backend & Data",
+    label: "Backend & Systems",
     accent: "#8b7cf6",
-    items: ["Python", "FastAPI", "Node.js", "PostgreSQL"],
+    items: ["Python", "FastAPI", "Node.js", "Edge Tunneling & SSE"],
   },
   {
-    label: "Frontend & Ship",
+    label: "Frontend & Native",
     accent: "#22d3ee",
-    items: ["React", "Next.js", "TypeScript", "Cloud Deployment"],
+    items: ["React", "Next.js", "TypeScript", "Android APK & Desktop"],
   },
 ];
 
@@ -37,8 +37,8 @@ export function Technology() {
           </Reveal>
           <Reveal y={20} delay={0.12}>
             <p className="mt-6 text-[17px] leading-relaxed text-ink/55">
-              No imagined stacks — every technology below runs inside one of the seven products,
-              from orchestration to vector search to deployment.
+              No imagined stacks — every technology below runs inside our applications and edge hardware experiments,
+              from Kirin 659 ARM64 NEON core pinning to vector search and global zero-port tunnels.
             </p>
           </Reveal>
         </div>

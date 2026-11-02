@@ -11,6 +11,14 @@ import { CollaboratorModal } from "@/components/CollaboratorModal";
 import { DownloadCompanionModal } from "@/components/DownloadCompanionModal";
 import { triggerFullscreenExploreVideo } from "@/components/fullscreen-explore-video";
 
+const TABS = [
+  { id: "all", label: "All Applications" },
+  { id: "experiments", label: "🧪 Hardware Experiments", match: (p: ProductDetail) => p.id === "moon-llm" || p.category.includes("EXPERIMENT") },
+  { id: "local", label: "Autonomous & Local AI", match: (p: ProductDetail) => p.id === "gravity-llm" || p.id === "domcode-llm" || p.id === "electron" },
+  { id: "vision", label: "Multimodal & Vision", match: (p: ProductDetail) => p.id === "galaxy-vision" || p.id === "lumina" },
+  { id: "security", label: "Security & Workspaces", match: (p: ProductDetail) => p.id === "phishing-defence" || p.id === "ledger" || p.id === "pendulum" || p.id === "hsbot" || p.id === "hs-code" || p.id === "academia" },
+];
+
 function ProductCell({
   product,
   onOpenCollab,
@@ -26,7 +34,11 @@ function ProductCell({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-8% 0px" }}
       transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-      className="group relative flex flex-col rounded-2xl border border-white/10 bg-[#111116] p-4 text-white shadow-2xl transition-all duration-500 hover:border-white/25 sm:p-5"
+      className={`group relative flex flex-col rounded-2xl border p-4 text-white shadow-2xl transition-all duration-500 sm:p-5 ${
+        product.id === "moon-llm"
+          ? "border-amber-500/40 bg-[#0e0e14] hover:border-amber-400"
+          : "border-white/10 bg-[#111116] hover:border-white/25"
+      }`}
       style={{ ["--acc" as string]: product.accent }}
     >
       <Link
@@ -47,7 +59,12 @@ function ProductCell({
         <div className="flex items-baseline justify-between">
           <span className="font-mono text-[11px] text-white/35">{product.number}</span>
           <span className="flex items-center gap-2">
-            {product.collaboratorOnly ? (
+            {product.id === "moon-llm" ? (
+              <span className="flex items-center gap-1.5 rounded-full border border-amber-400/40 bg-amber-500/15 px-2.5 py-0.5 font-mono text-[8.5px] uppercase tracking-[0.14em] text-amber-300">
+                <span className="h-1.5 w-1.5 rounded-full bg-amber-400 animate-ping" />
+                Physical Hardware
+              </span>
+            ) : product.collaboratorOnly ? (
               <span className="rounded-full border border-emerald-400/30 bg-emerald-950/40 px-2 py-0.5 font-mono text-[8.5px] uppercase tracking-[0.14em] text-emerald-300">
                 Collaborator Only
               </span>
@@ -80,7 +97,16 @@ function ProductCell({
         </div>
 
         <div className="mt-7 flex items-center justify-between border-t border-white/8 pt-5">
-          {product.downloadUrl ? (
+          {product.id === "moon-llm" ? (
+            <a
+              href={product.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex h-10 items-center gap-1.5 rounded-full border border-amber-400/50 bg-amber-500/20 px-4 text-[13px] font-semibold text-amber-300 transition-colors duration-300 hover:border-amber-400 hover:bg-amber-500/30"
+            >
+              Launch Edge Server <ArrowUpRight className="h-3.5 w-3.5" />
+            </a>
+          ) : product.downloadUrl ? (
             product.collaboratorOnly ? (
               <button
                 type="button"
@@ -135,6 +161,7 @@ function ProductCell({
 }
 
 export function AllApplications() {
+  const [activeTab, setActiveTab] = useState("all");
   const [collabModalOpen, setCollabModalOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<ProductDetail | null>(null);
   const [downloadCompanionProduct, setDownloadCompanionProduct] = useState<ProductDetail | null>(null);
@@ -147,6 +174,12 @@ export function AllApplications() {
   const handleOpenDownloadCompanion = (p: ProductDetail) => {
     setDownloadCompanionProduct(p);
   };
+
+  const currentTab = TABS.find((t) => t.id === activeTab) || TABS[0]!;
+  const filteredProducts =
+    currentTab.id === "all"
+      ? products
+      : products.filter((p) => currentTab.match?.(p));
 
   return (
     <section id="projects" className="relative bg-paper py-28 text-ink md:py-40">
@@ -163,14 +196,46 @@ export function AllApplications() {
           <Reveal delay={0.1}>
             <p className="max-w-md text-base leading-relaxed text-ink/65">
               Each tool represents an exploration into what software becomes when intelligence is
-              deeply integrated — from offline edge systems to multimodal understanding.
+              deeply integrated — from offline edge systems and mobile hardware servers to multimodal understanding.
             </p>
           </Reveal>
         </div>
 
+        {/* Category Filter Bar */}
+        <div className="mt-12 flex flex-wrap items-center gap-2 border-b border-ink/10 pb-4">
+          {TABS.map((tab) => {
+            const count =
+              tab.id === "all"
+                ? products.length
+                : products.filter((p) => tab.match?.(p)).length;
+            const isActive = activeTab === tab.id;
+            return (
+              <button
+                key={tab.id}
+                type="button"
+                onClick={() => setActiveTab(tab.id)}
+                className={`inline-flex items-center gap-2 rounded-full px-4 py-2 font-mono text-xs font-medium transition-all cursor-pointer ${
+                  isActive
+                    ? "bg-ink text-paper shadow-md"
+                    : "bg-ink/5 text-ink/70 hover:bg-ink/10 hover:text-ink"
+                }`}
+              >
+                <span>{tab.label}</span>
+                <span
+                  className={`rounded-full px-1.5 py-0.2 text-[10px] ${
+                    isActive ? "bg-white/20 text-white" : "bg-ink/10 text-ink/60"
+                  }`}
+                >
+                  {count}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+
         {/* products grid */}
-        <div className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {products.map((p) => (
+        <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {filteredProducts.map((p) => (
             <ProductCell
               key={p.id}
               product={p}

@@ -13,6 +13,7 @@ const PORTFOLIO_URL =
 const LINKS = [
   { href: "/#home", label: "Home" },
   { href: "/#products", label: "Products" },
+  { href: "/#experiments", label: "Experiments" },
   { href: "/#about", label: "About" },
   { href: "/#projects", label: "Projects" },
   { href: "/journey", label: "Endless Journey" },

@@ -13,6 +13,7 @@ const WORDS = [
   { word: "PROTECT", color: "#f4495f", desc: "AI-powered phishing and threat detection." },
   { word: "CODE", color: "#4ade80", desc: "Desktop-native AI coding assistance and local workflows." },
   { word: "LEARN", color: "#60a5fa", desc: "Personalized syllabus roadmap and adaptive AI tutoring." },
+  { word: "EMBED", color: "#f59e0b", desc: "Turning physical smartphone silicon into 24/7 headless edge AI servers and communication hubs." },
 ];
 
 export function WhatIBuild() {
@@ -34,7 +35,7 @@ export function WhatIBuild() {
         <div className="flex items-end justify-between">
           <p className="eyebrow text-white/45">What I build</p>
           <p className="hidden font-mono text-[11px] text-white/25 sm:block">
-            9 modes · {String(active + 1).padStart(2, "0")}/09
+            10 modes · {String(active + 1).padStart(2, "0")}/10
           </p>
         </div>
 
@@ -71,7 +72,7 @@ export function WhatIBuild() {
               <button
                 key={w.word}
                 onClick={() => setActive(i)}
-                className="group flex items-center gap-4 border-b border-white/8 py-3 text-left transition-colors"
+                className="group flex items-center gap-4 border-b border-white/8 py-3 text-left transition-colors cursor-pointer"
               >
                 <span
                   className={`font-mono text-[10px] ${i === active ? "text-white" : "text-white/25"}`}

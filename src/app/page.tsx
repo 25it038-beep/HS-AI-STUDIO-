@@ -1,6 +1,7 @@
 import { Hero } from "@/sections/hero";
 import { Intro } from "@/sections/intro";
 import { Featured } from "@/sections/featured";
+import { Experiments } from "@/sections/experiments";
 import { MultiModel } from "@/sections/multi-model";
 import { DigitalIdentity } from "@/sections/digital-identity";
 import { Security } from "@/sections/security";
@@ -17,6 +18,7 @@ export default function Home() {
       <Hero />
       <Intro />
       <Featured />
+      <Experiments />
       <MultiModel />
       <DigitalIdentity />
       <Security />
