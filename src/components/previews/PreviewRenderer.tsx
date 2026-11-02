@@ -9,12 +9,10 @@ import { PendulumPreview } from "@/components/previews/PendulumPreview";
 import { GalaxyVisionPreview } from "@/components/previews/GalaxyVisionPreview";
 import { GravityLLMPreview } from "@/components/previews/GravityLLMPreview";
 import { DomcodeLLMPreview } from "@/components/previews/DomcodeLLMPreview";
-import { MoonLLMPreview } from "@/components/previews/MoonLLMPreview";
 
 const registry: Record<string, React.ComponentType<{ className?: string }>> = {
   "gravity-llm": GravityLLMPreview,
   "domcode-llm": DomcodeLLMPreview,
-  "moon-llm": MoonLLMPreview,
   electron: ElectronPreview,
   pendulum: PendulumPreview,
   lumina: LuminaPreview,

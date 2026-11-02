@@ -111,16 +111,6 @@ export function ProductDetailView({ product }: { product: ProductDetail }) {
                         <span>Download Collaborator Suite</span>
                         <DownloadIcon className="h-4 w-4" />
                       </button>
-                    ) : product.id === "moon-llm" ? (
-                      <MagneticButton
-                        href={product.url}
-                        external
-                        lg
-                        accent={product.accent}
-                      >
-                        Launch Live Edge Server (1-Click)
-                        <ArrowUpRight className="h-4 w-4" />
-                      </MagneticButton>
                     ) : (
                       <MagneticButton
                         href={product.downloadUrl}
@@ -153,9 +143,7 @@ export function ProductDetailView({ product }: { product: ProductDetail }) {
                     ) : (
                       <span className="inline-flex items-center gap-2 rounded-full border border-white/15 px-4 py-2.5 text-[12.5px] font-medium text-white/80">
                         <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
-                        {product.id === "moon-llm"
-                          ? "Physical Kirin 659 · 24/7 Edge Server · 3.05 tok/s"
-                          : product.id === "electron"
+                        {product.id === "electron"
                           ? "Offline AI · 4GB RAM Ready · Live Search"
                           : product.id === "galaxy-vision"
                           ? "Multimodal Vision AI · Portable · Q4_K_M"
