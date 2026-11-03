@@ -37,11 +37,11 @@ if (typeof setInterval !== "undefined") {
   }, 60_000);
 }
 
-// Malicious probe and path traversal patterns
+// Malicious probe, path traversal, and vulnerability scanner patterns
 const SUSPICIOUS_PATTERNS = [
   /(\.\.|\%2e\%2e)/i, // Directory traversal
-  /\.(env|git|htaccess|htpasswd|ini|bak|conf|sql|pem|key)/i, // Sensitive config & source files
-  /(wp-admin|wp-login|phpinfo|cgi-bin|actuator|eval\(|<script)/i, // Common automated exploit scanners
+  /\.(env|git|htaccess|htpasswd|ini|bak|conf|sql|pem|key|aws|docker)/i, // Sensitive credentials & source files
+  /(wp-admin|wp-login|phpinfo|cgi-bin|actuator|eval\(|<script|console|solr|phpunit|autodiscover|\.well-known\/(?!security\.txt))/i, // Scanner exploits
 ];
 
 export function proxy(req: NextRequest) {
@@ -69,13 +69,28 @@ export function proxy(req: NextRequest) {
     }
   }
 
-  // 3. Rate limiting on sensitive API endpoints
+  // 3. API-specific defenses: Rate Limiting, Payload Sizing, and CORS Verification
   if (pathname.startsWith("/api/")) {
+    // 3a. Payload size limit (Max 1MB for API routes to prevent memory flooding)
+    const contentLength = parseInt(req.headers.get("content-length") || "0", 10);
+    if (contentLength > 1_048_576) {
+      return new NextResponse(
+        JSON.stringify({ error: "Payload Too Large. Max request size is 1MB." }),
+        {
+          status: 413,
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+    }
+
+    // 3b. Robust client IP resolution (prioritize edge x-real-ip to prevent X-Forwarded-For spoofing)
+    const realIp = req.headers.get("x-real-ip");
     const forwardedFor = req.headers.get("x-forwarded-for");
-    const ip = forwardedFor ? forwardedFor.split(",")[0].trim() : "anonymous-client";
+    const clientIp = (realIp || (forwardedFor ? forwardedFor.split(",")[0].trim() : "anonymous-client"))
+      .replace(/[^a-zA-Z0-9.:_-]/g, "");
 
     let rateLimit = 120; // Default: 120 requests/min
-    let windowMs = 60_000;
+    const windowMs = 60_000;
 
     if (pathname.startsWith("/api/admin")) {
       rateLimit = 15; // Strict: 15 attempts/min for admin endpoints
@@ -87,7 +102,7 @@ export function proxy(req: NextRequest) {
       rateLimit = 20; // 20 push subscription requests/min
     }
 
-    const rateLimitKey = `${ip}:${pathname.split("/").slice(0, 4).join("/")}`;
+    const rateLimitKey = `${clientIp}:${pathname.split("/").slice(0, 4).join("/")}`;
     const allowed = checkEdgeRateLimit(rateLimitKey, rateLimit, windowMs);
 
     if (!allowed) {
@@ -105,7 +120,7 @@ export function proxy(req: NextRequest) {
       );
     }
 
-    // 4. Same-origin validation for state-changing API requests (POST, PUT, DELETE)
+    // 3c. Strict same-origin & authorized domain CORS guard for mutating requests
     if (["POST", "PUT", "DELETE", "PATCH"].includes(method)) {
       const origin = req.headers.get("origin");
       const host = req.headers.get("host");
@@ -113,16 +128,20 @@ export function proxy(req: NextRequest) {
       if (origin && host) {
         try {
           const originHost = new URL(origin).host;
-          // Allow same-host or authorized localhost/vercel previews
+
+          // Strict whitelist: strictly allow matching host, local dev, or Harshan Seliyan's authorized project domain
           const isAllowedHost =
             originHost === host ||
-            originHost.endsWith(".vercel.app") ||
-            originHost.startsWith("localhost") ||
-            originHost.startsWith("127.0.0.1");
+            originHost === "hs-ai-studio-4i7i-git-main-harshanseliyan28-1638s-projects.vercel.app" ||
+            /^hs-ai-studio-[a-z0-9-]+-harshanseliyan28-1638s-projects\.vercel\.app$/.test(originHost) ||
+            originHost === "localhost" ||
+            originHost.startsWith("localhost:") ||
+            originHost === "127.0.0.1" ||
+            originHost.startsWith("127.0.0.1:");
 
           if (!isAllowedHost) {
             return new NextResponse(
-              JSON.stringify({ error: "Cross-Origin Request Blocked" }),
+              JSON.stringify({ error: "Cross-Origin Request Blocked by Security Policy" }),
               {
                 status: 403,
                 headers: { "Content-Type": "application/json" },
@@ -131,7 +150,7 @@ export function proxy(req: NextRequest) {
           }
         } catch {
           return new NextResponse(
-            JSON.stringify({ error: "Invalid Request Origin" }),
+            JSON.stringify({ error: "Invalid Request Origin Header" }),
             {
               status: 400,
               headers: { "Content-Type": "application/json" },
@@ -142,7 +161,7 @@ export function proxy(req: NextRequest) {
     }
   }
 
-  // 5. Apply comprehensive security headers
+  // 4. Apply comprehensive security headers
   const response = NextResponse.next();
 
   response.headers.set("X-Frame-Options", "SAMEORIGIN");
@@ -167,13 +186,6 @@ export function proxy(req: NextRequest) {
 
 export const config = {
   matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     * - images, videos, audio (static public media)
-     */
     "/((?!_next/static|_next/image|favicon.ico|images/|videos/|audio/).*)",
   ],
 };
