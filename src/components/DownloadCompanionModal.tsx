@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { DownloadIcon, ArrowUpRight } from "@/components/ui/icons";
 import {
@@ -17,6 +18,7 @@ interface DownloadCompanionModalProps {
   localBackupUrl?: string;
   accent?: string;
   fileName?: string;
+  onOpenCollaboratorModal?: () => void;
 }
 
 export function DownloadCompanionModal({
@@ -28,10 +30,17 @@ export function DownloadCompanionModal({
   localBackupUrl,
   accent = "#c084fc",
   fileName = "Galaxy-Vision-v1.0.0-Standalone.zip",
+  onOpenCollaboratorModal,
 }: DownloadCompanionModalProps) {
+  const [mounted, setMounted] = useState(false);
   const [notificationStatus, setNotificationStatus] = useState<
     "idle" | "granted" | "prompted" | "denied"
   >("idle");
+
+  useEffect(() => {
+    setMounted(true);
+    return () => setMounted(false);
+  }, []);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -50,7 +59,7 @@ export function DownloadCompanionModal({
       }
     }
 
-    // Schedule OS Desktop Notification to pop up even when the user switches to OneDrive
+    // Schedule OS Desktop Notification
     triggerOSNotification({
       title: `${productName} v${version} · Download Started`,
       body: `Your download was initiated from OneDrive! Click here to return to HS AI Solutions.`,
@@ -59,6 +68,17 @@ export function DownloadCompanionModal({
       delayMs: 2500,
     });
   }, [isOpen, productName, version]);
+
+  // Lock background scroll
+  useEffect(() => {
+    if (isOpen) {
+      const prevOverflow = document.body.style.overflow;
+      document.body.style.overflow = "hidden";
+      return () => {
+        document.body.style.overflow = prevOverflow;
+      };
+    }
+  }, [isOpen]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -87,13 +107,19 @@ export function DownloadCompanionModal({
     }
   };
 
-  return (
+  if (!mounted) return null;
+
+  const modalContent = (
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6">
+        <div
+          role="presentation"
+          className="fixed inset-0 z-[9999999] flex items-center justify-center p-4 sm:p-6"
+          style={{ isolation: "isolate" }}
+        >
           {/* Backdrop */}
           <motion.div
-            className="fixed inset-0 bg-black/80 backdrop-blur-md"
+            className="fixed inset-0 bg-black/85 backdrop-blur-xl"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -104,13 +130,14 @@ export function DownloadCompanionModal({
           <motion.div
             role="dialog"
             aria-modal="true"
-            initial={{ opacity: 0, scale: 0.95, y: 20 }}
+            aria-labelledby="companion-title"
+            initial={{ opacity: 0, scale: 0.94, y: 16 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.95, y: 20 }}
-            transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-            className="relative w-full max-w-lg overflow-hidden rounded-3xl border border-white/15 bg-[#0b0e14] p-6 text-white shadow-2xl sm:p-8"
+            exit={{ opacity: 0, scale: 0.94, y: 16 }}
+            transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+            className="relative z-10 w-full max-w-lg overflow-hidden rounded-3xl border border-white/15 bg-[#0b0e14] p-6 text-white shadow-2xl sm:p-8"
             style={{
-              boxShadow: `0 30px 80px -15px rgba(0, 0, 0, 0.95), 0 0 50px -10px ${accent}30`,
+              boxShadow: `0 35px 90px -15px rgba(0, 0, 0, 0.98), 0 0 50px -10px ${accent}30`,
             }}
           >
             {/* Ambient Lighting */}
@@ -150,7 +177,7 @@ export function DownloadCompanionModal({
               </span>
             </div>
 
-            <h2 className="mt-3 text-2xl font-bold tracking-tight text-white sm:text-3xl">
+            <h2 id="companion-title" className="mt-3 text-2xl font-bold tracking-tight text-white sm:text-3xl">
               {productName}
             </h2>
             <p className="mt-2 text-xs leading-relaxed text-zinc-300 sm:text-sm">
@@ -158,8 +185,30 @@ export function DownloadCompanionModal({
               When the download starts, you are always welcome back to <strong>HS AI Solutions</strong>.
             </p>
 
+            {/* Collaborator access shortcut */}
+            {onOpenCollaboratorModal && (
+              <div className="mt-4 rounded-2xl border border-emerald-500/30 bg-emerald-950/30 p-3.5">
+                <div className="flex items-center justify-between gap-3">
+                  <div className="text-xs">
+                    <p className="font-semibold text-emerald-200">Have a Collaborator ID?</p>
+                    <p className="text-[11px] text-zinc-300">Enter your ID to unlock direct verified release</p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      onClose();
+                      onOpenCollaboratorModal();
+                    }}
+                    className="shrink-0 rounded-xl bg-emerald-500 px-3.5 py-2 text-xs font-bold text-black transition-all hover:bg-emerald-400"
+                  >
+                    Enter Collaborator ID →
+                  </button>
+                </div>
+              </div>
+            )}
+
             {/* OS Notification Box */}
-            <div className="mt-5 rounded-2xl border border-purple-500/25 bg-purple-950/20 p-4">
+            <div className="mt-4 rounded-2xl border border-purple-500/25 bg-purple-950/20 p-4">
               <div className="flex items-start gap-3">
                 <span className="text-xl">🔔</span>
                 <div className="text-xs">
@@ -226,4 +275,6 @@ export function DownloadCompanionModal({
       )}
     </AnimatePresence>
   );
+
+  return createPortal(modalContent, document.body);
 }

@@ -272,21 +272,19 @@ export function Featured() {
 
           <Reveal y={20} delay={0.22}>
             <div className="mt-8 flex flex-wrap items-center gap-4">
-              <MagneticButton
-                href={
-                  galaxy.downloadUrl ??
-                  "https://1drv.ms/u/c/A4DE4F83095B15B0/IQBxmNpxxijbRrZxRbr2j7i6AddHgte4YOJ7o-aURM3-nFk?e=v6QdYB"
-                }
-                external={true}
-                lg
-                accent={galaxy.accent}
-                onClick={() => {
-                  setDownloadCompanionProduct(galaxy);
+              <button
+                type="button"
+                onClick={() => handleOpenCollab(galaxy)}
+                className="inline-flex h-12 items-center gap-2 rounded-full px-7 text-sm font-semibold transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
+                style={{
+                  background: galaxy.accent,
+                  color: "#000",
+                  boxShadow: `0 0 25px -4px ${galaxy.accent}80`,
                 }}
               >
-                Download Standalone ZIP
+                <span>Download Standalone ZIP</span>
                 <DownloadIcon className="h-4 w-4" />
-              </MagneticButton>
+              </button>
               <MagneticButton
                 href={`/products/${galaxy.id}`}
                 onClick={(e) => {
@@ -364,18 +362,19 @@ export function Featured() {
 
           <Reveal y={20} delay={0.22}>
             <div className="mt-8 flex flex-wrap items-center gap-4">
-              <MagneticButton
-                href={electron.downloadUrl ?? "https://1drv.ms/u/c/A4DE4F83095B15B0/IQDY8K9iXhZkQayEL_CMStd_AU2Kq61gd1RgfIles4t9BrE?e=76ltt3"}
-                external={true}
-                lg
-                accent={electron.accent}
-                onClick={() => {
-                  setDownloadCompanionProduct(electron);
+              <button
+                type="button"
+                onClick={() => handleOpenCollab(electron)}
+                className="inline-flex h-12 items-center gap-2 rounded-full px-7 text-sm font-semibold transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
+                style={{
+                  background: electron.accent,
+                  color: "#000",
+                  boxShadow: `0 0 25px -4px ${electron.accent}80`,
                 }}
               >
-                Download Standalone ZIP
+                <span>Download Standalone ZIP</span>
                 <DownloadIcon className="h-4 w-4" />
-              </MagneticButton>
+              </button>
               <MagneticButton
                 href={`/products/${electron.id}`}
                 onClick={(e) => {
@@ -415,9 +414,28 @@ export function Featured() {
       <CollaboratorModal
         isOpen={collabModalOpen}
         onClose={() => setCollabModalOpen(false)}
+        productId={activeCollabProduct?.id}
+        productName={activeCollabProduct?.name || "Gravity LLM"}
         accent={activeCollabProduct?.accent || gravity.accent}
         downloadApiPath={activeCollabProduct?.downloadUrl || "/api/download/gravity"}
-        fileName={activeCollabProduct?.id === "domcode-llm" ? "DomcodeLLM-Setup.exe" : "Gravity_LLM_Portable.zip"}
+        downloadUrl={
+          activeCollabProduct?.id === "domcode-llm"
+            ? "https://1drv.ms/u/c/A4DE4F83095B15B0/IQBE8mmADSXtS6polDPwwbUmAXJTbzfIjNdAWDn2Z0to1VM?e=korcxj"
+            : activeCollabProduct?.id === "galaxy-vision"
+            ? "https://1drv.ms/u/c/A4DE4F83095B15B0/IQBxmNpxxijbRrZxRbr2j7i6AddHgte4YOJ7o-aURM3-nFk?e=v6QdYB"
+            : activeCollabProduct?.id === "electron"
+            ? "https://1drv.ms/u/c/A4DE4F83095B15B0/IQDY8K9iXhZkQayEL_CMStd_AU2Kq61gd1RgfIles4t9BrE?e=76ltt3"
+            : "https://1drv.ms/u/c/A4DE4F83095B15B0/IQDBJNvSemwQRIDCxrLUYtxqAURTChIN5YXmYrolDeUgh1U?e=SKWsrl"
+        }
+        fileName={
+          activeCollabProduct?.id === "domcode-llm"
+            ? "DomcodeLLM-Setup.exe"
+            : activeCollabProduct?.id === "galaxy-vision"
+            ? "Galaxy-Vision-v1.0.0-Standalone.zip"
+            : activeCollabProduct?.id === "electron"
+            ? "Electron-AI-Standalone-NoOllama.zip"
+            : "Gravity_LLM_HS_AI_Solutions_Portable.zip"
+        }
       />
 
       <DownloadCompanionModal
@@ -437,8 +455,13 @@ export function Featured() {
         fileName={
           downloadCompanionProduct?.id === "galaxy-vision"
             ? "Galaxy-Vision-v1.0.0-Standalone.zip"
-            : "Electron-AI-Standalone.zip"
+            : "Electron-AI-Standalone-NoOllama.zip"
         }
+        onOpenCollaboratorModal={() => {
+          if (downloadCompanionProduct) {
+            handleOpenCollab(downloadCompanionProduct);
+          }
+        }}
       />
 
       <Link href="/products/gravity-llm" className="sr-only">

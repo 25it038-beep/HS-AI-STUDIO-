@@ -97,39 +97,23 @@ export function ProductDetailView({ product }: { product: ProductDetail }) {
               >
                 {product.downloadUrl ? (
                   <>
-                    {product.collaboratorOnly ? (
-                      <button
-                        type="button"
-                        onClick={() => setCollabModalOpen(true)}
-                        className="inline-flex h-12 items-center gap-2 rounded-full px-7 text-sm font-semibold transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
-                        style={{
-                          background: product.accent,
-                          color: "#000",
-                          boxShadow: `0 0 25px -4px ${product.accent}80`,
-                        }}
-                      >
-                        <span>Download Collaborator Suite</span>
-                        <DownloadIcon className="h-4 w-4" />
-                      </button>
-                    ) : (
-                      <MagneticButton
-                        href={product.downloadUrl}
-                        download={!product.downloadUrl.startsWith("http") ? true : undefined}
-                        external={product.downloadUrl.startsWith("http")}
-                        lg
-                        accent={product.accent}
-                        onClick={
-                          product.downloadUrl.startsWith("http")
-                            ? () => setDownloadCompanionOpen(true)
-                            : undefined
-                        }
-                      >
-                        {product.id === "electron" || product.id === "galaxy-vision"
-                          ? "Download Standalone ZIP"
-                          : "Download for Windows"}
-                        <DownloadIcon className="h-4 w-4" />
-                      </MagneticButton>
-                    )}
+                    <button
+                      type="button"
+                      onClick={() => setCollabModalOpen(true)}
+                      className="inline-flex h-12 items-center gap-2 rounded-full px-7 text-sm font-semibold transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
+                      style={{
+                        background: product.accent,
+                        color: "#000",
+                        boxShadow: `0 0 25px -4px ${product.accent}80`,
+                      }}
+                    >
+                      <span>
+                        {product.collaboratorOnly
+                          ? "Download Collaborator Suite"
+                          : "Download Standalone ZIP"}
+                      </span>
+                      <DownloadIcon className="h-4 w-4" />
+                    </button>
                     {product.collaboratorOnly ? (
                       <span className="inline-flex items-center gap-2 rounded-full border border-emerald-400/30 bg-emerald-950/40 px-4 py-2.5 text-[12.5px] font-medium text-emerald-300">
                         <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
@@ -541,9 +525,29 @@ export function ProductDetailView({ product }: { product: ProductDetail }) {
       <CollaboratorModal
         isOpen={collabModalOpen}
         onClose={() => setCollabModalOpen(false)}
+        productId={product.id}
+        productName={product.name}
         accent={product.accent}
         downloadApiPath={product.downloadUrl || "/api/download/gravity"}
-        fileName={product.id === "domcode-llm" ? "DomcodeLLM-Setup.exe" : "Gravity_LLM_Portable.zip"}
+        downloadUrl={
+          product.downloadUrl ||
+          (product.id === "domcode-llm"
+            ? "https://1drv.ms/u/c/A4DE4F83095B15B0/IQBE8mmADSXtS6polDPwwbUmAXJTbzfIjNdAWDn2Z0to1VM?e=korcxj"
+            : product.id === "galaxy-vision"
+            ? "https://1drv.ms/u/c/A4DE4F83095B15B0/IQBxmNpxxijbRrZxRbr2j7i6AddHgte4YOJ7o-aURM3-nFk?e=v6QdYB"
+            : product.id === "electron"
+            ? "https://1drv.ms/u/c/A4DE4F83095B15B0/IQDY8K9iXhZkQayEL_CMStd_AU2Kq61gd1RgfIles4t9BrE?e=76ltt3"
+            : "https://1drv.ms/u/c/A4DE4F83095B15B0/IQDBJNvSemwQRIDCxrLUYtxqAURTChIN5YXmYrolDeUgh1U?e=SKWsrl")
+        }
+        fileName={
+          product.id === "domcode-llm"
+            ? "DomcodeLLM-Setup.exe"
+            : product.id === "galaxy-vision"
+            ? "Galaxy-Vision-v1.0.0-Standalone.zip"
+            : product.id === "electron"
+            ? "Electron-AI-Standalone-NoOllama.zip"
+            : "Gravity_LLM_HS_AI_Solutions_Portable.zip"
+        }
       />
 
       {/* Download Companion & OS Alert Modal */}
@@ -563,6 +567,7 @@ export function ProductDetailView({ product }: { product: ProductDetail }) {
             ? "Galaxy-Vision-v1.0.0-Standalone.zip"
             : `${product.id}-standalone.zip`
         }
+        onOpenCollaboratorModal={() => setCollabModalOpen(true)}
       />
     </div>
   );

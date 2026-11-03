@@ -81,30 +81,14 @@ function ProductCell({
 
         <div className="mt-7 flex items-center justify-between border-t border-white/8 pt-5">
           {product.downloadUrl ? (
-            product.collaboratorOnly ? (
-              <button
-                type="button"
-                onClick={() => onOpenCollab(product)}
-                className="inline-flex h-10 items-center gap-1.5 rounded-full border border-emerald-500/30 bg-emerald-950/20 px-4 text-[13px] font-semibold text-emerald-300 transition-colors duration-300 hover:border-emerald-400 hover:bg-emerald-900/30"
-              >
-                Collaborator Download <ArrowUpRight className="h-3.5 w-3.5 rotate-90" />
-              </button>
-            ) : (
-              <a
-                href={product.downloadUrl}
-                download={!product.downloadUrl.startsWith("http") ? true : undefined}
-                target={product.downloadUrl.startsWith("http") ? "_blank" : undefined}
-                rel={product.downloadUrl.startsWith("http") ? "noopener noreferrer" : undefined}
-                onClick={
-                  product.downloadUrl.startsWith("http")
-                    ? () => onOpenDownloadCompanion(product)
-                    : undefined
-                }
-                className="inline-flex h-10 items-center gap-1.5 rounded-full border border-white/20 px-4 text-[13px] font-semibold text-white transition-colors duration-300 hover:border-white/60 hover:bg-white/5"
-              >
-                Download <ArrowUpRight className="h-3.5 w-3.5 rotate-90" />
-              </a>
-            )
+            <button
+              type="button"
+              onClick={() => onOpenCollab(product)}
+              className="inline-flex h-10 items-center gap-1.5 rounded-full border border-emerald-500/30 bg-emerald-950/20 px-4 text-[13px] font-semibold text-emerald-300 transition-colors duration-300 hover:border-emerald-400 hover:bg-emerald-900/30"
+            >
+              <span>{product.collaboratorOnly ? "Collaborator Download" : "Download ZIP"}</span>
+              <ArrowUpRight className="h-3.5 w-3.5 rotate-90" />
+            </button>
           ) : (
             <a
               href={product.url}
@@ -184,9 +168,29 @@ export function AllApplications() {
       <CollaboratorModal
         isOpen={collabModalOpen}
         onClose={() => setCollabModalOpen(false)}
+        productId={selectedProduct?.id}
+        productName={selectedProduct?.name || "HS AI Application"}
         accent={selectedProduct?.accent || "#10b981"}
         downloadApiPath={selectedProduct?.downloadUrl || "/api/download/gravity"}
-        fileName={selectedProduct?.id === "domcode-llm" ? "DomcodeLLM-Setup.exe" : "Gravity_LLM_Portable.zip"}
+        downloadUrl={
+          selectedProduct?.downloadUrl ||
+          (selectedProduct?.id === "domcode-llm"
+            ? "https://1drv.ms/u/c/A4DE4F83095B15B0/IQBE8mmADSXtS6polDPwwbUmAXJTbzfIjNdAWDn2Z0to1VM?e=korcxj"
+            : selectedProduct?.id === "galaxy-vision"
+            ? "https://1drv.ms/u/c/A4DE4F83095B15B0/IQBxmNpxxijbRrZxRbr2j7i6AddHgte4YOJ7o-aURM3-nFk?e=v6QdYB"
+            : selectedProduct?.id === "electron"
+            ? "https://1drv.ms/u/c/A4DE4F83095B15B0/IQDY8K9iXhZkQayEL_CMStd_AU2Kq61gd1RgfIles4t9BrE?e=76ltt3"
+            : "https://1drv.ms/u/c/A4DE4F83095B15B0/IQDBJNvSemwQRIDCxrLUYtxqAURTChIN5YXmYrolDeUgh1U?e=SKWsrl")
+        }
+        fileName={
+          selectedProduct?.id === "domcode-llm"
+            ? "DomcodeLLM-Setup.exe"
+            : selectedProduct?.id === "galaxy-vision"
+            ? "Galaxy-Vision-v1.0.0-Standalone.zip"
+            : selectedProduct?.id === "electron"
+            ? "Electron-AI-Standalone-NoOllama.zip"
+            : "Gravity_LLM_HS_AI_Solutions_Portable.zip"
+        }
       />
 
       <DownloadCompanionModal
@@ -205,6 +209,11 @@ export function AllApplications() {
             ? "Galaxy-Vision-v1.0.0-Standalone.zip"
             : `${downloadCompanionProduct?.id}-standalone.zip`
         }
+        onOpenCollaboratorModal={() => {
+          if (downloadCompanionProduct) {
+            handleOpenCollab(downloadCompanionProduct);
+          }
+        }}
       />
     </section>
   );
