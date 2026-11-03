@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { searchKnowledge, getKnowledgeStatus } from "@/lib/knowledge-engine";
 import { searchWeb, WebSearchResult } from "@/lib/web-search";
 import { products } from "@/data/products";
+import { sanitizeInput } from "@/lib/security";
 
 // Universal Knowledge Engine: Handles coding, math, general science, technology, live web synthesis, and site telemetry navigation
 function generateIntelligentResponse(
@@ -218,14 +219,17 @@ Feel free to ask a specific coding problem, request real-time information, or as
 
 export async function POST(req: NextRequest) {
   try {
-    const body = await req.json();
+    const body = await req.json().catch(() => ({}));
     const { message, enableWebSearch = true, telemetry } = body;
 
     if (!message || typeof message !== "string" || !message.trim()) {
       return NextResponse.json({ success: false, error: "Valid message required" }, { status: 400 });
     }
 
-    const cleanMessage = message.trim().slice(0, 1000);
+    const cleanMessage = sanitizeInput(message, 1000);
+    if (!cleanMessage) {
+      return NextResponse.json({ success: false, error: "Message contains invalid characters" }, { status: 400 });
+    }
     const qLower = cleanMessage.toLowerCase();
 
     // Check if user is inquiring about HS AI Solutions products/tools/announcements/services

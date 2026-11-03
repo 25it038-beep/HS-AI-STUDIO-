@@ -9,11 +9,15 @@ import {
   Announcement,
   DeliveryLog,
 } from "@/lib/notifications-store";
+import {
+  verifyAdminKey,
+  sanitizeInput,
+  sanitizeDestinationUrl,
+} from "@/lib/security";
 
 const VAPID_PUBLIC_KEY = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY;
 const VAPID_PRIVATE_KEY = process.env.VAPID_PRIVATE_KEY;
 const VAPID_SUBJECT = process.env.VAPID_SUBJECT || "mailto:harshanseliyan28@gmail.com";
-const ADMIN_SECRET_KEY = process.env.ADMIN_SECRET_KEY || "hs-ai-admin-secret-2026";
 
 if (VAPID_PUBLIC_KEY && VAPID_PRIVATE_KEY) {
   webPush.setVapidDetails(VAPID_SUBJECT, VAPID_PUBLIC_KEY, VAPID_PRIVATE_KEY);
@@ -24,32 +28,42 @@ export async function POST(req: NextRequest) {
     const authHeader = req.headers.get("authorization");
     const adminKey = authHeader ? authHeader.replace("Bearer ", "").trim() : req.headers.get("x-admin-key");
 
-    if (adminKey !== ADMIN_SECRET_KEY) {
+    // Timing-attack safe comparison
+    if (!verifyAdminKey(adminKey)) {
       return NextResponse.json(
         { success: false, error: "Unauthorized. Invalid Admin Key." },
         { status: 401 }
       );
     }
 
-    const body = await req.json();
+    const body = await req.json().catch(() => ({}));
     const { title, message, category, imageUrl, destinationUrl, channels, status } = body;
 
-    if (!title || !message) {
+    const sanitizedTitle = sanitizeInput(title, 150);
+    const sanitizedMessage = sanitizeInput(message, 1000);
+
+    if (!sanitizedTitle || !sanitizedMessage) {
       return NextResponse.json(
-        { success: false, error: "Title and message are required" },
+        { success: false, error: "Valid title and message are required" },
         { status: 400 }
       );
     }
 
+    const validCategories = ["Product Release", "AI Model", "Feature Update", "Announcement"] as const;
+    const safeCategory = validCategories.includes(category) ? category : "Product Release";
+
+    const safeDestinationUrl = sanitizeDestinationUrl(destinationUrl, "/#projects");
+    const safeImageUrl = imageUrl ? sanitizeDestinationUrl(imageUrl, "") : undefined;
+
     const newAnnouncement: Announcement = {
       id: `ann_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`,
-      title: title.trim(),
-      message: message.trim(),
-      category: category || "Product Release",
-      imageUrl: imageUrl?.trim() || undefined,
-      destinationUrl: destinationUrl?.trim() || "/#projects",
-      channels: channels || "both",
-      status: status || "published",
+      title: sanitizedTitle,
+      message: sanitizedMessage,
+      category: safeCategory,
+      imageUrl: safeImageUrl || undefined,
+      destinationUrl: safeDestinationUrl,
+      channels: channels === "in_app" || channels === "push" || channels === "both" ? channels : "both",
+      status: status === "published" || status === "draft" || status === "archived" ? status : "published",
       publishedAt: new Date().toISOString(),
       createdAt: new Date().toISOString(),
     };
@@ -133,7 +147,7 @@ export async function POST(req: NextRequest) {
   } catch (error: any) {
     console.error("Error publishing announcement:", error);
     return NextResponse.json(
-      { success: false, error: error.message || "Failed to publish announcement" },
+      { success: false, error: "Failed to publish announcement" },
       { status: 500 }
     );
   }

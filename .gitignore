@@ -42,3 +42,7 @@ next-env.d.ts
 
 # large local downloads (>100MB exceeding GitHub remote limits)
 public/downloads/Gravity_LLM_HS_AI_Solutions_Portable.zip
+
+# local data store (notifications, logs, subscriptions)
+.data/
+.data/*

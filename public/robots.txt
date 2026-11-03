@@ -1,0 +1,12 @@
+# robots.txt for HS AI Solutions
+User-agent: *
+Allow: /
+Allow: /journey
+Allow: /products/
+Allow: /videos/
+Allow: /images/
+
+# Restrict crawlers from sensitive administrative and API execution endpoints
+Disallow: /admin/
+Disallow: /api/
+Disallow: /.data/

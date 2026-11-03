@@ -1,14 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getAnnouncements, getSubscriptions, getDeliveryLogs } from "@/lib/notifications-store";
-
-const ADMIN_SECRET_KEY = process.env.ADMIN_SECRET_KEY || "hs-ai-admin-secret-2026";
+import { verifyAdminKey } from "@/lib/security";
 
 export async function GET(req: NextRequest) {
   try {
     const authHeader = req.headers.get("authorization");
     const adminKey = authHeader ? authHeader.replace("Bearer ", "").trim() : req.headers.get("x-admin-key");
 
-    if (adminKey !== ADMIN_SECRET_KEY) {
+    if (!verifyAdminKey(adminKey)) {
       return NextResponse.json(
         { success: false, error: "Unauthorized" },
         { status: 401 }
@@ -29,7 +28,7 @@ export async function GET(req: NextRequest) {
       announcements,
       deliveryLogs,
     });
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       { success: false, error: "Failed to fetch stats" },
       { status: 500 }
