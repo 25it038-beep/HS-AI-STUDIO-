@@ -16,6 +16,7 @@ import { DownloadCompanionModal } from "@/components/DownloadCompanionModal";
 export function ProductDetailView({ product }: { product: ProductDetail }) {
   const [collabModalOpen, setCollabModalOpen] = useState(false);
   const [downloadCompanionOpen, setDownloadCompanionOpen] = useState(false);
+  const [copiedCmd, setCopiedCmd] = useState(false);
   const others = products.filter((p) => p.id !== product.id);
 
   return (
@@ -95,7 +96,55 @@ export function ProductDetailView({ product }: { product: ProductDetail }) {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.35, duration: 0.7 }}
               >
-                {product.downloadUrl ? (
+                {product.command ? (
+                  <div className="flex flex-col gap-4 w-full max-w-xl">
+                    <div className="flex items-center justify-between gap-3 rounded-2xl border border-cyan-500/35 bg-black/90 p-3 shadow-xl backdrop-blur-md">
+                      <span className="truncate select-all font-mono text-xs text-cyan-200 pl-1">
+                        {product.command}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          if (typeof navigator !== "undefined" && navigator.clipboard) {
+                            navigator.clipboard.writeText(product.command!);
+                            setCopiedCmd(true);
+                            setTimeout(() => setCopiedCmd(false), 2500);
+                          }
+                        }}
+                        className="shrink-0 rounded-xl bg-cyan-500 px-4 py-2 text-xs font-bold text-black transition-all hover:bg-cyan-400 active:scale-95"
+                      >
+                        {copiedCmd ? "Copied! ✓" : "Copy Command"}
+                      </button>
+                    </div>
+
+                    <div className="flex flex-wrap items-center gap-3">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          if (typeof navigator !== "undefined" && navigator.clipboard) {
+                            navigator.clipboard.writeText(product.command!);
+                            setCopiedCmd(true);
+                            setTimeout(() => setCopiedCmd(false), 2500);
+                          }
+                        }}
+                        className="inline-flex h-12 items-center gap-2 rounded-full px-7 text-sm font-semibold transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
+                        style={{
+                          background: product.accent,
+                          color: "#000",
+                          boxShadow: `0 0 25px -4px ${product.accent}80`,
+                        }}
+                      >
+                        <span>{copiedCmd ? "Command Copied to Clipboard!" : "Copy PowerShell Command"}</span>
+                        <ArrowUpRight className="h-4 w-4" />
+                      </button>
+
+                      <span className="inline-flex items-center gap-2 rounded-full border border-cyan-400/30 bg-cyan-950/40 px-4 py-2.5 text-[12.5px] font-medium text-cyan-300">
+                        <span className="h-1.5 w-1.5 rounded-full bg-cyan-400 animate-pulse" />
+                        100% Free · No Collaborator ID Needed · Zero ZIP File
+                      </span>
+                    </div>
+                  </div>
+                ) : product.downloadUrl ? (
                   <>
                     <button
                       type="button"

@@ -20,6 +20,16 @@ function ProductCell({
   onOpenCollab: (p: ProductDetail) => void;
   onOpenDownloadCompanion: (p: ProductDetail) => void;
 }) {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopyCmd = () => {
+    if (typeof navigator !== "undefined" && navigator.clipboard && product.command) {
+      navigator.clipboard.writeText(product.command);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2400);
+    }
+  };
+
   return (
     <motion.article
       initial={{ opacity: 0, y: 40 }}
@@ -80,7 +90,27 @@ function ProductCell({
         </div>
 
         <div className="mt-7 flex items-center justify-between border-t border-white/8 pt-5">
-          {product.downloadUrl ? (
+          {product.command ? (
+            <button
+              type="button"
+              onClick={handleCopyCmd}
+              className="inline-flex h-10 items-center gap-1.5 rounded-full border border-cyan-400/40 bg-cyan-950/30 px-4 text-[13px] font-semibold text-cyan-300 transition-colors duration-300 hover:border-cyan-300 hover:bg-cyan-900/50"
+            >
+              {copied ? (
+                <>
+                  <span>Copied! ✓</span>
+                  <span className="text-[10px] text-cyan-200">Paste in PowerShell</span>
+                </>
+              ) : (
+                <>
+                  <span>Copy 1-Liner</span>
+                  <svg className="h-3.5 w-3.5 text-cyan-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                  </svg>
+                </>
+              )}
+            </button>
+          ) : product.downloadUrl ? (
             <button
               type="button"
               onClick={() => onOpenCollab(product)}
