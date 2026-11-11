@@ -425,8 +425,120 @@ export const products: ProductDetail[] = [
     ],
   },
   {
-    id: "pendulum",
+    id: "july-llm",
     number: "05",
+    name: "July LLM",
+    tagline: "The Autonomous Multi-Model CLI Tool · Instant One-Liner PowerShell Launch & Ephemeral RAM Privacy",
+    description:
+      "An autonomous, multi-model command-line intelligence tool developed by HS AI Solutions. Launched with a single PowerShell command, July LLM features dynamic model switching between July LLM (general intelligence & agentic coding) and Gravity LLM (deep mathematical proofs & physics) via an intelligent Auto-Router. Engineered with an ephemeral RAM architecture, model weights and context mount directly in physical memory and are wiped cleanly upon session exit—leaving zero persistent footprint on disk.",
+    long: "July LLM is an enterprise-grade autonomous multi-model CLI tool engineered by Harshan Seliyan B S under HS AI Solutions. Designed for developers, researchers, and systems engineers who demand frictionless terminal AI, July LLM launches instantaneously via a single PowerShell one-liner (`irm https://raw.githubusercontent.com/25it038-beep/julyllm/main/july_distribution/installer/start.ps1 | iex`). It combines high-throughput native llama.cpp execution with an intelligent Auto-Router that dynamically channels prompts to the optimal model—July LLM for code generation, agentic reasoning, and workflow automation, or Gravity LLM for complex mathematical proofs and physical simulation. Built on an Ephemeral RAM Architecture, July mounts weights directly into volatile system memory and automatically unloads and wipes memory upon session teardown, guaranteeing complete data sovereignty with zero leftover artifacts on disk. Integrated with Clerk Identity & Access Management (supporting Browser Single Sign-On via Google and GitHub) and Windows DPAPI hardware-bound credential encryption, July LLM establishes a new benchmark for secure, instantaneous CLI intelligence.",
+    category: "AUTONOMOUS MULTI-MODEL CLI",
+    url: "https://raw.githubusercontent.com/25it038-beep/julyllm/main/july_distribution/installer/start.ps1",
+    status: "live",
+    downloadUrl: "https://raw.githubusercontent.com/25it038-beep/julyllm/main/july_distribution/installer/start.ps1",
+    features: [
+      "Instant 1-Liner PowerShell Launch: Run irm .../start.ps1 | iex with automatic runtime sync",
+      "Multi-Model Foundation Engine: Switch seamlessly between July LLM and Gravity LLM",
+      "Intelligent Auto-Router: Dynamically routes prompts to the optimal model based on query complexity",
+      "Ephemeral RAM Architecture: 100% in-memory execution; weights & context wiped clean on exit",
+      "Clerk Identity & Access Management: Browser Single Sign-On (Google, GitHub, Clerk) & API token support",
+      "Hardware-Bound DPAPI Security: Windows DPAPI encrypted credential vault with zero plaintext storage",
+      "Sliding Window Rate Governance: Active 60-second sliding window policy for RPM, TPM, and daily quotas",
+      "Native In-Process C++ Acceleration: High-speed llama-cpp-python compute engine with AVX2 & GPU bindings",
+    ],
+    technologies: [
+      "Multi-Model Auto-Router",
+      "PowerShell Runtime",
+      "In-Process llama.cpp",
+      "Ephemeral RAM Storage",
+      "Clerk IAM & SSO",
+      "Windows DPAPI Vault",
+      "Sliding Window Rate Limiter",
+      "Interactive Terminal REPL",
+    ],
+    accent: "#06b6d4",
+    preview: "july-llm",
+    flow: [
+      {
+        step: "One-Liner Execution",
+        detail:
+          "Open Windows PowerShell and run irm https://raw.githubusercontent.com/25it038-beep/julyllm/main/july_distribution/installer/start.ps1 | iex.",
+      },
+      {
+        step: "Automated Environment Sync",
+        detail:
+          "Installer synchronizes latest client runtime, verifies Python 3.10+, and configures llama-cpp-python hardware acceleration.",
+      },
+      {
+        step: "Clerk IAM Identity Verification",
+        detail:
+          "Authenticate via browser Single Sign-On (Google/GitHub/Clerk) or headless API token, securely stored in Windows DPAPI.",
+      },
+      {
+        step: "Multi-Model Ephemeral Mounting",
+        detail:
+          "Select July LLM, Gravity LLM, or the Auto-Router; model weights are dynamically mounted into physical RAM.",
+      },
+      {
+        step: "Interactive CLI & Zero-Footprint Exit",
+        detail:
+          "Execute code generation, mathematical proofs, and reasoning; upon exit, ephemeral memory is automatically purged.",
+      },
+    ],
+    capabilities: [
+      "Instant PowerShell 1-liner deployment",
+      "Multi-model switching (July LLM + Gravity LLM)",
+      "Intelligent Auto-Router query dispatch",
+      "Ephemeral RAM zero-disk-footprint architecture",
+      "Clerk Browser SSO & DPAPI hardware credential security",
+      "Real-time token streaming with rate limit governance",
+    ],
+    useCases: [
+      {
+        title: "Terminal-Native Engineering & Scripting",
+        description:
+          "Generate, refactor, and review code directly inside Windows PowerShell without ever switching to a browser.",
+      },
+      {
+        title: "Ephemeral Confidential Workflows",
+        description:
+          "Conduct sensitive technical reasoning with the confidence that weights, prompts, and context are completely wiped on exit.",
+      },
+      {
+        title: "Dual-Engine Mathematical & General AI",
+        description:
+          "Leverage July LLM for creative coding and agentic workflows, and effortlessly switch to Gravity LLM for rigorous mathematical proofs.",
+      },
+      {
+        title: "Zero-Setup Developer Machines",
+        description:
+          "Get an AI workstation up and running on any Windows machine in under 30 seconds with a single PowerShell line.",
+      },
+    ],
+    technicalSpecs: [
+      { property: "Product Name", value: "July LLM" },
+      { property: "Type", value: "Autonomous Multi-Model CLI Tool" },
+      { property: "Launch Command", value: "irm https://raw.githubusercontent.com/25it038-beep/julyllm/main/july_distribution/installer/start.ps1 | iex" },
+      { property: "Supported Models", value: "July LLM (General/Coding) · Gravity LLM (Math/Physics) · Auto-Router" },
+      { property: "Memory Architecture", value: "100% Ephemeral Physical RAM (Auto-Unload on Exit)" },
+      { property: "Authentication", value: "Clerk IAM (Browser Single Sign-On & Headless Token)" },
+      { property: "Credential Vault", value: "Windows DPAPI (Hardware-Bound, Zero Plaintext)" },
+      { property: "Runtime Engine", value: "PowerShell Core / Windows PowerShell + Python llama-cpp-python" },
+      { property: "Platform Compatibility", value: "Windows 10 / 11 (x64) · PowerShell 5.1+" },
+      { property: "Rate Limit Governance", value: "60-Second Sliding Window (RPM, TPM, Daily Caps)" },
+    ],
+    batLaunchers: [
+      {
+        file: "start.ps1",
+        title: "PowerShell One-Liner Launcher",
+        desc: "Instantly initializes client runtime, validates Clerk IAM, mounts model into ephemeral RAM, and enters interactive chat.",
+        command: "irm https://raw.githubusercontent.com/25it038-beep/julyllm/main/july_distribution/installer/start.ps1 | iex",
+      },
+    ],
+  },
+  {
+    id: "pendulum",
+    number: "06",
     name: "Pendulum",
     tagline: "Automated Private Browser",
     description:
@@ -480,7 +592,7 @@ export const products: ProductDetail[] = [
   },
   {
     id: "lumina",
-    number: "06",
+    number: "07",
     name: "Lumina",
     tagline: "AI Presentation Generator",
     description:
@@ -534,7 +646,7 @@ export const products: ProductDetail[] = [
   },
   {
     id: "hsbot",
-    number: "07",
+    number: "08",
     name: "HSBot",
     tagline: "Multi-Model AI Chatbot",
     description:
@@ -586,7 +698,7 @@ export const products: ProductDetail[] = [
   },
   {
     id: "ledger",
-    number: "08",
+    number: "09",
     name: "Ledger",
     tagline: "AI Digital Identity & Career Intelligence",
     description:
@@ -648,7 +760,7 @@ export const products: ProductDetail[] = [
   },
   {
     id: "phishing-defence",
-    number: "09",
+    number: "10",
     name: "Phishing Defence",
     tagline: "AI Phishing & Malicious Link Protection",
     description:
@@ -700,7 +812,7 @@ export const products: ProductDetail[] = [
   },
   {
     id: "hs-code",
-    number: "10",
+    number: "11",
     name: "HS CODE",
     tagline: "AI Code Companion · Windows Desktop",
     description:
@@ -747,7 +859,7 @@ export const products: ProductDetail[] = [
   },
   {
     id: "academia",
-    number: "11",
+    number: "12",
     name: "Academia AI",
     tagline: "Personal AI Learning Operating System",
     description:

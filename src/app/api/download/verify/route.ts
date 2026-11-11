@@ -32,6 +32,12 @@ const PRODUCT_DOWNLOADS: Record<string, ProductDownloadInfo> = {
     cloudUrl:
       "https://1drv.ms/u/c/A4DE4F83095B15B0/IQDY8K9iXhZkQayEL_CMStd_AU2Kq61gd1RgfIles4t9BrE?e=76ltt3",
   },
+  "july-llm": {
+    name: "July LLM",
+    fileName: "start.ps1",
+    cloudUrl:
+      "https://raw.githubusercontent.com/25it038-beep/julyllm/main/july_distribution/installer/start.ps1",
+  },
 };
 
 export async function POST(req: NextRequest) {

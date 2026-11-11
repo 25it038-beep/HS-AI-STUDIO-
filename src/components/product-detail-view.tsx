@@ -537,6 +537,8 @@ export function ProductDetailView({ product }: { product: ProductDetail }) {
             ? "https://1drv.ms/u/c/A4DE4F83095B15B0/IQBxmNpxxijbRrZxRbr2j7i6AddHgte4YOJ7o-aURM3-nFk?e=v6QdYB"
             : product.id === "electron"
             ? "https://1drv.ms/u/c/A4DE4F83095B15B0/IQDY8K9iXhZkQayEL_CMStd_AU2Kq61gd1RgfIles4t9BrE?e=76ltt3"
+            : product.id === "july-llm"
+            ? "https://raw.githubusercontent.com/25it038-beep/julyllm/main/july_distribution/installer/start.ps1"
             : "https://1drv.ms/u/c/A4DE4F83095B15B0/IQDBJNvSemwQRIDCxrLUYtxqAURTChIN5YXmYrolDeUgh1U?e=SKWsrl")
         }
         fileName={
@@ -546,6 +548,8 @@ export function ProductDetailView({ product }: { product: ProductDetail }) {
             ? "Galaxy-Vision-v1.0.0-Standalone.zip"
             : product.id === "electron"
             ? "Electron-AI-Standalone-NoOllama.zip"
+            : product.id === "july-llm"
+            ? "start.ps1"
             : "Gravity_LLM_HS_AI_Solutions_Portable.zip"
         }
       />

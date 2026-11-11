@@ -11,6 +11,7 @@ import { GravityLLMPreview } from "@/components/previews/GravityLLMPreview";
 import { DomcodeLLMPreview } from "@/components/previews/DomcodeLLMPreview";
 import { GalaxyVisionPreview } from "@/components/previews/GalaxyVisionPreview";
 import { ElectronPreview } from "@/components/previews/ElectronPreview";
+import { JulyLLMPreview } from "@/components/previews/JulyLLMPreview";
 import { CollaboratorModal } from "@/components/CollaboratorModal";
 import { DownloadCompanionModal } from "@/components/DownloadCompanionModal";
 import { triggerFullscreenExploreVideo } from "@/components/fullscreen-explore-video";
@@ -28,6 +29,7 @@ export function Featured() {
   const domcode = products.find((p) => p.id === "domcode-llm")!;
   const galaxy = products.find((p) => p.id === "galaxy-vision")!;
   const electron = products.find((p) => p.id === "electron")!;
+  const july = products.find((p) => p.id === "july-llm")!;
 
   const handleOpenCollab = (p: ProductDetail) => {
     setActiveCollabProduct(p);
@@ -52,6 +54,10 @@ export function Featured() {
       <div
         className="pointer-events-none absolute -right-40 bottom-10 h-[560px] w-[640px] rounded-full blur-[140px] opacity-20"
         style={{ background: "radial-gradient(closest-side, rgba(56,189,248,0.2), transparent)" }}
+      />
+      <div
+        className="pointer-events-none absolute -left-40 bottom-32 h-[560px] w-[640px] rounded-full blur-[140px] opacity-20"
+        style={{ background: "radial-gradient(closest-side, rgba(6,182,212,0.22), transparent)" }}
       />
 
       {/* ========================================================= */}
@@ -411,6 +417,139 @@ export function Featured() {
         </div>
       </div>
 
+      {/* ========================================================= */}
+      {/* SPOTLIGHT 05: JULY LLM (Autonomous Multi-Model CLI Tool) */}
+      {/* ========================================================= */}
+      <div className="container-x relative mt-24 border-t border-white/8 pt-24 md:mt-32 md:pt-32 grid items-center gap-14 lg:grid-cols-[0.95fr_1.05fr]">
+        <div>
+          <Reveal y={18}>
+            <p className="eyebrow flex items-center gap-3 text-white/45">
+              <span
+                className="h-1.5 w-1.5 rounded-full"
+                style={{ background: july.accent, boxShadow: `0 0 10px ${july.accent}` }}
+              />
+              {july.number} · Spotlight · {july.category}
+            </p>
+          </Reveal>
+
+          <Reveal y={26} delay={0.05}>
+            <h2 className="display-lg mt-6 text-[clamp(2.4rem,7vw,6.5rem)]">{july.name}</h2>
+          </Reveal>
+
+          <Reveal y={22} delay={0.1}>
+            <p className="mt-3 font-display text-xl font-medium text-white/85">
+              {july.tagline}
+            </p>
+          </Reveal>
+
+          <Reveal y={22} delay={0.16}>
+            <p className="mt-6 max-w-xl text-[17px] leading-relaxed text-muted-dark">
+              {july.description}
+            </p>
+          </Reveal>
+
+          {/* 1-Liner PowerShell Command Box */}
+          <Reveal y={20} delay={0.2}>
+            <div className="mt-7 max-w-xl rounded-2xl border border-cyan-500/35 bg-black/85 p-3.5 shadow-2xl backdrop-blur-md">
+              <div className="flex items-center justify-between text-[11px] text-zinc-400 mb-1.5 font-mono">
+                <span className="flex items-center gap-1.5 text-cyan-300 font-semibold">
+                  <span className="h-1.5 w-1.5 rounded-full bg-cyan-400 animate-pulse" />
+                  Instant PowerShell 1-Liner Launch
+                </span>
+                <span className="text-[10px] text-zinc-500">Zero Setup Required</span>
+              </div>
+              <div className="flex items-center justify-between gap-3 rounded-xl border border-white/10 bg-white/[0.03] px-3.5 py-2.5 font-mono text-xs text-white">
+                <span className="truncate select-all text-cyan-200">
+                  irm https://raw.githubusercontent.com/25it038-beep/julyllm/main/july_distribution/installer/start.ps1 | iex
+                </span>
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (typeof navigator !== "undefined" && navigator.clipboard) {
+                      navigator.clipboard.writeText(
+                        "irm https://raw.githubusercontent.com/25it038-beep/julyllm/main/july_distribution/installer/start.ps1 | iex"
+                      );
+                      setDownloadToast({
+                        title: "Command Copied to Clipboard!",
+                        message: "Paste into Windows PowerShell to launch July Multi-Model CLI.",
+                      });
+                      setTimeout(() => setDownloadToast(null), 3500);
+                    }
+                  }}
+                  className="shrink-0 rounded-lg bg-cyan-500 px-3 py-1.5 text-xs font-bold text-black transition-all hover:bg-cyan-400 active:scale-95"
+                >
+                  Copy Command
+                </button>
+              </div>
+            </div>
+          </Reveal>
+
+          <Reveal y={20} delay={0.24}>
+            <div className="mt-8 flex flex-wrap items-center gap-4">
+              <button
+                type="button"
+                onClick={() => {
+                  if (typeof navigator !== "undefined" && navigator.clipboard) {
+                    navigator.clipboard.writeText(
+                      "irm https://raw.githubusercontent.com/25it038-beep/julyllm/main/july_distribution/installer/start.ps1 | iex"
+                    );
+                    setDownloadToast({
+                      title: "1-Liner Copied!",
+                      message: "Open PowerShell (Win + X) and press Ctrl + V to run.",
+                    });
+                    setTimeout(() => setDownloadToast(null), 3500);
+                  }
+                }}
+                className="inline-flex h-12 items-center gap-2 rounded-full px-7 text-sm font-semibold transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
+                style={{
+                  background: july.accent,
+                  color: "#000",
+                  boxShadow: `0 0 25px -4px ${july.accent}80`,
+                }}
+              >
+                <span>Launch in PowerShell</span>
+                <ArrowUpRight className="h-4 w-4" />
+              </button>
+              <MagneticButton
+                href={`/products/${july.id}`}
+                onClick={(e) => {
+                  e.preventDefault();
+                  triggerFullscreenExploreVideo(`/products/${july.id}`);
+                }}
+                variant="ghost"
+                lg
+                accent={july.accent}
+              >
+                View Details
+                <ArrowUpRight className="h-4 w-4" />
+              </MagneticButton>
+            </div>
+          </Reveal>
+
+          {/* Quick Start pill instructions */}
+          <Reveal y={18} delay={0.28}>
+            <div className="mt-7 inline-flex flex-wrap items-center gap-2 rounded-xl border border-cyan-400/25 bg-cyan-950/20 px-3.5 py-2 text-xs text-cyan-200/90 backdrop-blur-sm">
+              <span className="font-semibold text-cyan-300">Quick Start:</span>
+              <span>1. Open PowerShell</span>
+              <span className="text-white/30">→</span>
+              <span>2. Paste irm Command</span>
+              <span className="text-white/30">→</span>
+              <span className="font-mono font-semibold text-white">3. Multi-Model Chat in RAM</span>
+            </div>
+          </Reveal>
+
+          <Reveal y={18} delay={0.32}>
+            <p className="mt-8 font-mono text-[11px] uppercase tracking-[0.25em] text-white/35">
+              July LLM + Gravity LLM · Auto-Router · Ephemeral RAM Privacy · Clerk IAM
+            </p>
+          </Reveal>
+        </div>
+
+        <Parallax depth={-40}>
+          <JulyLLMPreview className="w-full" />
+        </Parallax>
+      </div>
+
       <CollaboratorModal
         isOpen={collabModalOpen}
         onClose={() => setCollabModalOpen(false)}
@@ -425,6 +564,8 @@ export function Featured() {
             ? "https://1drv.ms/u/c/A4DE4F83095B15B0/IQBxmNpxxijbRrZxRbr2j7i6AddHgte4YOJ7o-aURM3-nFk?e=v6QdYB"
             : activeCollabProduct?.id === "electron"
             ? "https://1drv.ms/u/c/A4DE4F83095B15B0/IQDY8K9iXhZkQayEL_CMStd_AU2Kq61gd1RgfIles4t9BrE?e=76ltt3"
+            : activeCollabProduct?.id === "july-llm"
+            ? "https://raw.githubusercontent.com/25it038-beep/julyllm/main/july_distribution/installer/start.ps1"
             : "https://1drv.ms/u/c/A4DE4F83095B15B0/IQDBJNvSemwQRIDCxrLUYtxqAURTChIN5YXmYrolDeUgh1U?e=SKWsrl"
         }
         fileName={
@@ -434,6 +575,8 @@ export function Featured() {
             ? "Galaxy-Vision-v1.0.0-Standalone.zip"
             : activeCollabProduct?.id === "electron"
             ? "Electron-AI-Standalone-NoOllama.zip"
+            : activeCollabProduct?.id === "july-llm"
+            ? "start.ps1"
             : "Gravity_LLM_HS_AI_Solutions_Portable.zip"
         }
       />
@@ -475,6 +618,9 @@ export function Featured() {
       </Link>
       <Link href="/products/electron" className="sr-only">
         View Electron AI details
+      </Link>
+      <Link href="/products/july-llm" className="sr-only">
+        View July LLM details
       </Link>
 
       {downloadToast && (
